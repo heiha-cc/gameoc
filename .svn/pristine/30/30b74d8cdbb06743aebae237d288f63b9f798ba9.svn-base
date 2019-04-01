@@ -1,0 +1,7 @@
+.idea
+composer.lock
+*.log
+.user.ini
+404.html
+.well-known
+sftp-config.json

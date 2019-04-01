@@ -1,0 +1,36 @@
+<?php
+
+namespace app\admin\controller;
+
+use org\Auth;
+use think\Controller;
+use think\Db;
+use think\Session;
+
+
+class GameCfg extends Controller
+{
+    public function  conifglist()
+    {
+
+
+        return $this->fetch();
+
+    }
+
+
+    public function edit()
+    {
+
+
+    }
+
+
+    public function add()
+    {
+
+
+    }
+
+
+}
