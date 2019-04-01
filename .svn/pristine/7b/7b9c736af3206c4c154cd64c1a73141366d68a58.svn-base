@@ -1,0 +1,191 @@
+---------------------------------------------------------------
+[ 2019-04-01T15:20:47+08:00 ] 0.0.0.0 GET localhost:802/admin/index/index.html
+[运行时间：0.058000s] [吞吐率：17.24req/s] [内存消耗：3,050.17kb] [文件加载：46]
+[ info ] [ LANG ] D:\��Ϸ��̨\GameOC\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'content-type' => '',
+  'content-length' => '0',
+  'x-original-url' => '/admin/index/index.html',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+  'referer' => 'http://localhost:802/admin/user/index/index',
+  'host' => 'localhost:802',
+  'cookie' => '__guid=111872281.1026026313116656900.1551749901982.9902; _ga=GA1.1.1755471559.1551749903; RYRCQIPAI=VerifyCodeKey=10&VerifyCodeKey_ETS=2019-03-13+11%3a10%3a21&VS=c886160b0669cce2; Default=RYCacheKey=1&RYCacheKey_ETS=2019-03-23+15%3a53%3a26&VS=96fba6ba9b508118; Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1553049743,1553841005; PHPSESSID=g0dauvih9jerp20dprubu7nno4; Hm_lpvt_f8d0a8c400404989e195270b0bbf060a=1554086976; Hm_lvt_b393d153aeb26b46e9431fabaf0f6190=1554101878; Hm_lpvt_b393d153aeb26b46e9431fabaf0f6190=1554102340; monitor_count=96',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'connection' => 'keep-alive',
+  'cache-control' => 'max-age=0',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Index->index[ D:\��Ϸ��̨\GameOC\application\admin\controller\Index.php ]
+[ info ] [ VIEW ] D:\��Ϸ��̨\GameOC/application/admin\view\index\index.html [ array (
+  0 => 'menu',
+) ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-01T15:20:47+08:00 ] 0.0.0.0 GET localhost:802/admin/index/welcome.html
+[运行时间：0.040000s] [吞吐率：25.00req/s] [内存消耗：3,001.52kb] [文件加载：45]
+[ info ] [ LANG ] D:\��Ϸ��̨\GameOC\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'welcome',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'content-type' => '',
+  'content-length' => '0',
+  'x-original-url' => '/admin/index/welcome.html',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+  'referer' => 'http://localhost:802/admin/index/index.html',
+  'host' => 'localhost:802',
+  'cookie' => '__guid=111872281.1026026313116656900.1551749901982.9902; _ga=GA1.1.1755471559.1551749903; RYRCQIPAI=VerifyCodeKey=10&VerifyCodeKey_ETS=2019-03-13+11%3a10%3a21&VS=c886160b0669cce2; Default=RYCacheKey=1&RYCacheKey_ETS=2019-03-23+15%3a53%3a26&VS=96fba6ba9b508118; Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1553049743,1553841005; PHPSESSID=g0dauvih9jerp20dprubu7nno4; Hm_lpvt_f8d0a8c400404989e195270b0bbf060a=1554086976; Hm_lvt_b393d153aeb26b46e9431fabaf0f6190=1554101878; Hm_lpvt_b393d153aeb26b46e9431fabaf0f6190=1554102340; monitor_count=97',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'connection' => 'keep-alive',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\Index->welcome[ D:\��Ϸ��̨\GameOC\application\admin\controller\Index.php ]
+[ info ] [ VIEW ] D:\��Ϸ��̨\GameOC/application/admin\view\index\welcome.html [ array (
+  0 => 'menu',
+) ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-01T15:20:49+08:00 ] 0.0.0.0 GET localhost:802/admin/user/userlist.html
+[运行时间：0.040000s] [吞吐率：25.00req/s] [内存消耗：3,086.37kb] [文件加载：47]
+[ info ] [ LANG ] D:\��Ϸ��̨\GameOC\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'user',
+    2 => 'userlist',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'content-type' => '',
+  'content-length' => '0',
+  'x-original-url' => '/admin/user/userlist.html',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+  'referer' => 'http://localhost:802/admin/index/index.html',
+  'host' => 'localhost:802',
+  'cookie' => '__guid=111872281.1026026313116656900.1551749901982.9902; _ga=GA1.1.1755471559.1551749903; RYRCQIPAI=VerifyCodeKey=10&VerifyCodeKey_ETS=2019-03-13+11%3a10%3a21&VS=c886160b0669cce2; Default=RYCacheKey=1&RYCacheKey_ETS=2019-03-23+15%3a53%3a26&VS=96fba6ba9b508118; Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1553049743,1553841005; PHPSESSID=g0dauvih9jerp20dprubu7nno4; Hm_lpvt_f8d0a8c400404989e195270b0bbf060a=1554086976; Hm_lvt_b393d153aeb26b46e9431fabaf0f6190=1554101878; Hm_lpvt_b393d153aeb26b46e9431fabaf0f6190=1554102340; monitor_count=97',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'connection' => 'keep-alive',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ RUN ] app\admin\controller\User->userlist[ D:\��Ϸ��̨\GameOC\application\admin\controller\User.php ]
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] D:\��Ϸ��̨\GameOC/application/admin\view\user\userlist.html [ array (
+  0 => 'users',
+) ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-01T15:24:54+08:00 ] 0.0.0.0 GET localhost:802/admin/auth/index.html
+[运行时间：0.067000s] [吞吐率：14.93req/s] [内存消耗：3,147.89kb] [文件加载：46]
+[ info ] [ LANG ] D:\��Ϸ��̨\GameOC\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'auth',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'content-type' => '',
+  'content-length' => '0',
+  'x-original-url' => '/admin/auth/index.html',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+  'referer' => 'http://localhost:802/admin/index/index.html',
+  'host' => 'localhost:802',
+  'cookie' => '__guid=111872281.1026026313116656900.1551749901982.9902; _ga=GA1.1.1755471559.1551749903; RYRCQIPAI=VerifyCodeKey=10&VerifyCodeKey_ETS=2019-03-13+11%3a10%3a21&VS=c886160b0669cce2; Default=RYCacheKey=1&RYCacheKey_ETS=2019-03-23+15%3a53%3a26&VS=96fba6ba9b508118; Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1553049743,1553841005; PHPSESSID=g0dauvih9jerp20dprubu7nno4; Hm_lpvt_f8d0a8c400404989e195270b0bbf060a=1554086976; Hm_lvt_b393d153aeb26b46e9431fabaf0f6190=1554101878; Hm_lpvt_b393d153aeb26b46e9431fabaf0f6190=1554102340; monitor_count=97',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'connection' => 'keep-alive',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ RUN ] app\admin\controller\auth->index[ D:\��Ϸ��̨\GameOC\application\admin\controller\Auth.php ]
+[ info ] [ VIEW ] D:\��Ϸ��̨\GameOC/application/admin\view\auth\index.html [ array (
+  0 => 'menu',
+  1 => 'auth',
+) ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2019-04-01T16:21:13+08:00 ] 127.0.0.1 GET gameoc.com/
+[运行时间：0.016830s] [吞吐率：59.42req/s] [内存消耗：896.73kb] [文件加载：30]
+[ info ] [ LANG ] C:\Users\Administrator\Desktop\GameOC\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'keep-alive',
+  'host' => 'gameoc.com',
+  'content-length' => '',
+  'content-type' => '',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LOG ] INIT File
