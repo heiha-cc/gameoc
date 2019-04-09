@@ -1,9 +1,10 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"C:\Users\Administrator\Desktop\GameOC/application/admin\view\user\login.html";i:1554263661;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8"/>
 <title>LotusAdmin</title>
-<link rel="stylesheet" type="text/css" href="__css__/style.css" tppabs="css/style.css" />
+<link rel="stylesheet" type="text/css" href="/public/static/css/style.css" tppabs="css/style.css" />
 <meta name="description" content="lotusadmin">
 
 <style>
@@ -17,10 +18,10 @@ canvas{
 	position:absolute;
 }
 </style>
-<script src="__js__/jquery.min.js"></script>
-<script src="__module__/layer/layer.js"></script>
-<script src="__js__/verificationNumbers.js" tppabs="js/verificationNumbers.js"></script>
-<script src="__js__/Particleground.js" tppabs="js/Particleground.js"></script>
+<script src="/public/static/js/jquery.min.js"></script>
+<script src="/public/static/lib/layer/layer.js"></script>
+<script src="/public/static/js/verificationNumbers.js" tppabs="js/verificationNumbers.js"></script>
+<script src="/public/static/js/Particleground.js" tppabs="js/Particleground.js"></script>
  <script src="http://static.geetest.com/static/tools/gt.js"></script>
 
 </head>
@@ -29,7 +30,7 @@ canvas{
 	    $username = 	session('username');
 		if(!empty($username )){  ?>	
 		<script type="text/javascript">
-				window.location.href="{:url('admin/index/index')}";
+				window.location.href="<?php echo url('admin/index/index'); ?>";
 		</script>
 <?php  } ?>
 <dl class="admin_login">
@@ -63,7 +64,7 @@ $(document).ready(function() {
   captchaObj.appendTo("#captcha");
  };
  // 获取验证码
- $.get("{:url('admin/user/geetest_show_verify')}", function(data) {
+ $.get("<?php echo url('admin/user/geetest_show_verify'); ?>", function(data) {
   // 使用initGeetest接口
   // 参数1：配置参数，与创建Geetest实例时接受的参数一致
   // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
@@ -84,7 +85,7 @@ $(document).ready(function() {
  //   geetest_seccode: $('.geetest_seccode').val()
  //  }
  //  // 验证是否通过
- //  $.post("{:url('admin/user/geetest_ajax_check')}", postData, function(data) {
+ //  $.post("<?php echo url('admin/user/geetest_ajax_check'); ?>", postData, function(data) {
  //   if (data==1) {
  //    alert('验证成功');
  //   }else{

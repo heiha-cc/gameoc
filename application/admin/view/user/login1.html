@@ -44,12 +44,11 @@ canvas{
  </dd>
  
  <dd class="val_icon">
-  <!--<div class="checkcode">-->
-    <!--<input type="text" name="code"  id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">-->
-    <!--<canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>-->
-  <!--</div>-->
-  <!--<input type="button" value="更换验证码" class="ver_btn" onClick="validate();">-->
-  <div id="captcha"></div>
+  <div class="checkcode">
+    <input type="text" name="code"  id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">
+    <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
+  </div>
+  <input type="button" value="更换验证码" class="ver_btn" onClick="validate();">
  </dd>
  <dd>
   <button id="bs" onclick="login()" type="button"  value="立即登陆" class="submit_btn"/>立即登陆</button>
@@ -58,47 +57,13 @@ canvas{
 </body>
 <script>
 $(document).ready(function() {
- var handler = function (captchaObj) {
-  // 将验证码加到id为captcha的元素里
-  captchaObj.appendTo("#captcha");
- };
- // 获取验证码
- $.get("{:url('admin/user/geetest_show_verify')}", function(data) {
-  // 使用initGeetest接口
-  // 参数1：配置参数，与创建Geetest实例时接受的参数一致
-  // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
-  initGeetest({
-   gt: data.gt,
-   challenge: data.challenge,
-   product: "float", // 产品形式
-   offline: !data.success
-  }, handler);
- },'json');
- // 检测验证码
- // function check_verify(){
- //  // 组合验证需要用的数据
- //  var test=$('.geetest_challenge').val();
- //  var postData={
- //   geetest_challenge: $('.geetest_challenge').val(),
- //   geetest_validate: $('.geetest_validate').val(),
- //   geetest_seccode: $('.geetest_seccode').val()
- //  }
- //  // 验证是否通过
- //  $.post("{:url('admin/user/geetest_ajax_check')}", postData, function(data) {
- //   if (data==1) {
- //    alert('验证成功');
- //   }else{
- //    alert('验证失败');
- //   }
- //  });
- // }
   //粒子背景特效
   $('body').particleground({
     dotColor: '#5cbdaa',
     lineColor: '#5cbdaa'
   });
   //验证码
-  // createCode();
+  createCode();
   //测试提交，对接程序删除即可
    $(".submit_btn").click(function(){
 	  // location.href="javascrpt:"tpa=http://***index.html;\
@@ -113,14 +78,12 @@ $(document).ready(function() {
 function login(){
 	var username  = $('#username').val();
 	var password  = $('#password').val();
-    var geetest_challenge= $('input[name="geetest_challenge"]').val();
-    var geetest_validate= $('input[name="geetest_validate"]').val();
-    var geetest_seccode= $('input[name="geetest_seccode"]').val();
+	var code_  = $('#J_codetext').val();
 
-	// if(code_==''||code_==null){
-	// 	layer.msg('验证码不能为空', {offset:'t'}  );
-	// 	return;
-	// }
+	if(code_==''||code_==null){
+		layer.msg('验证码不能为空', {offset:'t'}  );
+		return;
+	}
 
 	$.ajax({
 	url: 'login',
@@ -128,11 +91,7 @@ function login(){
 	dataType: 'json',
 		data:{
 			username: username,
-			password:password,
-            geetest_challenge:geetest_challenge,
-            geetest_validate:geetest_validate,
-            geetest_seccode:geetest_seccode,
-
+			password:password
 			},
 	})
 	.done(function(data){
