@@ -9,12 +9,12 @@
             </button>
 
             <div class="layui-input-inline">
-              <input id="username" name="username" value="{$username}"  class="layui-input"  placeholder="请输入登录名搜索">
+              <input id="username" name="username"   class="layui-input"  placeholder="请输入登录名搜索">
             </div>
 
-            <button id="search" class="layui-btn" onclick="searchUser()"><i class="layui-icon layui-icon-search"></i></button>
+            <button id="search" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
             <!-- <button onclick="javascript:location.reload()" class="layui-btn  "><i class="icon iconfont ">&#xe6aa;</i></button> -->
-            <span class="x-right">共有数据:<i class="i_count" id="i_count">{$users->total()}</i>条 <button onclick="javascript:location.reload()" class="layui-btn-default "><i class="layui-icon layui-icon-refresh"></i></button></span>
+            <span class="x-right">共有数据:<i class="i_count">{$users->total()}</i>条 <button onclick="javascript:location.reload()" class="layui-btn-default "><i class="layui-icon layui-icon-refresh"></i></button></span>
 
        </div>
 
@@ -36,7 +36,7 @@
             <th>最后登录IP</th>
             <th>操作</th>
         </thead>
-        <tbody id="thistbody">
+        <tbody>
 
         {volist name="users" id="vo"}
         	<tr>
@@ -67,7 +67,7 @@
       </table>
 
 
-            <div class="layui-box layui-laypage layui-laypage-default" id="thispages">
+            <div class="layui-box layui-laypage layui-laypage-default">
                 {$users->render()}
             </div>
 
@@ -141,58 +141,5 @@
             
             });
         });
-      }
-
-      function searchUser() {
-          var username = $('#username').val();
-          // if (username==''){
-          //     layer.msg('请输入用户名');
-          //     return false;
-          // }
-          window.location.href = "{:url('admin/user/userlist')}"+'?username='+username;
-          // $.ajax({
-          //     url: "{:url('admin/user/userlist')}",
-          //     type: 'get',
-          //     data: {
-          //         username: username,
-          //         //captcha: captcha
-          //     },
-          //     success: function (response) {
-          //         if (response.code === 0) {
-          //             $('#i_count').html(response.count);
-          //             $('#thistbody').html('');
-          //
-          //             console.log(response.data.data[0].id);
-          //             if (response.data.data.length>0) {
-          //                var content='';
-          //                for (var i=0;i<response.data.data.length;i++) {
-          //                    content+="    \t<tr>\n" +
-          //                        "\t            <td>\n" +
-          //                        "\t              <div class=\"layui-form-checkbox\" lay-skin=\"primary\" data-id='2'><i class=\"layui-icon\">&#xe605;</i></div>\n" +
-          //                        "\t            </td>\n" +
-          //                        "\t            <td>"+response.data.data[i].id+"</td>\n" +
-          //                        "\t            <td>"+response.data.data[i].username+"</td>\n" +
-          //                        "              <td>"+response.data.data[i].email+"</td>\n" +
-          //                        "\t            <td>"+response.data.data[i].create_time+"</td>\n" +
-          //                        "\t            <td>"+response.data.data[i].last_login_time+"</td>\n"+
-          //                        "              <td>"+response.data.data[i].last_login_ip+"</td>\n" +
-          //                        "\t            <td>\n" +
-          //                        "\n" +
-          //                        "\t<button class=\"layui-btn layui-btn-xs\" onclick=\"x_admin_show('编辑用户','editUser.html?id='+response.data.data[i].id+',500,410)\">编辑</button>\n" +
-          //                        "\t             \t<button onclick=\"delUser(this,"+response.data.data[i].id+")\" class=\"layui-btn layui-btn-xs layui-btn-danger\">删除</button>\n" +
-          //                        "\t           </td>\n" +
-          //                        "\t        </tr>"
-          //                }
-          //                 $('#thistbody').html(content);
-          //             }
-          //             if (response.pages === null) {
-          //                 $('#thispages').html('');
-          //             } else {
-          //                 $('#thispages').html(response.pages);
-          //             }
-          //
-          //         }
-          //     }
-          // })
       }
     </script>

@@ -65,33 +65,14 @@ class User extends Controller
     public function userlist()
     {
         $where = [];
-        $username = '';
-        //$page = $this->request->get('page') ? $this->request->get('page') : 1;
-        if ($this->request->get('username')) {
-            $where['username'] = ['like', '%'.trim($this->request->get('username')).'%'];
-            $username = $this->request->get('username');
-//            $data = Db::name('User')
-//                ->where($where)
-//                ->order('id asc')
-//                ->paginate(1);
-//            $pages = $data->render();
-//            $count = $data->total();
-//            return json(['code' => 0, 'data' => $data, 'pages' => $pages, 'count'=>$count]);
-        } else {
-
+        if ($this->request->username) {
+            $where['username'] = ['like', '%'.trim($this->request->username).'%'];
         }
         $data = Db::name('User')
             ->where($where)
             ->order('id asc')
-            ->paginate(1, false, [
-                'type'      => 'Layui',
-                'var_page'  => 'page',
-                'query'     => [
-                    'username' => $username
-                ]
-            ]);
+            ->paginate(10);
         $this->assign('users', $data);
-        $this->assign('username',$username);
         return $this->fetch();
     }
     //增加用户

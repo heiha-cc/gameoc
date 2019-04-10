@@ -1,0 +1,172 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:81:"C:\Users\Administrator\Desktop\GameOC/application/admin\view\db_manage\index.html";i:1554106426;s:77:"C:\Users\Administrator\Desktop\GameOC\application\admin\view\public\head.html";i:1554169992;s:77:"C:\Users\Administrator\Desktop\GameOC\application\admin\view\public\foot.html";i:1554106426;}*/ ?>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin-v3.0</title>
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="shortcut icon" href="/public/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/public/static/css/font.css">
+    <link rel="stylesheet" href="/public/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/public/static/css/xadmin.css">
+    <link rel="stylesheet" href="/public/static/css/lotus.css">
+    
+
+</head>
+
+
+    <body>
+    <div class="x-body" >
+
+        <div class="lotus-nav layui-row ">
+            <button class="layui-btn layui-btn-sm many-tables" onclick="">一键备份</button>
+            <button  onclick="lotus_show_full('备份列表','backup_list.html')" class="layui-btn layui-btn-sm layui-btn-normal " onclick="">备份列表</button>
+
+            <span class="x-right" >数据库表数量:<?php echo $tableNum; ?>
+                 <button onclick="javascript:location.reload()" class="layui-btn-default">
+                    <i class="icon iconfont">&#xe6aa;</i>
+                </button>
+            </span>
+        </div>
+
+    <table class="layui-table">
+        <thead>
+          <tr>
+            <th>
+              <div class="header layui-form-checkbox layui-form-checked" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>数据表</th>
+            <th>记录条数</th>
+            <th>占用空间</th>
+            <th>编码</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+         <?php if(empty($list) || (($list instanceof \think\Collection || $list instanceof \think\Paginator ) && $list->isEmpty())): ?>
+                            <tr>
+                                <td class="no-data" align="center" axis="col0" colspan="50">
+                                    <i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+                                </td>
+                            </tr>
+                        <?php else: if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): if( count($list)==0 ) : echo "" ;else: foreach($list as $k=>$vo): ?>
+                            <tr data-id="<?php echo $vo['Name']; ?>">
+                                <td>
+                                      <div data-table-name="<?php echo $vo['Name']; ?>" class="layui-form-checkbox layui-form-checked" lay-skin="primary" data-id='<?php echo $vo['Name']; ?>'><i class="layui-icon">&#xe605;</i></div>
+                                </td>
+                             <!--    <td class="sign">
+                                    <div class="w40 tc"><input type="checkbox" name="tables[]" value="<?php echo $vo['Name']; ?>" checked="checked"></div>
+                                </td> -->
+                                <td >
+                                    <div style="padding-left: 10px;"><?php echo $vo['Name']; ?></div>
+                                </td>
+                                <td>
+                                    <div class="w80 tc"><?php echo $vo['Rows']; ?></div>
+                                </td>
+                                <td>
+                                    <div class="w80 tc"><?php echo format_bytes($vo['Data_length']); ?></div>
+                                </td>
+                                <td>
+                                    <div class="w120 tc"><?php echo $vo['Collation']; ?></div>
+                                </td>
+                                <td>
+                                    <div class="w160 tc"><?php echo $vo['Create_time']; ?></div>
+                                </td>
+                                <td>
+                                    <div class="info w80 tc">
+                                        <button onclick="optimize('<?php echo $vo['Name']; ?>')" class="layui-btn layui-btn-success layui-btn-xs">优化</button>
+                                        <button  onclick="repair('<?php echo $vo['Name']; ?>')" class="layui-btn layui-btn-normal layui-btn-xs">修复</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; endif; else: echo "" ;endif; endif; ?>
+        </tbody>
+      </table>
+	    
+    </div>
+</body>
+<script type="text/javascript" src="/public/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/public/static/js/xadmin.js"></script>
+<script type="text/javascript" src="/public/static/js/jquery.form.js"></script>
+<script src="/public/static/lib/layui/layui.all.js" charset="utf-8"></script>
+<script type="text/javascript" src="/public/static/js/echarts.common.min.js"></script>
+</html>
+<script type="text/javascript">
+    $(function(){
+
+
+
+       $(".many-tables").click(function(event) {
+         //询问框
+        layer.confirm('是否确认备份？', {
+          btn: ['确定','取消'] //按钮
+        }, function(){
+             var data = tableCheck.getData();
+        backup(data);
+        });
+
+       
+       });
+    })
+    //备份数据库
+    function backup(tables){
+        layer.load();
+        $.ajax({
+            url: "<?php echo url('admin/db_manage/backup'); ?>",
+            type: 'post',
+            dataType: 'json',
+            data: {tables: tables},
+        })
+        .done(function(data) {
+            layer.closeAll('loading');
+            if(data.msg!==0){
+                layer.alert(data.msg);
+            }else{
+                layer.msg('备份失败');
+            }
+        })
+        
+    }
+
+
+    function optimize(table_name){
+        layer.load();
+        $.ajax({
+            url: "<?php echo url('admin/db_manage/optimize'); ?>",
+            type: 'post',
+            dataType: 'json',
+            data: {table_name: table_name},
+        })
+        .done(function(data) {
+            layer.closeAll('loading');
+            if(data.msg!==0){
+                layer.alert(data.msg);
+            }else{
+                layer.msg('失败');
+            }
+        }) 
+    }
+
+    function repair(table_name){
+        layer.load();
+        $.ajax({
+            url: "<?php echo url('admin/db_manage/repair'); ?>",
+            type: 'post',
+            dataType: 'json',
+            data: {table_name: table_name},
+        })
+        .done(function(data) {
+            layer.closeAll('loading');
+            if(data.msg!==0){
+                layer.alert(data.msg);
+            }else{
+                layer.msg('失败');
+            }
+        }) 
+    }
+
+
+</script>
