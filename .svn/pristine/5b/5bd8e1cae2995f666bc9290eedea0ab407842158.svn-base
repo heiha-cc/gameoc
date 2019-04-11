@@ -9,7 +9,7 @@ return array (
   'mail_type' => '0',
   'mail_smtp_host' => 'smtp.qq.com',
   'mail_smtp_port' => '465',
-  'mail_smtp_user' => '1000011122333',
+  'mail_smtp_user' => '1000011122',
   'mail_smtp_pass' => 'password',
   'mail_verify_type' => '0',
   'mail_from' => '10000@qq.com',
