@@ -1,0 +1,158 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:80:"C:\Users\Administrator\Desktop\GameOC/application/admin\view\game_cfg\index.html";i:1555034691;s:77:"C:\Users\Administrator\Desktop\GameOC\application\admin\view\public\head.html";i:1554169992;s:77:"C:\Users\Administrator\Desktop\GameOC\application\admin\view\public\foot.html";i:1554106426;}*/ ?>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin-v3.0</title>
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="shortcut icon" href="/public/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/public/static/css/font.css">
+    <link rel="stylesheet" href="/public/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/public/static/css/xadmin.css">
+    <link rel="stylesheet" href="/public/static/css/lotus.css">
+    
+
+</head>
+
+
+<body>
+<div class="x-body">
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <h2>系统配置</h2>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-tab layui-tab-brief" lay-filter="dev_tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" id="bindali">验证码配置</li>
+                    <li>邮箱配置</li>
+                    <li>游戏配置</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <form class="layui-form" action="index" id="mainForm" method="post">
+                            <?php if(is_array($lists) || $lists instanceof \think\Collection || $lists instanceof \think\Paginator): $i = 0; $__LIST__ = $lists;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+
+                            <div class="layui-form-item">
+                                <label for="" class="layui-form-label"><?php echo $vo['title']; ?></label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="<?php echo $vo['name']; ?>" id="<?php echo $vo['name']; ?>" value="<?php echo $vo['value']; ?>" lay-verify="<?php echo $vo['rule']; ?>" placeholder="<?php echo $vo['tip']; ?>" class="layui-input">
+                                </div>
+                            </div>
+                            <?php endforeach; endif; else: echo "" ;endif; ?>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="withdraw-apply">修 改</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="layui-tab-item">
+                        <form class="layui-form" action="editEmail" id="mainForm2" method="post">
+                            <?php if(is_array($lists2) || $lists2 instanceof \think\Collection || $lists2 instanceof \think\Paginator): $i = 0; $__LIST__ = $lists2;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo2): $mod = ($i % 2 );++$i;?>
+
+                            <div class="layui-form-item">
+                                <label for="" class="layui-form-label"><?php echo $vo2['title']; ?></label>
+                                <div class="layui-input-block">
+                                    <?php switch($vo2['type']): case "string": ?>
+                                    <input type="text" name="<?php echo $vo2['name']; ?>" id="<?php echo $vo2['name']; ?>" value="<?php echo $vo2['value']; ?>" lay-verify="<?php echo $vo2['rule']; ?>" placeholder="<?php echo $vo2['tip']; ?>" class="layui-input">
+                                    <?php break; case "select": ?>
+                                    <select class="layui-form-select" name="<?php echo $vo2['name']; ?>" id="<?php echo $vo2['name']; ?>">
+                                        <?php if(is_array($vo2['content']) || $vo2['content'] instanceof \think\Collection || $vo2['content'] instanceof \think\Paginator): if( count($vo2['content'])==0 ) : echo "" ;else: foreach($vo2['content'] as $k=>$v): ?>
+                                        <option value="<?php echo $k; ?>" <?php if(in_array(($k), is_array($vo2['value'])?$vo2['value']:explode(',',$vo2['value']))): ?>selected<?php endif; ?>><?php echo $v; ?></option>
+                                        <?php endforeach; endif; else: echo "" ;endif; ?>
+                                    </select>
+                                    <?php break; case "array": ?>
+                                    <dl class="fieldlist" data-name="row[<?php echo $item['name']; ?>]">
+                                        <dd>
+                                            <ins><?php echo __('Array key'); ?></ins>
+                                            <ins><?php echo __('Array value'); ?></ins>
+                                        </dd>
+                                        <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i> <?php echo __('Append'); ?></a></dd>
+                                        <textarea name="row[<?php echo $item['name']; ?>]" class="form-control hide" cols="30" rows="5"><?php echo $item['value']; ?></textarea>
+                                    </dl>
+                                    <?php break; endswitch; ?>
+                                </div>
+                            </div>
+                            <?php endforeach; endif; else: echo "" ;endif; ?>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="withdraw-apply">修 改</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <form class="layui-form" action="editGame" id="mainForm3" method="post">
+                            <?php if(is_array($lists3) || $lists3 instanceof \think\Collection || $lists3 instanceof \think\Paginator): $i = 0; $__LIST__ = $lists3;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+
+                            <div class="layui-form-item">
+                                <label for="" class="layui-form-label"><?php echo $vo['title']; ?></label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="<?php echo $vo['name']; ?>" id="<?php echo $vo['name']; ?>" value="<?php echo $vo['value']; ?>" lay-verify="<?php echo $vo['rule']; ?>" placeholder="<?php echo $vo['tip']; ?>" class="layui-input">
+                                </div>
+                            </div>
+                            <?php endforeach; endif; else: echo "" ;endif; ?>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="withdraw-apply">修 改</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="/public/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/public/static/js/xadmin.js"></script>
+<script type="text/javascript" src="/public/static/js/jquery.form.js"></script>
+<script src="/public/static/lib/layui/layui.all.js" charset="utf-8"></script>
+<script type="text/javascript" src="/public/static/js/echarts.common.min.js"></script>
+</html>
+<script>
+    $(document).ready(function(){
+        var options = {
+            type:'post',           //post提交
+            //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+            dataType:"json",        //json格式
+            data:{},    //如果需要提交附加参数，视情况添加
+            clearForm: false,        //成功提交后，清除所有表单元素的值
+            resetForm: false,        //成功提交后，重置所有表单元素的值
+            cache:false,
+            async:false,          //同步返回
+            success:function(data){
+                if(data.code==0){
+                    layer.msg(data.msg);
+                }else{
+                    layer.msg(data.msg,{icon:1,time:500},function(){
+                        //window.location.reload();
+                    });
+                }
+                //服务器端返回处理逻辑
+            },
+            error:function(XmlHttpRequest,textStatus,errorThrown){
+                layer.msg('操作失败:服务器处理失败');
+            }
+        };
+        // bind form using 'ajaxForm'
+        $('#mainForm').ajaxForm(options).submit(function(data){
+            //无逻辑
+        });
+        $('#mainForm2').ajaxForm(options).submit(function(data){
+            //无逻辑
+        });
+        $('#mainForm3').ajaxForm(options).submit(function(data){
+            //无逻辑
+        });
+    });
+</script>

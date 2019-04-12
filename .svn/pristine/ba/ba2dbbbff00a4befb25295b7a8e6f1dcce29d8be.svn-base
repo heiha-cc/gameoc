@@ -14,7 +14,7 @@
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <form class="layui-form" action="editCode" id="mainForm" method="post">
+                        <form class="layui-form" action="index" id="mainForm" method="post">
                             {volist name="lists" id="vo"}
 
                             <div class="layui-form-item">

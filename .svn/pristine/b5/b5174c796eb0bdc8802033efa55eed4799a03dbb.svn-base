@@ -1,0 +1,91 @@
+{include file="public/head"}
+<body>
+<div class="x-body">
+
+    <div  class="lotus-nav" >
+        <form class="layui-form" action="{:url('admin/log/index')}" method="get">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">操作人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="username" name="username" value="{$username}" placeholder="请输入操作人账号"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">操作时间</label>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" name="start" id="start" value="{$start}" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" name="end"  id="end" value="{$end}" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <button class="layui-btn" id="search_proxy"  type="submit" data-type="reload">搜索</button>
+<!--                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="layui-card">
+        <div class="layui-card-body" >
+            <table class="layui-table" id="mytable" lay-filter="mytest">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'id'}">ID</th>
+                    <th lay-data="{field:'userid'}">操作人ID</th>
+                    <th lay-data="{field:'username'}">操作人账号</th>
+                    <th lay-data="{field:'action'}">操作方法</th>
+                    <th lay-data="{field:'request'}">操作内容</th>
+                    <th lay-data="{field:'status'}">操作状态</th>
+                    <th lay-data="{field:'logday'}">操作日期</th>
+                    <th lay-data="{field:'recordtime'}">操作时间</th>
+                </thead>
+                <tbody id="thistbody">
+
+                {volist name="lists" id="vo"}
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.userid}</td>
+                    <td>{$vo.username}</td>
+                    <td>{$vo.action}</td>
+                    <td>{$vo.request}</td>
+                    <td>{$vo.status}</td>
+                    <td>{$vo.logday}</td>
+                    <td>{$vo.recordtime}</td>
+                </tr>
+                {/volist}
+
+                </tbody>
+            </table>
+
+
+            <div class="layui-box layui-laypage layui-laypage-default" id="thispages">
+                {$lists->render()}
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+{include file="public/foot"}
+<script>
+
+    layui.use(['laydate','table'], function(){
+        var laydate = layui.laydate;
+        var table = layui.table;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+            ,format:'yyyyMMdd'
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+            ,format:'yyyyMMdd'
+        });
+        //table.init('mytest');//此处可渲染
+    });
+</script>
