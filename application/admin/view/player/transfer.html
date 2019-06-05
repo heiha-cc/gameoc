@@ -1,0 +1,125 @@
+{extend name="common/base" /}
+
+{block name="title"}向玩家转账{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-header layuiadmin-card-header-auto">
+        <form class="layui-form" lay-filter="component-form-group">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">玩家ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="userid" name="userid" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期</label>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">转账类型</label>
+                    <div class="layui-input-inline">
+                        <select name="condition" id="condition">
+                            <option value="-1" selected>全部</option>
+                            <option value="1">测试专用赠送</option>
+                            <option value="2">充值手工补发</option>
+                            <option value="3">支付驳回</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <a class="layui-btn" id="search" data-type="reload">搜索</a>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-card-body">
+        <button style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('向玩家转账','addTransfer')">
+            <i class="layui-icon layui-icon-add-circle"></i>
+        </button>
+        <div id="alllist">
+            <table id="proxylist" lay-filter="proxylist"></table>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        var init = function() {
+            form.render(null, 'component-form-group');
+            laydate.render({
+                elem: '#LAY-component-form-group-date'
+                ,format:'yyyy-MM-dd'
+                ,max:-1
+                ,btns: ['clear', 'confirm']
+            });
+            renderData();
+            $('#search').on('click', function(e) {
+                e.preventDefault();
+                search();
+            });
+        };
+
+
+        var renderData = function() {
+            var cols = [ //表头
+
+                {field: 'userid', title: '时间', width:150}
+                ,{field: 'userid', title: '玩家ID', width:150}
+                ,{field: 'nickname', title: '转账类型', width:120}
+                , {field: 'percent', title: '金额', width:120}
+                , {field: 'num', title: '支出账户', width:120}
+                , {field: 'totaltax', title: '操作人', width:150}
+                , {field: 'proxyincome', title: '备注'}
+            ];
+
+            table.render({
+                elem: '#proxylist'
+                , url: "{:url('player/index')}" //数据接口
+                , page: true //开启分页
+                , cols: [cols]
+            });
+        };
+
+        //搜索
+        var search = function() {
+            var userid = $.trim($('#userid').val());
+
+            //执行重载
+            table.reload('proxylist', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    'userid':userid
+                }
+            });
+        };
+        init();
+    });
+</script>
+{/block}

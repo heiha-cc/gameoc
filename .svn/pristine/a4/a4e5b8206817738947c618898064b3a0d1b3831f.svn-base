@@ -20,7 +20,8 @@ return array (
     'ddd' => 'erere',
     'test111' => 'dsds ddd',
     'ggg' => 'zfffgf',
-    'this is testuu' => 'dddddd',
+    'this is test' => 'dddddd',
     'aaa' => 'AAA',
+    'tyty' => 'TTRR',
   ),
 );
