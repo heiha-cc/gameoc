@@ -1,19 +1,8 @@
 {extend name="common/base" /}
 
-{block name="title"}超级玩家列表{/block}
+{block name="title"}向玩家转账{/block}
 {block name="css"}{/block}
 {block name="content"}
-
-<div class="layui-card">
-    <div class="layui-card-header">
-        超级玩家总转出
-        <span class="layui-badge layui-bg-blue layuiadmin-badge">转出</span>
-    </div>
-    <div class="layui-card-body layuiadmin-card-list">
-        <p class="layuiadmin-big-font" style="color: red">元</p>
-
-    </div>
-</div>
 
 
 <div class="layui-card">
@@ -27,18 +16,35 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label">日期</label>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">转账类型</label>
+                    <div class="layui-input-inline">
+                        <select name="condition" id="condition">
+                            <option value="-1" selected>全部</option>
+                            <option value="1">测试专用赠送</option>
+                            <option value="2">充值手工补发</option>
+                            <option value="3">支付驳回</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <div class="layui-input-inline">
                         <a class="layui-btn" id="search" data-type="reload">搜索</a>
-                        <a type="reset" class="layui-btn layui-btn-primary">重置</a>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
     <div class="layui-card-body">
-        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('添加超级玩家','addSuper.html', '', 260)">
+        <button style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('向玩家转账','addTransfer')">
             <i class="layui-icon layui-icon-add-circle"></i>
-        </a>
+        </button>
         <div id="alllist">
             <table id="proxylist" lay-filter="proxylist"></table>
         </div>
@@ -82,13 +88,13 @@
         var renderData = function() {
             var cols = [ //表头
 
-                {field: 'userid', title: '超级玩家ID', width:120}
-                ,{field: 'nickname', title: '昵称', width:120}
-                , {field: 'percent', title: '赠送比例', width:120}
-                , {field: 'daytax', title: '总转入', width:150}
-                , {field: 'dayincome', title: '总转出', width:150}
-                , {field: 'proxyincome', title: '账户余额', width:150}
-                , {field: 'proxyincome', title: '操作', width:150}
+                {field: 'userid', title: '时间', width:150}
+                ,{field: 'userid', title: '玩家ID', width:150}
+                ,{field: 'nickname', title: '转账类型', width:120}
+                , {field: 'percent', title: '金额', width:120}
+                , {field: 'num', title: '支出账户', width:120}
+                , {field: 'totaltax', title: '操作人', width:150}
+                , {field: 'proxyincome', title: '备注'}
             ];
 
             table.render({

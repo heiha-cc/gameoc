@@ -116,7 +116,7 @@ class User extends Controller
 
 
                 $logData = [
-                    'userid'     => session('userid'),
+                    'userid'     => session('user_id'),
                     'username'   => session('username'),
                     'action'     => __METHOD__,
                     'request'    => json_encode($post),
@@ -170,7 +170,7 @@ class User extends Controller
                         ->update(['group_id' => $group_id]);
 
                     $logData = [
-                        'userid'     => session('userid'),
+                        'userid'     => session('user_id'),
                         'username'   => session('username'),
                         'action'     => __METHOD__,
                         'request'    => json_encode($post),
@@ -187,7 +187,7 @@ class User extends Controller
                     $this->error($validate->getError());
                 } else {
                     $logData = [
-                        'userid'     => session('userid'),
+                        'userid'     => session('user_id'),
                         'username'   => session('username'),
                         'action'     => __METHOD__,
                         'request'    => json_encode($post),
@@ -238,7 +238,7 @@ class User extends Controller
                     ->where('id', $id)
                     ->delete();
                 $logData = [
-                    'userid'     => session('userid'),
+                    'userid'     => session('user_id'),
                     'username'   => session('username'),
                     'action'     => __METHOD__,
                     'request'    => json_encode($this->request->post()),

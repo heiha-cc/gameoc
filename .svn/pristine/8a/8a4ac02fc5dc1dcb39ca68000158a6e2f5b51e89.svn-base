@@ -1,0 +1,337 @@
+{extend name="common/base" /}
+
+{block name="title"}房间总览{/block}
+{block name="css"}
+<link rel="stylesheet" href="__static__/css/xadmin.css">
+<style>
+    .x-admin-backlog-body p cite {
+        font-size:25px;
+
+    }
+</style>
+{/block}
+{block name="content"}
+
+<div class ="layui-row layui-col-space20">
+
+<div class="layui-col-md3">
+    <div class="layui-card">
+        <div class="layui-card-header">待办事项</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                <div carousel-item="">
+                    <ul class="layui-row layui-col-space10 layui-this">
+                        <li class="layui-col-xs12">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>历史总战绩</h3>
+                                <p>
+                                    <cite>100000.77</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>当前战绩</h3>
+                                <p>
+                                    <cite>1200.55</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>在线人数</h3>
+                                <p>
+                                    <cite>999</cite></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-col-md3">
+    <div class="layui-card">
+        <div class="layui-card-header">待办事项</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                <div carousel-item="">
+                    <ul class="layui-row layui-col-space10 layui-this">
+                        <li class="layui-col-xs12">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>历史总战绩</h3>
+                                <p>
+                                    <cite>100000.77</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>当前战绩</h3>
+                                <p>
+                                    <cite>1200.55</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>在线人数</h3>
+                                <p>
+                                    <cite>999</cite></p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-col-md3">
+    <div class="layui-card">
+        <div class="layui-card-header">待办事项</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                <div carousel-item="">
+                    <ul class="layui-row layui-col-space10 layui-this">
+                        <li class="layui-col-xs12">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>历史总战绩</h3>
+                                <p>
+                                    <cite>100000.77</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>当前战绩</h3>
+                                <p>
+                                    <cite>1200.55</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>在线人数</h3>
+                                <p>
+                                    <cite>999</cite></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-col-md3">
+    <div class="layui-card">
+        <div class="layui-card-header">待办事项</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                <div carousel-item="">
+                    <ul class="layui-row layui-col-space10 layui-this">
+                        <li class="layui-col-xs12">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>历史总战绩</h3>
+                                <p>
+                                    <cite>100000.77</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>当前战绩</h3>
+                                <p>
+                                    <cite>1200.55</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>在线人数</h3>
+                                <p>
+                                    <cite>999</cite></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">待办事项</div>
+            <div class="layui-card-body">
+                <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                    <div carousel-item="">
+                        <ul class="layui-row layui-col-space10 layui-this">
+                            <li class="layui-col-xs12">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>历史总战绩</h3>
+                                    <p>
+                                        <cite>100000.77</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs6">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>当前战绩</h3>
+                                    <p>
+                                        <cite>1200.55</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs6">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>在线人数</h3>
+                                    <p>
+                                        <cite>999</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">待办事项</div>
+            <div class="layui-card-body">
+                <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                    <div carousel-item="">
+                        <ul class="layui-row layui-col-space10 layui-this">
+                            <li class="layui-col-xs12">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>历史总战绩</h3>
+                                    <p>
+                                        <cite>100000.77</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs6">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>当前战绩</h3>
+                                    <p>
+                                        <cite>1200.55</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs6">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>在线人数</h3>
+                                    <p>
+                                        <cite>999</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md3">
+        <div class="layui-card">
+            <div class="layui-card-header">待办事项7</div>
+            <div class="layui-card-body">
+                <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
+                    <div carousel-item="">
+                        <ul class="layui-row layui-col-space10 layui-this">
+                            <li class="layui-col-xs12">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>历史总战绩</h3>
+                                    <p>
+                                        <cite>100000.77</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs6">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>当前战绩</h3>
+                                    <p>
+                                        <cite>1200.55</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs6">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>在线人数</h3>
+                                    <p>
+                                        <cite>999</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , table = layui.table
+            , $ = layui.$
+            , form = layui.form;
+
+        var init = function () {
+            form.render(null, 'component-form-group');
+            laydate.render({
+                elem: '#LAY-component-form-group-date'
+                , format: 'yyyy-MM-dd'
+                , max: -1
+                , btns: ['clear', 'confirm']
+            });
+            renderData();
+            $('#search').on('click', function (e) {
+                e.preventDefault();
+                search();
+            });
+        };
+
+
+        var renderData = function () {
+            var cols = [ //表头
+
+                {field: 'userid', title: '玩家ID', width: 120}
+                , {field: 'nickname', title: '昵称', width: 120}
+                , {field: 'percent', title: '银行余额', width: 120}
+                , {field: 'num', title: '携带余额', width: 120}
+                , {field: 'totaltax', title: '游戏房间', width: 150}
+                , {field: 'daytax', title: '总充值', width: 150}
+                , {field: 'dayincome', title: '总转出', width: 150}
+                , {field: 'proxyincome', title: '盈利', width: 150}
+                , {field: 'proxyincome', title: '个人胜率', width: 100}
+                , {field: 'proxyincome', title: '控制时长', width: 150}
+                , {field: 'proxyincome', title: '不控间隔', width: 150}
+                , {field: 'proxyincome', title: '总流水', width: 150}
+                , {field: 'proxyincome', title: '活跃度', width: 150}
+                , {field: 'proxyincome', title: '备注', width: 150}
+                , {field: 'proxyincome', title: '操作', width: 150}
+            ];
+
+            table.render({
+                elem: '#proxylist'
+                , url: "{:url('player/index')}" //数据接口
+                , page: true //开启分页
+                , cols: [cols]
+            });
+        };
+
+        //搜索
+        var search = function () {
+            var userid = $.trim($('#userid').val());
+            var startTime = $.trim($('#LAY-component-form-group-date').val());
+
+            //执行重载
+            table.reload('proxylist', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    'userid': userid,
+                    'start': startTime
+                }
+            });
+        };
+        init();
+    });
+</script>
+{/block}

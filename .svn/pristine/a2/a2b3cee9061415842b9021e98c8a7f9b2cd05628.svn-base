@@ -4,6 +4,8 @@ namespace app\admin\controller;
 
 
 
+use think\Cache;
+
 class Player extends Main
 {
     /**

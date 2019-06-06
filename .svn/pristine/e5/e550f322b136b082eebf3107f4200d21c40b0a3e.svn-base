@@ -3,58 +3,13 @@
 namespace app\admin\controller;
 
 
-
-class Player extends Main
+/**
+ * 支付通道
+ */
+class Payment extends Main
 {
     /**
-     * 在线玩家
-     */
-    public function online()
-    {
-        //halt(phpinfo());
-        if ($this->request->isAjax()) {
-
-        }
-//        halt(Cache::store('redis')->get('my'));
-        return $this->fetch();
-    }
-
-    /**
-     * 所有玩家
-     */
-    public function all()
-    {
-        if ($this->request->isAjax()) {
-
-        }
-        return $this->fetch();
-    }
-
-    /**
-     * 超级玩家
-     */
-    public function super()
-    {
-        if ($this->request->isAjax()) {
-
-        }
-        return $this->fetch();
-    }
-
-    /**
-     * 新增超级玩家
-     */
-    public function addSuper()
-    {
-        if ($this->request->isAjax()) {
-
-        }
-        return $this->fetch();
-    }
-
-
-    /**
-     * 向玩家转账
+     * 线下转账
      */
     public function transfer()
     {
@@ -65,9 +20,9 @@ class Player extends Main
     }
 
     /**
-     * 向玩家转账
+     * 支付通道
      */
-    public function addTransfer()
+    public function channel()
     {
         if ($this->request->isAjax()) {
 
@@ -76,10 +31,58 @@ class Player extends Main
     }
 
     /**
-     * 设置玩家胜率
+     * 新增支付通道
      */
-    public function setPlayerRate()
+    public function addChannel()
     {
+        if ($this->request->isAjax()) {
+
+        }
         return $this->fetch();
     }
+
+    /**
+     * 支付金额
+     */
+    public function amount()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 新增支付金额
+     */
+    public function addAmount()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 通道金额配置
+     */
+    public function payment()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 新增通道金额
+     */
+    public function addPayment()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
 }

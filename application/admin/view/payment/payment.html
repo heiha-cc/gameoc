@@ -1,19 +1,8 @@
 {extend name="common/base" /}
 
-{block name="title"}超级玩家列表{/block}
+{block name="title"}通道金额配置{/block}
 {block name="css"}{/block}
 {block name="content"}
-
-<div class="layui-card">
-    <div class="layui-card-header">
-        超级玩家总转出
-        <span class="layui-badge layui-bg-blue layuiadmin-badge">转出</span>
-    </div>
-    <div class="layui-card-body layuiadmin-card-list">
-        <p class="layuiadmin-big-font" style="color: red">元</p>
-
-    </div>
-</div>
 
 
 <div class="layui-card">
@@ -21,7 +10,17 @@
         <form class="layui-form" lay-filter="component-form-group">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">玩家ID</label>
+                    <label class="layui-form-label">支付类型：</label>
+                    <div class="layui-input-inline">
+                        <select name="condition" id="condition">
+                            <option value="1">支付宝</option>
+                            <option value="2">微信</option>
+                            <option value="3">银联</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">支付通道</label>
                     <div class="layui-input-inline">
                         <input type="text" id="userid" name="userid" autocomplete="off" class="layui-input">
                     </div>
@@ -36,7 +35,7 @@
         </form>
     </div>
     <div class="layui-card-body">
-        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('添加超级玩家','addSuper.html', '', 260)">
+        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('新增支付金额','addPayment.html', '', 250)">
             <i class="layui-icon layui-icon-add-circle"></i>
         </a>
         <div id="alllist">
@@ -82,13 +81,10 @@
         var renderData = function() {
             var cols = [ //表头
 
-                {field: 'userid', title: '超级玩家ID', width:120}
-                ,{field: 'nickname', title: '昵称', width:120}
-                , {field: 'percent', title: '赠送比例', width:120}
-                , {field: 'daytax', title: '总转入', width:150}
-                , {field: 'dayincome', title: '总转出', width:150}
-                , {field: 'proxyincome', title: '账户余额', width:150}
-                , {field: 'proxyincome', title: '操作', width:150}
+                {field: 'userid', title: 'ID', width:150}
+                ,{field: 'userid', title: '支付类型', width:150}
+                ,{field: 'userid', title: '金额', width:150}
+                ,{field: 'userid', title: '支付通道', width:150}
             ];
 
             table.render({

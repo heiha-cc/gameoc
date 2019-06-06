@@ -36,7 +36,7 @@
         </form>
     </div>
     <div class="layui-card-body">
-        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('添加超级玩家','addSuper.html', '', 260)">
+        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('添加超级玩家','addSuper.html', '', 270)">
             <i class="layui-icon layui-icon-add-circle"></i>
         </a>
         <div id="alllist">

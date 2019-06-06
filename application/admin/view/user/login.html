@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>LotusAdmin</title>
+<title>Admin管理后台</title>
 <link rel="stylesheet" type="text/css" href="__css__/style.css" tppabs="css/style.css" />
-<meta name="description" content="lotusadmin">
-
+<!--<meta name="description" content="lotusadmin">-->
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <style>
 body{
 	height:100%;
@@ -21,7 +21,6 @@ canvas{
 <script src="__module__/layer/layer.js"></script>
 <script src="__js__/verificationNumbers.js" tppabs="js/verificationNumbers.js"></script>
 <script src="__js__/Particleground.js" tppabs="js/Particleground.js"></script>
- <script src="http://static.geetest.com/static/tools/gt.js"></script>
 
 </head>
 <body>
@@ -40,17 +39,18 @@ canvas{
   <input type="text" name="username" id='username'  value="admin" placeholder="账号" class="login_txtbx"/>
  </dd>
  <dd class="pwd_icon">
-  <input type="password" name="password"  id="password" value="123456"  placeholder="密码" class="login_txtbx"/>
+  <input type="password" name="password"  id="password" value=""  placeholder="密码" class="login_txtbx"/>
  </dd>
- 
- <!--<dd class="val_icon">-->
-  <!--&lt;!&ndash;<div class="checkcode">&ndash;&gt;-->
-    <!--&lt;!&ndash;<input type="text" name="code"  id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">&ndash;&gt;-->
-    <!--&lt;!&ndash;<canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-  <!--&lt;!&ndash;<input type="button" value="更换验证码" class="ver_btn" onClick="validate();">&ndash;&gt;-->
-  <!--<div id="captcha"></div>-->
- <!--</dd>-->
+ <dd class="mobile_icon">
+  <input type="text" name="mobile"  id="mobile" value=""  placeholder="手机号" class="login_txtbx"/>
+ </dd>
+ <dd class="val_icon">
+  <div class="checkcode">
+    <input type="text" name="code"  id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">
+    <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
+  </div>
+  <input type="button" value="更换验证码" class="ver_btn" onClick="validate();">
+ </dd>
  <dd>
   <button id="bs" onclick="login()" type="button"  value="立即登陆" class="submit_btn"/>立即登陆</button>
  </dd>
@@ -58,46 +58,44 @@ canvas{
 </body>
 <script>
 $(document).ready(function() {
-// var handler = function (captchaObj) {
-//  // 将验证码加到id为captcha的元素里
-//  captchaObj.appendTo("#captcha");
-// };
-// // 获取验证码
-// $.get("{:url('admin/user/geetest_show_verify')}"+"?v="+(new Date()).getTime(), function(data) {
-//  // 使用initGeetest接口
-//  // 参数1：配置参数，与创建Geetest实例时接受的参数一致
-//  // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
-//  initGeetest({
-//   gt: data.gt,
-//   challenge: data.challenge,
-//   product: "float", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
-//   offline: !data.success
-//  }, handler);
-// },'json');
-
   //粒子背景特效
   $('body').particleground({
     dotColor: '#5cbdaa',
     lineColor: '#5cbdaa'
   });
-
+  //验证码
+  createCode();
+  //测试提交，对接程序删除即可
+   $(".submit_btn").click(function(){
+	});
 });
 
 
 function login(){
 	var username  = $('#username').val();
 	var password  = $('#password').val();
+	var mobile  = $('#mobile').val();
+	var code_  = $('#J_codetext').val();
 
-    var validate = validate();
-    console.log(validate);
-    if (!validate) {
+
+	if (username == '' || password=='') {
+        layer.msg('账号密码不能为空', {offset:'t'}  );
+        return;
+    }
+    if (mobile == '') {
+        layer.msg('手机号不能为空', {offset:'t'}  );
+        return;
+    }
+    if(code_==''||code_==null){
+        layer.msg('验证码不能为空', {offset:'t'}  );
+        return;
+    }
+    var vali = validate();
+    if (!vali) {
         layer.msg('验证码错误，请重新输入',{});
         createCode();
         return false;
     }
-//    var geetest_challenge= $('input[name="geetest_challenge"]').val();
-//    var geetest_validate= $('input[name="geetest_validate"]').val();
-//    var geetest_seccode= $('input[name="geetest_seccode"]').val();
 
 	$.ajax({
 	url: 'login',
@@ -106,12 +104,11 @@ function login(){
 		data:{
 			username: username,
 			password:password,
-//            geetest_challenge:geetest_challenge,
-//            geetest_validate:geetest_validate,
-//            geetest_seccode:geetest_seccode,
+			mobile:mobile
 			},
 	})
 	.done(function(data){
+		console.log(data);
 		if(data.code==0){
 			layer.msg(data.msg,{});
 		}else{

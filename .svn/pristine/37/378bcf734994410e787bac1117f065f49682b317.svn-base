@@ -1,0 +1,49 @@
+{extend name="common/base" /}
+
+{block name="title"}设置玩家胜率{/block}
+{block name="css"}
+{/block}
+{block name="content"}
+
+<form class="layui-form" action="{:url('proxy/addProxy')}" method="post" id="addProxy" >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">玩家ID：</label>
+        <div class="layui-input-block">
+            <input type="password" id="passwordForReg" name='passwordForReg' lay-verify="required" placeholder="请输入玩家ID" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">昵称：</label>
+        <div class="layui-input-block">
+            <input type="text" id="nickNameForReg" name="nickNameForReg" lay-verify="required" placeholder="请输入赠送比例" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">玩家胜率：</label>
+        <div class="layui-input-block">
+            <input type="text" id="nickNameForReg" name="nickNameForReg" lay-verify="required" placeholder="请输入玩家胜率" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button style="margin-left: 20%" type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="addit" id="addit" >确认</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置</button>
+        </div>
+    </div>
+</form>
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+    });
+</script>
+{/block}

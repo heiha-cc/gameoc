@@ -1,0 +1,49 @@
+{extend name="common/base" /}
+
+{block name="title"}通道金额配置{/block}
+{block name="css"}
+{/block}
+{block name="content"}
+
+<form class="layui-form" action="{:url('proxy/addProxy')}" method="post" id="addProxy" >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">金额：</label>
+        <div class="layui-input-block">
+            <input type="password" id="passwordForReg" name='passwordForReg' lay-verify="required" placeholder="请输入金额" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">通道：</label>
+        <div class="layui-input-block">
+            <input type="password" id="passwordForReg" name='passwordForReg' lay-verify="required" placeholder="请输入金额" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <a style="margin-left: 20%" type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="addit" id="addit" >新增</a>
+            <a type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置</a>
+        </div>
+    </div>
+</form>
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+    });
+</script>
+{/block}
