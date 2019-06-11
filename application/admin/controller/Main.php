@@ -69,4 +69,25 @@ class Main extends Controller
 
         $this->assign('menu', $menu);
     }
+
+
+    /**
+     * Notes: 接口数据返回
+     * @param $code
+     * @param array $data
+     * @param string $msg
+     * @param int $count
+     * @param array $other
+     * @return mixed
+     */
+    public function apiReturn($code, $data = [], $msg = '', $count = 0, $other = [])
+    {
+        return json([
+            'code' => $code,
+            'data' => $data,
+            'msg'  => $msg,
+            'count' => $count,
+            'other' => $other
+        ]);
+    }
 }

@@ -28,15 +28,8 @@ class auth extends Main
             }else{
 
                 Db::name('auth_rule')->insert($post);
-                GameLog::log([
-                    'userid' => session('userid'),
-                    'username' => session('username'),
-                    'action' => __METHOD__,
-                    'request' => json_encode($post,JSON_UNESCAPED_UNICODE),
-                    'logday'  => date('Ymd'),
-                    'recordtime' => date('Y-m-d H:i:s'),
-                    'status' => 1
-                ]);
+                //记录log
+                GameLog::logData(__METHOD__, $post, 1);
                 $this->success('success');
             }
         }else{
@@ -57,19 +50,9 @@ class auth extends Main
             if($res!==true){
                 $this->error($validate->getError());
             }else{
-                $logData = [
-                    'userid' => session('userid'),
-                    'username' => session('username'),
-                    'action' => __METHOD__,
-                    'request' => json_encode($post,JSON_UNESCAPED_UNICODE),
-                    'logday'  => date('Ymd'),
-                    'recordtime' => date('Y-m-d H:i:s'),
-                    'status' => 1
-                ];
-
                 unset($post['id']);
                 Db::name('auth_rule')->where('id',$id)->update($post);
-                GameLog::log($logData);
+                GameLog::logData(__METHOD__, $post);
                 $this->success('success');
             }
         }else{
@@ -103,17 +86,8 @@ class auth extends Main
              Db::name('auth_rule')
                 ->delete($id);
 
-            $logData = [
-                'userid' => session('userid'),
-                'username' => session('username'),
-                'action' => __METHOD__,
-                'request' => json_encode($this->request->post(),JSON_UNESCAPED_UNICODE),
-                'logday'  => date('Ymd'),
-                'recordtime' => date('Y-m-d H:i:s'),
-                'status' => 1
-            ];
-            GameLog::log($logData);
-                $this->success('success');
+            GameLog::logData(__METHOD__, $this->request->post());
+            $this->success('success');
         }
     }
     /*角色页面展示*/
@@ -144,16 +118,8 @@ class auth extends Main
             if(empty($res)){
                  Db::name('auth_group')
                 ->insert(['title'=>$auth_group,'status'=>0]);
-                $logData = [
-                    'userid' => session('userid'),
-                    'username' => session('username'),
-                    'action' => __METHOD__,
-                    'request' => json_encode(['title'=>$auth_group,'status'=>0],JSON_UNESCAPED_UNICODE),
-                    'logday'  => date('Ymd'),
-                    'recordtime' => date('Y-m-d H:i:s'),
-                    'status' => 1
-                ];
-                GameLog::log($logData);
+                GameLog::logData(__METHOD__, ['title'=>$auth_group,'status'=>0]);
+
                 $this->success('添加成功');
             }else{
                 $this->error('系统中已经存在该用户名');
@@ -172,17 +138,8 @@ class auth extends Main
             Db::name('auth_group')
                 ->where('id',$data['id'])
                 ->update(['status'=>1]);
-            $logData = [
-                'userid' => session('userid'),
-                'username' => session('username'),
-                'action' => __METHOD__,
-                'request' => json_encode(['id'=>$data['id'],'status'=>1],JSON_UNESCAPED_UNICODE),
-                'logday'  => date('Ymd'),
-                'recordtime' => date('Y-m-d H:i:s'),
-                'status' => 1
-            ];
-            GameLog::log($logData);
-                $this->success('启用成功');
+            GameLog::logData(__METHOD__, ['id'=>$data['id'],'status'=>1]);
+            $this->success('启用成功');
         }else{
              Db::name('auth_group')
                 ->where('id',$data['id'])
@@ -197,7 +154,7 @@ class auth extends Main
                 'status' => 1
             ];
             GameLog::log($logData);
-                $this->success('禁用成功');
+            $this->success('禁用成功');
         }
     }
     /**
@@ -225,6 +182,7 @@ class auth extends Main
             ];
             GameLog::log($logData);
             if (Db::name('auth_group')->where('id',$post['id'])->update($group_data) !== false) {
+
                 $logData['status'] = 1;
                 GameLog::log($logData);
                 $this->success('授权成功');

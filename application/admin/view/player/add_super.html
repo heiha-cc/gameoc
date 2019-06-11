@@ -5,18 +5,18 @@
 {/block}
 {block name="content"}
 
-<form class="layui-form" action="{:url('proxy/addProxy')}" method="post" id="addProxy" >
+<form class="layui-form" action="{:url('player/addSuper')}" method="post" id="addProxy" >
 
     <div class="layui-form-item">
         <label class="layui-form-label">超级玩家ID：</label>
         <div class="layui-input-block">
-            <input type="password" id="passwordForReg" name='passwordForReg' lay-verify="required" placeholder="请输入超级玩家ID" autocomplete="off" class="layui-input">
+            <input type="text" id="roleid" name='roleid' lay-verify="required" placeholder="请输入超级玩家ID" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">赠送比例：</label>
         <div class="layui-input-block">
-            <input type="text" id="nickNameForReg" name="nickNameForReg" lay-verify="required" placeholder="请输入赠送比例" autocomplete="off" class="layui-input">
+            <input type="text" id="rate" name="rate" lay-verify="required" placeholder="请输入赠送比例" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -45,58 +45,35 @@
             ,table = layui.table
             ,$ = layui.$
             ,form = layui.form;
+        form.on('submit(addit)', function(data) {
+            submitForm(data);
+            return false;
+        });
 
-        var init = function() {
-            form.render(null, 'component-form-group');
-            laydate.render({
-                elem: '#LAY-component-form-group-date'
-                ,format:'yyyy-MM-dd'
-                ,max:-1
-                ,btns: ['clear', 'confirm']
-            });
-            renderData();
-            $('#search').on('click', function(e) {
-                e.preventDefault();
-                search();
-            });
-        };
+        var submitForm = function(data) {
 
-
-        var renderData = function() {
-            var cols = [ //表头
-
-                {field: 'userid', title: '超级玩家ID', width:120}
-                ,{field: 'nickname', title: '昵称', width:120}
-                , {field: 'percent', title: '赠送比例', width:120}
-                , {field: 'daytax', title: '总转入', width:150}
-                , {field: 'dayincome', title: '总转出', width:150}
-                , {field: 'proxyincome', title: '账户余额', width:150}
-                , {field: 'proxyincome', title: '操作', width:150}
-            ];
-
-            table.render({
-                elem: '#proxylist'
-                , url: "{:url('player/index')}" //数据接口
-                , page: true //开启分页
-                , cols: [cols]
-            });
-        };
-
-        //搜索
-        var search = function() {
-            var userid = $.trim($('#userid').val());
-
-            //执行重载
-            table.reload('proxylist', {
-                page: {
-                    curr: 1 //重新从第 1 页开始
+            var roleid = $.trim(data.field.roleid)
+                ,rate = $.trim(data.field.rate);
+            $.ajax({
+                type:'post',
+                url:data.form.action,
+                data:{
+                    'roleid' : roleid,
+                    'rate' : rate
                 },
-                where: {
-                    'userid':userid
+                dataType:'json',
+                success: function(res) {
+                    if (res.code === 0) {
+                        layer.msg(res.msg,{icon:1,time:1000}, function () {
+                            x_admin_close();
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.msg(res.msg, {icon:2});
+                    }
                 }
             });
         };
-        init();
     });
 </script>
 {/block}

@@ -108,8 +108,7 @@ class User extends Controller
                 $post['salt']          = $salt;
                 $post['last_login_ip'] = '0.0.0.0';
                 $post['create_time']   = date('Y-m-d h:i:s', time());
-                $db                    = Db::name('user')
-                    ->insert($post);
+                $db                    = Db::name('user')->insert($post);
                 $userId                = Db::name('user')->getLastInsID();
                 Db::name('auth_group_access')
                     ->insert(['uid' => $userId, 'group_id' => $group_id]);

@@ -80,9 +80,10 @@ class Api {
         $sign = $this->generateSign($params);
         $params['sign'] = $sign;
         //请求地址拼接
-        $sendurl = config('apiurl').$controller.'/'.$method;
+        $sendurl = config('apiurl').$controller.DIRECTORY_SEPARATOR.$method;
         $res = $this->curlPost($sendurl, $params);
-        halt($res);
+        //halt($res);
+        $res = json_decode($res, true);
         return $res;
     }
 }
