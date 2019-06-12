@@ -2,27 +2,22 @@
 
 namespace app\common;
 
-class Api
-{
+class Api {
     //存放实例
     private static $_instance = null;
 
     //私有化构造方法、
-    private function __construct()
-    {
+    private function __construct(){
 
     }
-
     //私有化克隆方法
-    private function __clone()
-    {
+    private function __clone(){
 
     }
 
     //公有化获取实例方法
-    public static function getInstance()
-    {
-        if (!(self::$_instance instanceof Api)) {
+    public static function getInstance(){
+        if (!(self::$_instance instanceof Api)){
             self::$_instance = new Api();
         }
         return self::$_instance;
@@ -44,7 +39,7 @@ class Api
                 $str .= $k . '=' . $v . '&';
             }
         }
-        $str = rtrim($str, '&');
+        $str  = rtrim($str, '&');
         //拼接key, 并用md5加密
         $sign = md5($str . '&key=' . config('apikey'));
         return $sign;
@@ -58,18 +53,16 @@ class Api
      */
     public function curlPost($url, $data)
     {
-
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,false);
+        curl_setopt($ch, CURLOPT_HEADER,false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_POST,1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
         curl_close($ch);
         return $output;
@@ -84,11 +77,12 @@ class Api
      */
     public function sendRequest($params, $controller, $method)
     {
-        $sign           = $this->generateSign($params);
+        $sign = $this->generateSign($params);
         $params['sign'] = $sign;
         //请求地址拼接
-        $sendurl = config('apiurl') . $controller . '/' . $method;
-        $res     = $this->curlPost($sendurl, $params);
+        $sendurl = config('apiurl').$controller.DIRECTORY_SEPARATOR.$method;
+        $res = $this->curlPost($sendurl, $params);
+        //halt($res);
         $res = json_decode($res, true);
         return $res;
     }

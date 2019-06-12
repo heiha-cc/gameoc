@@ -31,7 +31,7 @@ class Player extends Main
     }
 
     /**
-     * Notes: 超级玩家列表
+     * Notes: 超级玩家
      * @return mixed
      */
     public function super()
@@ -39,11 +39,11 @@ class Player extends Main
         if ($this->request->isAjax()) {
             $page   = intval(input('page')) ?? 1;
             $limit  = intval(input('limit')) ?? 20;
-            $roleId = intval(input('roleid')) ?? 0;
-
-
+            $roleId = input('roleid') ?? '';
             $res = Api::getInstance()->sendRequest(['roleid' => $roleId, 'page' => $page, 'pagesize' => $limit], 'SuperUser', 'list');
-            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+            $res = ['code' => 0, 'data' => [['roleid'=>111,'nickname' => 'laowang', 'totalin'=>111,'totalout'=>222,'rate'=>22]], 'message' => 'cg', 'count' => 1];
+
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['count']);
         }
         return $this->fetch();
     }

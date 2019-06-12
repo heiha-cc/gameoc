@@ -150,56 +150,57 @@
             ,$ = layui.$
             ,form = layui.form;
 
-        var init = function() {
-            form.render(null, 'component-form-group');
-            laydate.render({
-                elem: '#LAY-component-form-group-date'
-                ,format:'yyyy-MM-dd'
-                ,max:-1
-                ,btns: ['clear', 'confirm']
-            });
-            renderData();
-            $('#search').on('click', function(e) {
-                e.preventDefault();
-                search();
-            });
+        var main = {
+            renderData : function() {
+                var cols = [ //表头
+                    {field: 'userid', title: '编号'}
+                    ,{field: 'nickname', title: '游戏结果'}
+                    , {field: 'percent', title: '本局下注'}
+                    , {field: 'num', title: '本局战绩'}
+                ];
+
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('player/index')}" //数据接口
+                    , page: true //开启分页
+                    , cols: [cols]
+                });
+            },
+
+
+            //搜索
+            search : function() {
+                var userid = $.trim($('#userid').val());
+
+                //执行重载
+                table.reload('proxylist', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        'userid':userid
+                    }
+                });
+            },
+
+
+            init : function() {
+                form.render(null, 'component-form-group');
+                laydate.render({
+                    elem: '#LAY-component-form-group-date'
+                    ,format:'yyyy-MM-dd'
+                    ,max:-1
+                    ,btns: ['clear', 'confirm']
+                });
+                main.renderData();
+                $('#search').on('click', function(e) {
+                    e.preventDefault();
+                    main.search();
+                });
+            }
         };
 
-
-        var renderData = function() {
-            var cols = [ //表头
-
-                {field: 'userid', title: '编号'}
-                ,{field: 'nickname', title: '游戏结果'}
-                , {field: 'percent', title: '本局下注'}
-                , {field: 'num', title: '本局战绩'}
-            ];
-
-            table.render({
-                elem: '#proxylist'
-                , url: "{:url('player/index')}" //数据接口
-                , page: true //开启分页
-                , cols: [cols]
-            });
-        };
-
-        //搜索
-        var search = function() {
-            var userid = $.trim($('#userid').val());
-            var startTime = $.trim($('#LAY-component-form-group-date').val());
-
-            //执行重载
-            table.reload('proxylist', {
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                },
-                where: {
-                    'userid':userid,
-                    'start':startTime
-                }
-            });
-        };
-        init();
+        main.init();
     });
 </script>
 {/block}
