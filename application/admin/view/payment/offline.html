@@ -1,18 +1,15 @@
 {extend name="common/base" /}
 
-{block name="title"}支付通道{/block}
+{block name="title"}线下转账{/block}
 {block name="css"}{/block}
 {block name="content"}
 
 
 <div class="layui-card">
     <div class="layui-card-header layuiadmin-card-header-auto">
-       <h3>支付通道设置</h3>
+        <h3>线下转账</h3>
     </div>
     <div class="layui-card-body">
-        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('新增支付通道','addChannel.html', '', 550)">
-            <i class="layui-icon layui-icon-add-circle"></i>
-        </a>
         <div id="alllist">
             <table id="proxylist" lay-filter="proxylist"></table>
         </div>
@@ -22,7 +19,9 @@
 
 {/block}
 {block name="script"}
-
+<script type="text/html" id="msg-bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></a>
+</script>
 <script>
     layui.config({
         base: '__layui__/' //静态资源所在路径
@@ -41,25 +40,22 @@
             renderData : function() {
                 var cols = [ //表头
 
-                    {field: 'userid', title: '通道ID', width:120}
-                    ,{field: 'nickname', title: '通道名称', width:120}
-                    , {field: 'percent', title: '类型', width:120}
-                    , {field: 'daytax', title: '状态', width:150}
-                    , {field: 'dayincome', title: '商户号', width:150}
-                    , {field: 'proxyincome', title: '应用ID', width:150}
-                    , {field: 'proxyincome', title: '网关地址', width:150}
-                    , {field: 'proxyincome', title: '备注', width:150}
-                    , {field: 'proxyincome', title: '操作', width:150}
+                    {field: 'classid', title: 'ID', minWidth:120}
+                    , {field: 'classname', title: '转账类型', minWidth:120}
+                    , {field: 'bank', title: '银行', minWidth:180}
+                    , {field: 'cardno', title: '账号', minWidth:200}
+                    , {field: 'cardname', title: '收款人姓名', minWidth:150}
+                    , {field: 'descript', title: '备注', minWidth:200}
+                    , {fixed: 'right', title:'操作', align:'center', minWidth:70, toolbar: '#msg-bar'}
                 ];
 
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/index')}" //数据接口
+                    , url: "{:url('payment/offline')}" //数据接口
                     , page: true //开启分页
                     , cols: [cols]
                 });
             },
-
 
             //操作事件
             extraEvent : function () {
@@ -68,7 +64,7 @@
                     var data = obj.data //获得当前行数据
                         ,layEvent = obj.event; //获得 lay-event 对应的值
                     if (layEvent === 'edit') {
-                        x_admin_show('编辑线下转账', 'editAmount?id='+data.id+'&amount='+data.amount, '', 300);
+                        x_admin_show('编辑线下转账', 'editOffline?classid='+data.classid+'&classname='+data.classname+'&bank='+data.bank+'&cardno='+data.cardno+'&cardname='+data.cardname+'&descript='+data.descript, '', 550);
                     }
                 });
             },
@@ -79,7 +75,6 @@
                 main.extraEvent();
             }
         };
-
         main.init();
     });
 </script>

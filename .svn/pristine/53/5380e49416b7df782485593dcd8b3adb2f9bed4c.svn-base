@@ -19,7 +19,9 @@
 
 {/block}
 {block name="script"}
-
+<script type="text/html" id="msg-bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></a>
+</script>
 <script>
     layui.config({
         base: '__layui__/' //静态资源所在路径
@@ -38,56 +40,41 @@
             renderData : function() {
                 var cols = [ //表头
 
-                    {field: 'userid', title: '类别ID', width:120}
-                    ,{field: 'nickname', title: '支付名称', width:120}
-                    , {field: 'percent', title: '银行卡', width:120}
-                    , {field: 'daytax', title: '账号', width:150}
-                    , {field: 'dayincome', title: '收款人姓名', width:150}
-                    , {field: 'proxyincome', title: '备注', width:150}
-                    , {field: 'proxyincome', title: '操作', width:150}
+                    {field: 'classid', title: 'ID', minWidth:120}
+                    , {field: 'classname', title: '转账类型', minWidth:120}
+                    , {field: 'bank', title: '银行', minWidth:180}
+                    , {field: 'cardno', title: '账号', minWidth:200}
+                    , {field: 'cardname', title: '收款人姓名', minWidth:150}
+                    , {field: 'descript', title: '备注', minWidth:200}
+                    , {fixed: 'right', title:'操作', align:'center', minWidth:70, toolbar: '#msg-bar'}
                 ];
 
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/index')}" //数据接口
+                    , url: "{:url('payment/offline')}" //数据接口
                     , page: true //开启分页
                     , cols: [cols]
                 });
             },
 
-
-            //搜索
-            search : function() {
-                var userid = $.trim($('#userid').val());
-
-                //执行重载
-                table.reload('proxylist', {
-                    page: {
-                        curr: 1 //重新从第 1 页开始
-                    },
-                    where: {
-                        'userid':userid
+            //操作事件
+            extraEvent : function () {
+                //编辑
+                table.on('tool(proxylist)', function(obj) {
+                    var data = obj.data //获得当前行数据
+                        ,layEvent = obj.event; //获得 lay-event 对应的值
+                    if (layEvent === 'edit') {
+                        x_admin_show('编辑线下转账', 'editOffline?classid='+data.classid+'&classname='+data.classname+'&bank='+data.bank+'&cardno='+data.cardno+'&cardname='+data.cardname+'&descript='+data.descript, '', 550);
                     }
                 });
             },
 
 
             init : function() {
-                form.render(null, 'component-form-group');
-                laydate.render({
-                    elem: '#LAY-component-form-group-date'
-                    ,format:'yyyy-MM-dd'
-                    ,max:-1
-                    ,btns: ['clear', 'confirm']
-                });
                 main.renderData();
-                $('#search').on('click', function(e) {
-                    e.preventDefault();
-                    main.search();
-                });
+                main.extraEvent();
             }
         };
-
         main.init();
     });
 </script>
