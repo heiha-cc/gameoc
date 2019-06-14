@@ -1,56 +1,61 @@
 {extend name="common/base" /}
 
-{block name="title"}新增支付通道{/block}
+{block name="title"}支付通道修改{/block}
 {block name="css"}
 {/block}
 {block name="content"}
 
-<form class="layui-form" action="{:url('payment/addChannel')}" method="post" id="addProxy" >
-
+<form class="layui-form" action="{:url('payment/editChannel')}" method="post" id="addProxy" >
+    <div class="layui-form-item">
+        <label class="layui-form-label">通道ID：</label>
+        <div class="layui-input-block">
+            <input type="text" id="channelid" name='channelid' value="{$channelid}" lay-verify="required" readonly autocomplete="off" class="layui-input layui-disabled">
+        </div>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label">通道名称：</label>
         <div class="layui-input-block">
-            <input type="text" id="channelname" name='channelname' lay-verify="required" placeholder="请输入通道名称" autocomplete="off" class="layui-input">
+            <input type="text" id="channelname" name='channelname' value="{$channelname}" lay-verify="required" placeholder="请输入通道名称" autocomplete="off" class="layui-input">
         </div>
     </div>
     <!--<div class="layui-form-item">-->
-        <!--<label class="layui-form-label">类型：</label>-->
-        <!--<div class="layui-input-block">-->
-            <!--<select name="condition" id="condition">-->
-                <!--<option value="1">支付宝</option>-->
-                <!--<option value="2">微信</option>-->
-                <!--<option value="3">银联</option>-->
-            <!--</select>-->
-        <!--</div>-->
+    <!--<label class="layui-form-label">类型：</label>-->
+    <!--<div class="layui-input-block">-->
+    <!--<select name="condition" id="condition">-->
+    <!--<option value="1">支付宝</option>-->
+    <!--<option value="2">微信</option>-->
+    <!--<option value="3">银联</option>-->
+    <!--</select>-->
+    <!--</div>-->
     <!--</div>-->
     <div class="layui-form-item">
         <label class="layui-form-label">商户号：</label>
         <div class="layui-input-block">
-            <input type="text" id="mchid" name="mchid"  placeholder="请输入商户号" autocomplete="off" class="layui-input">
+            <input type="text" id="mchid" name="mchid" value="{$mchid}" placeholder="请输入商户号" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">应用ID：</label>
         <div class="layui-input-block">
-            <input type="text" id="appid" name="appid" placeholder="请输入应用ID" autocomplete="off" class="layui-input">
+            <input type="text" id="appid" name="appid" value="{$appid}" placeholder="请输入应用ID" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">网关地址：</label>
         <div class="layui-input-block">
-            <input type="text" id="noticeurl" name="noticeurl"  placeholder="请输入网关地址" autocomplete="off" class="layui-input">
+            <input type="text" id="noticeurl" name="noticeurl" value="{$noticeurl}"  placeholder="请输入网关地址" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">备注：</label>
         <div class="layui-input-block">
-            <textarea class="layui-textarea" id="descript" name="descript"></textarea>
+            <textarea class="layui-textarea" id="descript" name="descript">{$descript}</textarea>
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <a style="margin-left: 15%" type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="addit" id="addit" >新增</a>
+            <a style="margin-left: 15%" type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="addit" id="addit" >修改</a>
             <a  class="layui-btn layui-btn-primary layui-btn-radius" lay-submit="" lay-filter="cancel" id="cancel" >取消</a>
         </div>
     </div>
@@ -66,24 +71,24 @@
         index: 'lib/index' //主入口模块
 
     }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
-        var element = layui.element
-            ,layer = layui.layer
-            ,laydate = layui.laydate
-            ,table = layui.table
+        var layer = layui.layer
             ,$ = layui.$
             ,form = layui.form;
 
         var main = {
             submitForm : function(data) {
-                var channelname = $.trim(data.field.channelname),
-                    mchid = $.trim(data.field.mchid),
-                    appid = $.trim(data.field.appid),
-                    noticeurl = $.trim(data.field.noticeurl),
-                    descript = $.trim(data.field.descript);
+                var channelid = $.trim(data.field.channelid)
+                    ,channelname = $.trim(data.field.channelname)
+                    ,mchid = $.trim(data.field.mchid)
+                    ,appid = $.trim(data.field.appid)
+                    ,noticeurl = $.trim(data.field.noticeurl)
+                    ,descript = $.trim(data.field.descript);
+
                 $.ajax({
                     type:'post',
                     url:data.form.action,
                     data:{
+                        'channelid' : channelid,
                         'channelname' : channelname,
                         'mchid' : mchid,
                         'appid' : appid,
