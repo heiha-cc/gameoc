@@ -338,11 +338,12 @@ class Payment extends Main
             return $this->apiReturn($res['code'], $res['data'], $res['message']);
         }
 
-
-        $amountchannel = Api::getInstance()->sendRequest([], 'payment', 'amoutchannel');
+        $channel = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'channel');
+        $amount = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'amount');
         $class = config('site.zf_class');
+        $this->assign('channel', $channel['data'] ?? []);
+        $this->assign('amount', $amount['data'] ?? []);
         $this->assign('class', $class);
-        $this->assign('amountchannel', $amountchannel['data'] ?? []);
         return $this->fetch();
     }
 

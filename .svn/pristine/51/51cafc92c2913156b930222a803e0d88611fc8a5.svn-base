@@ -1,0 +1,199 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\common\Config as ConfigModel;
+use app\common\GameLog;
+use app\model\Dictionary;
+use think\Exception;
+use think\Db;
+
+//配置文件信息
+class GameCfg extends Main
+{
+    protected $model = null;
+    protected $dictModel=  null;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new ConfigModel();
+    }
+    public function index()
+    {
+        $list = $this->model->select();
+        foreach ($list as &$v) {
+            if ($v['content']) {
+                $v['content'] = json_decode($v['content'], true);
+            }
+            if (in_array($v['type'], ['select', 'selects', 'checkbox', 'radio'])) {
+                $v['value'] = explode(',', $v['value']);
+            }
+            if ($v['type'] == 'array') {
+                $v['value'] = json_decode($v['value'], true);
+            }
+            $v['title'] = htmlspecialchars($v['title']);
+            $v['tip'] = htmlspecialchars($v['tip']);
+        }
+        unset($v);
+        //p($list);
+        $this->assign('lists', $list);
+        return $this->fetch();
+    }
+
+    //添加字典分类
+    public function addDirectory()
+    {
+        if ($this->request->isAjax()) {
+            $request = $this->request->request();
+            if (!$request['title'] || !$request['name']) {
+                return $this->apiReturn(1, [], '参数不能为空');
+            }
+            $data = [
+                'name' => $request['name'],
+                'group' => $request['name'],
+                'title' => $request['title'],
+                'type' => 'array',
+                'rule' => 'required',
+                'tip' => '',
+                'value' => '{}',
+                'content' => '',
+                'extend' => ''
+
+            ];
+            $res = $this->model->insert($data);
+            return $this->apiReturn(0, [], '成功');
+        }
+
+        return $this->fetch();
+    }
+
+
+    //编辑游戏配置
+    public function editGame()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            if ($data) {
+                $logData = [
+                    'userid' => session('userid'),
+                    'username' => session('username'),
+                    'action' => __METHOD__,
+                    'logday'  => date('Ymd'),
+                    'recordtime' => date('Y-m-d H:i:s'),
+                    'request'   => json_encode($data, JSON_UNESCAPED_UNICODE)
+                ];
+                $this->doHandle($data, $logData);
+            }
+        }
+    }
+
+    //编辑字典配置
+    public function editDict()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            if ($data) {
+                $logData = [
+                    'userid' => session('userid'),
+                    'username' => session('username'),
+                    'action' => __METHOD__,
+                    'logday'  => date('Ymd'),
+                    'recordtime' => date('Y-m-d H:i:s'),
+                    'request'   => json_encode($data, JSON_UNESCAPED_UNICODE)
+                ];
+                $this->doHandle($data, $logData);
+            }
+        }
+    }
+
+    //删除字典配置
+    public function delCfg()
+    {
+        if ($this->request->isAjax()) {
+            $id = intval(input('id')) ?? 0;
+            if ($id) {
+                $logData = [
+                    'userid' => session('userid'),
+                    'username' => session('username'),
+                    'action' => __METHOD__,
+                    'logday'  => date('Ymd'),
+                    'recordtime' => date('Y-m-d H:i:s'),
+                    'request'   => json_encode($id, JSON_UNESCAPED_UNICODE)
+                ];
+                Db::name('config')->where(['id' => $id])->delete();
+                try {
+                    $this->refreshFile();
+                } catch (\Exception $e) {
+
+                    $response =  ['code' => 1, 'msg' => $e->getMessage()];
+                    $logData['response'] = json_encode($response, JSON_UNESCAPED_UNICODE);
+                    $logData['status'] = 0;
+                    GameLog::log($logData);
+                    return $this->apiReturn(1, [], '删除失败');
+                }
+                $response =  ['code' => 0, 'msg' => '删除成功'];
+                $logData['response'] = json_encode($response, JSON_UNESCAPED_UNICODE);
+                $logData['status'] = 1;
+                GameLog::log($logData);
+                return $this->apiReturn(0, [], '删除成功');
+            }
+        }
+    }
+
+
+    private function doHandle($data, $logData) {
+        $response = [];
+        $configList = [];
+        foreach ($this->model->all() as $v) {
+            if (isset($data[$v['name']])) {
+                $value = $data[$v['name']];
+                if (is_array($value) && isset($value['field'])) {
+                    $value = json_encode(ConfigModel::getArrayData($value), JSON_UNESCAPED_UNICODE);
+                } else {
+                    $value = is_array($value) ? implode(',', $value) : $value;
+                }
+                $v['value'] = $value;
+                $configList[] = $v->toArray();
+            }
+        }
+//        var_dump($configList);
+//        die;
+        $this->model->allowField(true)->saveAll($configList);
+        try {
+            $this->refreshFile();
+        } catch (\Exception $e) {
+
+            $response =  ['code' => 1, 'msg' => $e->getMessage()];
+            $logData['response'] = json_encode($response, JSON_UNESCAPED_UNICODE);
+            $logData['status'] = 0;
+            GameLog::log($logData);
+            $this->error($e->getMessage());
+        }
+
+        $response =  ['code' => 0, 'msg' => '更新成功'];
+        $logData['response'] = json_encode($response, JSON_UNESCAPED_UNICODE);
+        $logData['status'] = 1;
+        GameLog::log($logData);
+        $this->success('更新成功');
+    }
+
+    /**
+     * 刷新配置文件
+     */
+    protected function refreshFile()
+    {
+        $config = [];
+        foreach ($this->model->all() as $k => $v) {
+
+            $value = $v->toArray();
+            if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
+                $value['value'] = explode(',', $value['value']);
+            }
+            if ($value['type'] == 'array') {
+                $value['value'] = (array)json_decode($value['value'], TRUE);
+            }
+            $config[$value['name']] = $value['value'];
+        }
+        file_put_contents(APP_PATH . 'extra' . DS . 'site.php', '<?php' . "\n\nreturn " . var_export($config, true) . ";");
+    }
+}

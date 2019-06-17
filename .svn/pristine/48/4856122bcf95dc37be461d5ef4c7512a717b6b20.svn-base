@@ -21,10 +21,8 @@
         <label class="layui-form-label">金额：</label>
         <div class="layui-input-block">
             <select name="amountid" id="amountid">
-            {foreach $amountchannel as $k2 => $v2}
-                {if condition="$v2.itypeid eq 1"}
-            <option value="{$v2.showid}">{$v2.showname}</option>
-                {/if}
+            {foreach $amount as $k2 => $v2}
+            <option value="{$v2.amountid}">{$v2.amount}</option>
             {/foreach}
             </select>
         </div>
@@ -33,11 +31,9 @@
         <label class="layui-form-label">支付通道：</label>
         <div class="layui-input-block">
             <select name="channelid" id="channelid">
-                {foreach $amountchannel as $k3 => $v3}
-                {if condition="$v3.itypeid eq 0"}
-                <option value="{$v3.showid}">{$v3.showname}</option>
-                {/if}
-                {/foreach}
+            {foreach $channel as $k3 => $v3}
+            <option value="{$v3.channelid}">{$v3.channelname}</option>
+            {/foreach}
             </select>
         </div>
     </div>
