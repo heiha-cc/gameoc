@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\common\Api;
 use app\common\GameLog;
 use redis\Redis;
+
 class Player extends Main
 {
     /**
@@ -54,7 +55,7 @@ class Player extends Main
     public function addSuper()
     {
         if ($this->request->isAjax()) {
-            $request = $this->request->request();
+            $request  = $this->request->request();
             $validate = validate('Player');
             $validate->scene('addSuper');
             if (!$validate->check($request)) {
@@ -76,7 +77,7 @@ class Player extends Main
     public function editSuper()
     {
         if ($this->request->isAjax()) {
-            $request = $this->request->request();
+            $request  = $this->request->request();
             $validate = validate('Player');
             $validate->scene('editSuper');
             if (!$validate->check($request)) {
@@ -90,7 +91,7 @@ class Player extends Main
         }
 
         $roleid = input('roleid');
-        $rate = intval(input('rate')) ?? 0;
+        $rate   = intval(input('rate')) ?? 0;
         $this->assign('roleid', $roleid);
         $this->assign('rate', $rate);
         return $this->fetch();
@@ -102,7 +103,7 @@ class Player extends Main
      */
     public function deleteSuper()
     {
-        $request = $this->request->request();
+        $request  = $this->request->request();
         $validate = validate('Player');
         $validate->scene('deleteSuper');
         if (!$validate->check($request)) {
@@ -116,18 +117,33 @@ class Player extends Main
     }
 
 
-
     /**
      * 向玩家转账
      */
     public function transfer()
     {
         if ($this->request->isAjax()) {
-            $page   = intval(input('page')) ?? 1;
-            $limit  = intval(input('limit')) ?? 20;
+            $page    = intval(input('page')) ?? 1;
+            $limit   = intval(input('limit')) ?? 20;
+            $roleId  = intval(input('roleid')) ?? 0;
+            $start   = input('start') ?? '';
+            $end     = input('end') ?? '';
+            $classid = input('classid') ?? -1;
 
-            $res = Api::getInstance()->sendRequest(['page' => $page, 'pagesize' => $limit], 'charge', 'list');
-            p($res);
+            $data = ['page' => $page, 'pagesize' => $limit];
+            if ($roleId) {
+                $data['roleid'] = $roleId;
+            }
+            if ($classid && $classid != -1) {
+                $data['classid'] = $classid;
+            }
+            if ($start) {
+                $data['starttime'] = $start;
+                if ($end) {
+                    $data['endtime'] = $end;
+                }
+            }
+            $res = Api::getInstance()->sendRequest($data, 'charge', 'list');
             return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
         }
         return $this->fetch();

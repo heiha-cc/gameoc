@@ -283,7 +283,4 @@ return $config = [
         'admin/System/clear'
     ],
 
-    'apikey' => 'A0LWeVmP097HC1jf',
-    'apiurl' => 'http://api.lefaqipai8.com/'
-
 ];

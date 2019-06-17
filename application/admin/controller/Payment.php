@@ -65,8 +65,8 @@ class Payment extends Main
     public function channel()
     {
         if ($this->request->isAjax()) {
-            $limit  = intval(input('limit')) ?? 20;
-            $page   = intval(input('page')) ?? 1;
+            $limit = intval(input('limit')) ?? 20;
+            $page  = intval(input('page')) ?? 1;
 
             $res = Api::getInstance()->sendRequest(['page' => $page, 'pagesize' => $limit], 'payment', 'channel');
             return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
@@ -120,14 +120,14 @@ class Payment extends Main
                 return $this->apiReturn(1, [], $validate->getError());
             }
             $data = [
-                'channelid' => $request['channelid'],
+                'channelid'   => $request['channelid'],
                 'channelname' => $request['channelname'],
                 'mchid'       => $request['mchid'] ?? '',
                 'appid'       => $request['appid'] ?? '',
                 'noticeurl'   => $request['noticeurl'] ?? '',
                 'descript'    => $request['descript'] ?? '',
             ];
-            $res = Api::getInstance()->sendRequest($data, 'payment', 'updatechannel');
+            $res  = Api::getInstance()->sendRequest($data, 'payment', 'updatechannel');
 
             //log记录
             GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
@@ -150,7 +150,7 @@ class Payment extends Main
      */
     public function deleteChannel()
     {
-        $request = $this->request->request();
+        $request  = $this->request->request();
         $validate = validate('Payment');
         $validate->scene('deleteChannel');
         if (!$validate->check($request)) {
@@ -170,7 +170,7 @@ class Payment extends Main
      */
     public function setChannelStatus()
     {
-        $request = $this->request->request();
+        $request  = $this->request->request();
         $validate = validate('Payment');
         $validate->scene('setChannelStatus');
         if (!$validate->check($request)) {
@@ -233,7 +233,7 @@ class Payment extends Main
                 return $this->apiReturn(1, [], $validate->getError());
             }
             $res = Api::getInstance()->sendRequest([
-                'id'   => $request['id'],
+                'id'     => $request['id'],
                 'amount' => $request['amount']
             ], 'payment', 'updateamount');
 
@@ -254,7 +254,7 @@ class Payment extends Main
      */
     public function deleteAmount()
     {
-        $request = $this->request->request();
+        $request  = $this->request->request();
         $validate = validate('Payment');
         $validate->scene('deleteAmount');
         if (!$validate->check($request)) {
@@ -268,24 +268,82 @@ class Payment extends Main
     }
 
     /**
-     * 通道金额配置
+     * 通道金额关系列表
      */
     public function payment()
     {
         if ($this->request->isAjax()) {
+            $page      = input('page') ?? 1;
+            $pagesize  = input('limit') ?? 10;
+            $classid   = input('classid') ?? 0;
+            $channelid = input('channelid') ?? 0;
 
+            $res = Api::getInstance()->sendRequest([
+                'classid'   => $classid,
+                'channelid' => $channelid,
+                'page'      => $page,
+                'pagesize'  => $pagesize
+            ], 'payment', 'relate');
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
         }
+
+        $channel = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'channel');
+        $class = config('site.zf_class');
+        $this->assign('channel', $channel['data']);
+        $this->assign('class', $class);
         return $this->fetch();
     }
 
+
     /**
-     * 新增通道金额
+     * Notes: 删除关系
+     * @return mixed
+     */
+    public function deletePayment()
+    {
+        $request  = $this->request->request();
+        $validate = validate('Payment');
+        $validate->scene('deletePayment');
+        if (!$validate->check($request)) {
+            return $this->apiReturn(1, [], $validate->getError());
+        }
+
+        $res = Api::getInstance()->sendRequest(['id' => $request['id']], 'payment', 'delrelate');
+
+        //log记录
+        GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+        return $this->apiReturn($res['code'], $res['data'], $res['message']);
+    }
+
+    /**
+     * 新增通道金额关系
      */
     public function addPayment()
     {
         if ($this->request->isAjax()) {
+            $request  = $this->request->request();
+            $validate = validate('Payment');
+            $validate->scene('addPayment');
+            if (!$validate->check($request)) {
+                return $this->apiReturn(1, [], $validate->getError());
+            }
+            $res = Api::getInstance()->sendRequest([
+                'amountid' => $request['amountid'],
+                'classid' => $request['classid'],
+                'channelid' => $request['channelid'],
+            ], 'payment', 'addrelate');
 
+            //log记录
+            GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+            return $this->apiReturn($res['code'], $res['data'], $res['message']);
         }
+
+        $channel = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'channel');
+        $amount = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'amount');
+        $class = config('site.zf_class');
+        $this->assign('channel', $channel['data'] ?? []);
+        $this->assign('amount', $amount['data'] ?? []);
+        $this->assign('class', $class);
         return $this->fetch();
     }
 

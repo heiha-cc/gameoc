@@ -12,17 +12,23 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">支付类型：</label>
                     <div class="layui-input-inline">
-                        <select name="condition" id="condition">
-                            <option value="1">支付宝</option>
-                            <option value="2">微信</option>
-                            <option value="3">银联</option>
+                        <select name="classid" id="classid">
+                            <option value="0">全部</option>
+                            {foreach $class as $k1 => $v1}
+                            <option value="{$k1}">{$v1}</option>
+                            {/foreach}
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">支付通道</label>
                     <div class="layui-input-inline">
-                        <input type="text" id="userid" name="userid" autocomplete="off" class="layui-input">
+                        <select name="channelid" id="channelid">
+                            <option value="0">全部</option>
+                            {foreach $channel as $vo}
+                            <option value="{$vo.channelid}">{$vo.channelname}</option>
+                            {/foreach}
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -35,7 +41,7 @@
         </form>
     </div>
     <div class="layui-card-body">
-        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('新增支付金额','addPayment.html', '', 250)">
+        <a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('新增支付金额','addPayment.html', '')">
             <i class="layui-icon layui-icon-add-circle"></i>
         </a>
         <div id="alllist">
@@ -47,7 +53,9 @@
 
 {/block}
 {block name="script"}
-
+<script type="text/html" id="msg-bar">
+    <a class="layui-btn layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></a>
+</script>
 <script>
     layui.config({
         base: '__layui__/' //静态资源所在路径
@@ -66,51 +74,77 @@
             renderData : function() {
                 var cols = [ //表头
 
-                    {field: 'userid', title: 'ID', width:120}
-                    ,{field: 'nickname', title: '类型', width:120}
-                    , {field: 'percent', title: '金额', width:120}
-                    , {field: 'daytax', title: '通道', width:150}
-                    , {field: 'proxyincome', title: '操作', width:150}
+                    {field: 'id', title: 'ID', width:120}
+                    , {field: 'channelname', title: '支付通道', minWidth:150}
+                    ,{field: 'classname', title: '支付类型', minWidth:120}
+                    , {field: 'amount', title: '金额', minWidth:120}
+                    , {fixed: 'right', title:'操作', align:'center', minWidth:70, toolbar: '#msg-bar'}
                 ];
 
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/index')}" //数据接口
+                    , url: "{:url('payment/payment')}" //数据接口
                     , page: true //开启分页
                     , cols: [cols]
                 });
             },
 
 
-            //搜索
-            search : function() {
-                var userid = $.trim($('#userid').val());
 
-                //执行重载
-                table.reload('proxylist', {
-                    page: {
-                        curr: 1 //重新从第 1 页开始
-                    },
-                    where: {
-                        'userid':userid
+            //操作事件
+            extraEvent : function () {
+                //编辑
+                table.on('tool(proxylist)', function(obj) {
+                    var data = obj.data //获得当前行数据
+                        ,layEvent = obj.event; //获得 lay-event 对应的值
+                    if (layEvent === 'delete') {
+                        layer.confirm("确认删除这条记录？",{btn: ['确认','取消']}, function() {
+                            $.ajax({
+                                type: 'post',
+                                url: "{:url('payment/deletePayment')}",
+                                data: {
+                                    'id': data.id
+                                },
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.code === 0) {
+                                        layer.msg(res.msg, {icon: 6,time:1000}, function() {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        layer.msg(res.msg, {icon: 5});
+                                    }
+                                }
+                            });
+                        });
                     }
                 });
             },
 
-
-            init : function() {
-                form.render(null, 'component-form-group');
-                laydate.render({
-                    elem: '#LAY-component-form-group-date'
-                    ,format:'yyyy-MM-dd'
-                    ,max:-1
-                    ,btns: ['clear', 'confirm']
-                });
-                main.renderData();
+            //绑定事件
+            bindEvent : function () {
                 $('#search').on('click', function(e) {
                     e.preventDefault();
-                    main.search();
+                    var channelid = $.trim($('#channelid').val());
+                    var classid = $.trim($('#classid').val());
+
+                    //执行重载
+                    table.reload('proxylist', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        },
+                        where: {
+                            'channelid':channelid,
+                            'classid':classid
+                        }
+                    });
                 });
+            },
+
+            init : function() {
+                main.renderData();
+                main.bindEvent();
+                main.extraEvent();
             }
         };
 

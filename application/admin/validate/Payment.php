@@ -17,6 +17,8 @@ class Payment extends Validate
         //        'appid' => 'require',
         //        'noticeurl' => 'require',
         'channelid'   => 'require|number',
+        'amountid'    => 'require|number',
+        'classid'     => 'require|number',
         'status'      => 'require|number'
     ];
     protected $message = [
@@ -32,12 +34,16 @@ class Payment extends Validate
         'channelid.number'    => '通道ID格式有误',
         'status.require'      => '开关状态设置有误',
         'status.number'       => '开关状态设置有误',
+
+        'amountid.require' => '金额不能为空',
+        'amountid.number'  => '金额格式有误',
+        'classid.require'  => '支付类型不能为空',
+        'classid.number'   => '支付类型有误',
     ];
     protected $scene = [
         //固定金额
         'editAmount'       => [
-            'id',
-            'amount'
+            'id', 'amount'
         ],
         'addAmount'        => [
             'amount'
@@ -51,15 +57,21 @@ class Payment extends Validate
             'channelname'
         ],
         'editChannel'      => [
-            'channelid',
-            'channelname'
+            'channelid', 'channelname'
         ],
         'deleteChannel'    => [
             'id'
         ],
         'setChannelStatus' => [
-            'id',
-            'status'
+            'id', 'status'
+        ],
+
+        //关系
+        'deletePayment'    => [
+            'id'
+        ],
+        'addPayment'       => [
+            'classid', 'channelid', 'amountid'
         ],
     ];
 

@@ -35,10 +35,8 @@ class GameCfg extends Main
             $v['tip'] = htmlspecialchars($v['tip']);
         }
         unset($v);
+        //p($list);
         $this->assign('lists', $list);
-
-
-        //GameLog::log($logData);
         return $this->fetch();
     }
 
@@ -69,25 +67,6 @@ class GameCfg extends Main
         return $this->fetch();
     }
 
-    //编辑验证码配置
-    public function editCode()
-    {
-        if ($this->request->isPost()) {
-            $data = $this->request->post();
-            if ($data['codeid'] && $data['codekey']) {
-                $logData = [
-                    'userid' => session('userid'),
-                    'username' => session('username'),
-                    'action' => __METHOD__,
-                    'logday'  => date('Ymd'),
-                    'recordtime' => date('Y-m-d H:i:s'),
-                    'request'   => json_encode($data, JSON_UNESCAPED_UNICODE)
-                ];
-                $this->doHandle($data, $logData);
-            }
-        }
-    }
-
 
     //编辑游戏配置
     public function editGame()
@@ -113,8 +92,6 @@ class GameCfg extends Main
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-//            var_dump(json_decode($data['send'],true));
-//            die;
             if ($data) {
                 $logData = [
                     'userid' => session('userid'),
@@ -125,6 +102,40 @@ class GameCfg extends Main
                     'request'   => json_encode($data, JSON_UNESCAPED_UNICODE)
                 ];
                 $this->doHandle($data, $logData);
+            }
+        }
+    }
+
+    //删除字典配置
+    public function delCfg()
+    {
+        if ($this->request->isAjax()) {
+            $id = intval(input('id')) ?? 0;
+            if ($id) {
+                $logData = [
+                    'userid' => session('userid'),
+                    'username' => session('username'),
+                    'action' => __METHOD__,
+                    'logday'  => date('Ymd'),
+                    'recordtime' => date('Y-m-d H:i:s'),
+                    'request'   => json_encode($id, JSON_UNESCAPED_UNICODE)
+                ];
+                Db::name('config')->where(['id' => $id])->delete();
+                try {
+                    $this->refreshFile();
+                } catch (\Exception $e) {
+
+                    $response =  ['code' => 1, 'msg' => $e->getMessage()];
+                    $logData['response'] = json_encode($response, JSON_UNESCAPED_UNICODE);
+                    $logData['status'] = 0;
+                    GameLog::log($logData);
+                    return $this->apiReturn(1, [], '删除失败');
+                }
+                $response =  ['code' => 0, 'msg' => '删除成功'];
+                $logData['response'] = json_encode($response, JSON_UNESCAPED_UNICODE);
+                $logData['status'] = 1;
+                GameLog::log($logData);
+                return $this->apiReturn(0, [], '删除成功');
             }
         }
     }

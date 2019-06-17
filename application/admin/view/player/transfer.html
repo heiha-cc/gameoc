@@ -12,7 +12,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">玩家ID</label>
                     <div class="layui-input-inline">
-                        <input type="text" id="userid" name="userid" autocomplete="off" class="layui-input">
+                        <input type="text" id="roleid" name="roleid" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -27,7 +27,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">转账类型</label>
                     <div class="layui-input-inline">
-                        <select name="condition" id="condition">
+                        <select name="condition" id="classid" name="classid">
                             <option value="-1" selected>全部</option>
                             <option value="1">测试专用赠送</option>
                             <option value="2">充值手工补发</option>
@@ -75,13 +75,27 @@
             renderData : function() {
                 var cols = [ //表头
 
-                    {field: 'userid', title: '操作时间', width:120}
-                    ,{field: 'nickname', title: '玩家ID', width:120}
-                    , {field: 'percent', title: '转账类型', width:120}
-                    , {field: 'daytax', title: '金额', width:150}
-                    , {field: 'dayincome', title: '备注', width:150}
-                    , {field: 'proxyincome', title: '支出账户', width:150}
-                    , {field: 'proxyincome', title: '操作人', width:150}
+                    {field: 'addtime', title: '操作时间', minWidth:120}
+                    ,{field: 'roleid', title: '玩家ID', minWidth:120}
+                    , {field: 'classid', title: '转账类型', minWidth:120, templet : function(d) {
+                        var classname = '';
+                        if (d.classid == 1) {
+                            classname = '测试专用赠送';
+                        } else if (d.classid == 2) {
+                            classname = '充值手工补发';
+                        } else if (d.classid == 3) {
+                            classname = '转给超级玩家';
+                        } else {
+                            classname = '其他';
+                        }
+
+                        return classname;
+                    }}
+                    , {field: 'totalmoney', title: '金额', minWidth:150}
+
+//                    , {field: 'proxyincome', title: '支出账户', width:150}
+//                    , {field: 'proxyincome', title: '操作人', width:150}
+                    , {field: 'descript', title: '备注', minWidth:200}
                 ];
 
                 table.render({
@@ -95,7 +109,12 @@
 
             //搜索
             search : function() {
-                var userid = $.trim($('#userid').val());
+                var roleid = $.trim($('#roleid').val());
+                var classid = $.trim($('#classid').val());
+                var start = $.trim($('#LAY-component-form-group-date').val());
+                var end = $.trim($('#LAY-component-form-group-date2').val());
+
+
 
                 //执行重载
                 table.reload('proxylist', {
@@ -103,7 +122,10 @@
                         curr: 1 //重新从第 1 页开始
                     },
                     where: {
-                        'userid':userid
+                        'roleid':roleid,
+                        'classid':classid,
+                        'start':start,
+                        'end':end,
                     }
                 });
             },
@@ -114,13 +136,13 @@
                 laydate.render({
                     elem: '#LAY-component-form-group-date'
                     ,format:'yyyy-MM-dd'
-                    ,max:-1
+                    ,max:0
                     ,btns: ['clear', 'confirm']
                 });
                 laydate.render({
                     elem: '#LAY-component-form-group-date2'
                     ,format:'yyyy-MM-dd'
-                    ,max:-1
+                    ,max:0
                     ,btns: ['clear', 'confirm']
                 });
                 main.renderData();

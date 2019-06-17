@@ -46,7 +46,7 @@ class Api
         }
         $str = rtrim($str, '&');
         //拼接key, 并用md5加密
-        $sign = md5($str . '&key=' . config('apikey'));
+        $sign = md5($str . '&key=' . config('site.apikey'));
         return $sign;
     }
 
@@ -87,7 +87,7 @@ class Api
         $sign           = $this->generateSign($params);
         $params['sign'] = $sign;
         //请求地址拼接
-        $sendurl = config('apiurl') . $controller . '/' . $method;
+        $sendurl = config('site.url') . $controller . '/' . $method;
         $res     = $this->curlPost($sendurl, $params);
         $res = json_decode($res, true);
         return $res;

@@ -3,19 +3,10 @@
 return array (
   'url' => 'http://api.lefaqipai8.com/',
   'appkey' => 'A0LWeVmP097HC1jf',
-  'dictionary' => 
+  'zf_class' => 
   array (
-    'aaa' => '222',
-    'ccc' => '4',
-  ),
-  'fxpz' => 
-  array (
-    'a' => '1',
-    'aaa' => '22',
-  ),
-  'test' => 
-  array (
-    'vcvc' => '323',
-    'vvvv' => '344',
+    1200 => '支付宝充值',
+    1300 => '微信充值',
+    1400 => '银联充值',
   ),
 );
