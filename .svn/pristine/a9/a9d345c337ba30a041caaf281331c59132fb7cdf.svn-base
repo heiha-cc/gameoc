@@ -1,19 +1,8 @@
 {extend name="common/base" /}
 
-{block name="title"}在线玩家列表{/block}
+{block name="title"}充值汇总{/block}
 {block name="css"}{/block}
 {block name="content"}
-
-<div class="layui-card">
-    <div class="layui-card-header">
-        当前在线玩家数
-        <span class="layui-badge layui-bg-blue layuiadmin-badge">玩家数</span>
-    </div>
-    <div class="layui-card-body layuiadmin-card-list">
-        <p class="layuiadmin-big-font" style="color: red"></p>
-
-    </div>
-</div>
 
 
 <div class="layui-card">
@@ -24,28 +13,6 @@
                     <label class="layui-form-label">玩家ID</label>
                     <div class="layui-input-inline">
                         <input type="text" id="roleid" name="roleid" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">房间</label>
-                    <div class="layui-input-inline">
-                        <select name="roomid" id="roomid">
-                            <option value="0">所有</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">排序条件</label>
-                    <div class="layui-input-inline">
-                        <select name="orderby" id="orderby">
-                            <option value="0">不排序</option>
-                            <option value="1">总充值</option>
-                            <option value="2">总转出</option>
-                            <option value="3">活跃度</option>
-                            <option value="4">总流水</option>
-                        </select>
                     </div>
                 </div>
 
@@ -87,26 +54,17 @@
                  renderData : function() {
                     var cols = [ //表头
 
-                        {field: 'id', title: '玩家ID', minWidth:100}
-                        ,{field: 'nickname', title: '昵称', minWidth:120}
-                        , {field: 'balance', title: '银行余额', minWidth:120}
-                        , {field: 'gamebalance', title: '携带余额', minWidth:120}
-                        , {field: 'kindname', title: '游戏房间', minWidth:120}
-                        , {field: 'totalin', title: '总充值', minWidth:120}
-                        , {field: 'totalout', title: '总转出', minWidth:120}
-                        , {field: 'totalget', title: '盈利', minWidth:120}
-                        , {field: 'ctrolratio', title: '个人胜率', minWidth:100}
-                        , {field: 'cotroltime', title: '控制时长', minWidth:100}
-                        , {field: 'ctrltimeinterval', title: '不控间隔', minWidth:100}
-                        , {field: 'totalwater', title: '总流水', minWidth:120}
-                        , {field: 'huoyue', title: '活跃度', minWidth:150}
+                        {field: 'id', title: '玩家账号', minWidth:100}
+                        ,{field: 'nickname', title: '商人总转入', minWidth:120}
+                        , {field: 'balance', title: '在线总充值', minWidth:120}
+                        , {field: 'gamebalance', title: '总转出', minWidth:120}
 //                        , {field: 'proxyincome', title: '备注', minWidth:150}
 //                        , {field: 'proxyincome', title: '操作', minWidth:150}
                     ];
 
                     table.render({
                         elem: '#proxylist'
-                        , url: "{:url('player/online')}" //数据接口
+                        , url: "{:url('game/index')}" //数据接口
                         , page: true //开启分页
                         , cols: [cols]
                     });

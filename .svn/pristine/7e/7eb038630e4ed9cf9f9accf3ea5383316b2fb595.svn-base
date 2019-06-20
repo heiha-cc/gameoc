@@ -13,6 +13,7 @@ class Player extends Main
      */
     public function online()
     {
+        
         if ($this->request->isAjax()) {
             $page    = intval(input('page')) ?? 1;
             $limit   = intval(input('limit')) ?? 20;
