@@ -12,11 +12,11 @@
 {/block}
 {block name="content"}
 
-<div class ="layui-row layui-col-space30">
+<div class ="layui-row layui-col-space20">
     {foreach $roomlist as $room}
         <div class="layui-col-md3">
             <div class="layui-card">
-                <div class="layui-card-header" style="color: red"><h3>{$room.roomname}</h3></div>
+                <div class="layui-card-header" style="color: red">{$room.roomname}</div>
                 <div class="layui-card-body">
                     <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 200px;">
                         <div carousel-item="">
