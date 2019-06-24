@@ -1,0 +1,284 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\common\Api;
+use app\common\GameLog;
+use redis\Redis;
+use socket\QuerySocket;
+
+class Player extends Main
+{
+
+    /**
+     * 在线玩家
+     */
+    public function online()
+    {
+        if ($this->request->isAjax()) {
+            $page    = intval(input('page')) ?? 1;
+            $limit   = intval(input('limit')) ?? 20;
+            $roleId  = intval(input('roleid')) ?? 0;
+            $roomId  = intval(input('roomid')) ?? 0;
+            $orderby = intval(input('orderby')) ?? 0;
+            $asc   = intval(input('asc')) ?? 0;
+
+            $res = Api::getInstance()->sendRequest([
+                'roleid'   => $roleId,
+                'roomid'   => $roomId,
+                'orderby'  => $orderby,
+                'page'     => $page,
+                'asc'     => $asc,
+                'pagesize' => $limit
+            ], 'player', 'online');
+            if ($res['data']) {
+                foreach ($res['data'] as &$v) {
+                    //盈利
+                    $v['totalget'] = $v['totalin'] - $v['totalout'];
+                    //活跃度
+                    $v['huoyue'] = $v['totalin'] != 0 ? sprintf(".2f", $v['totalwater'] / $v['totalin']) : 0;
+                }
+                unset($v);
+            }
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+
+        }
+        $selectData=$this->getRoomList();
+        $this->assign('selectData',$selectData);
+        return $this->fetch();
+    }
+
+    /**
+     * * Notes: 返回前端select标签里的内容
+     * @return mixed
+     */
+    public function getRoomList()
+    {
+        $res = Api::getInstance()->sendRequest([
+            'id'=>0
+        ], 'room', 'kind');
+        return $res['data'];
+    }
+
+
+    /**
+     * 所有玩家
+     */
+    public function all()
+    {
+        if ($this->request->isAjax()) {
+            $page    = intval(input('page')) ?? 1;
+            $limit   = intval(input('limit')) ?? 20;
+            $roleId  = intval(input('roleid')) ?? 0;
+            $roomId  = intval(input('roomid')) ?? 0;
+            $orderby = intval(input('orderby')) ?? 0;
+            $asc   = intval(input('asc')) ?? 0;
+
+            $res = Api::getInstance()->sendRequest([
+                'roleid'   => $roleId,
+                'roomid'   => $roomId,
+                'orderby'  => $orderby,
+                'page'     => $page,
+                'asc'     => $asc,
+                'pagesize' => $limit
+            ], 'player', 'all');
+            if ($res['data']) {
+                foreach ($res['data'] as &$v) {
+                    //盈利
+                    $v['totalget'] = $v['totalin'] - $v['totalout'];
+                    //活跃度
+                    $v['huoyue'] = $v['totalin'] != 0 ? sprintf(".2f", $v['totalwater'] / $v['totalin']) : 0;
+                }
+                unset($v);
+            }
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+
+        }
+        $selectData=$this->getRoomList();
+        $this->assign('selectData',$selectData);
+        return $this->fetch();
+    }
+
+    /**
+     * Notes: 超级玩家列表
+     * @return mixed
+     */
+    public function super()
+    {
+        if ($this->request->isAjax()) {
+            $page   = intval(input('page')) ?? 1;
+            $limit  = intval(input('limit')) ?? 20;
+            $roleId = intval(input('roleid')) ?? 0;
+
+            $res = Api::getInstance()->sendRequest(['roleid' => $roleId, 'page' => $page, 'pagesize' => $limit], 'SuperUser', 'list');
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * Notes: 新增超级玩家
+     * @return mixed
+     */
+    public function addSuper()
+    {
+        if ($this->request->isAjax()) {
+            $request  = $this->request->request();
+            $validate = validate('Player');
+            $validate->scene('addSuper');
+            if (!$validate->check($request)) {
+                return $this->apiReturn(1, [], $validate->getError());
+            }
+
+            $res = Api::getInstance()->sendRequest(['roleid' => $request['roleid'], 'rate' => $request['rate']], 'SuperUser', 'add');
+            //log记录
+            GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+            return $this->apiReturn($res['code'], $res['data'], $res['message']);
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * Notes: 编辑超级玩家
+     * @return mixed
+     */
+    public function editSuper()
+    {
+        if ($this->request->isAjax()) {
+            $request  = $this->request->request();
+            $validate = validate('Player');
+            $validate->scene('editSuper');
+            if (!$validate->check($request)) {
+                return $this->apiReturn(1, [], $validate->getError());
+            }
+            $res = Api::getInstance()->sendRequest(['roleid' => $request['roleid'], 'rate' => $request['rate']], 'SuperUser', 'update');
+
+            //log记录
+            GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+            return $this->apiReturn($res['code'], $res['data'], $res['message']);
+        }
+
+        $roleid = input('roleid');
+        $rate   = intval(input('rate')) ?? 0;
+        $this->assign('roleid', $roleid);
+        $this->assign('rate', $rate);
+        return $this->fetch();
+    }
+
+    /**
+     * Notes: 删除超级玩家
+     * @return mixed
+     */
+    public function deleteSuper()
+    {
+        $request  = $this->request->request();
+        $validate = validate('Player');
+        $validate->scene('deleteSuper');
+        if (!$validate->check($request)) {
+            return $this->apiReturn(1, [], $validate->getError());
+        }
+        $res = Api::getInstance()->sendRequest(['roleid' => $request['roleid']], 'SuperUser', 'delete');
+
+        //log记录
+        GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+        return $this->apiReturn($res['code'], $res['data'], $res['message']);
+    }
+
+
+    /**
+     * 向玩家转账
+     */
+    public function transfer()
+    {
+        if ($this->request->isAjax()) {
+            $page    = intval(input('page')) ?? 1;
+            $limit   = intval(input('limit')) ?? 20;
+            $roleId  = intval(input('roleid')) ?? 0;
+            $start   = input('start') ?? '';
+            $end     = input('end') ?? '';
+            $classid = input('classid') ?? -1;
+
+            $data = ['page' => $page, 'pagesize' => $limit];
+            if ($roleId) {
+                $data['roleid'] = $roleId;
+            }
+            if ($classid && $classid != -1) {
+                $data['classid'] = $classid;
+            }
+            if ($start) {
+                $data['starttime'] = $start;
+                if ($end) {
+                    $data['endtime'] = $end;
+                }
+            }
+            $res = Api::getInstance()->sendRequest($data, 'charge', 'list');
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 向玩家转账
+     */
+    public function addTransfer()
+    {
+        if ($this->request->isAjax()) {
+            $request  = $this->request->request();
+            $validate = validate('Player');
+            $validate->scene('addTransfer');
+            if (!$validate->check($request)) {
+                return $this->apiReturn(1, [], $validate->getError());
+            }
+
+            $data = [
+                'roleid'     => $request['roleid'],
+                'classid'    => $request['classid'],
+                'totalmoney' => $request['totalmoney'],
+                'uid'        => session('userid'),
+                'adduser'    => session('username'),
+                'descript'   => $request['descript'] ?? ''
+            ];
+            $socket = new QuerySocket();
+            $res = $socket->addRoleMoney($data['roleid'], $data['totalmoney']*1000);
+            if ($res['iResult'] == 0) {
+
+                $res  = Api::getInstance()->sendRequest($data, 'charge', 'add');
+                //log记录
+                GameLog::logData(__METHOD__, $request, (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+                return $this->apiReturn($res['code'], $res['data'], $res['message']);
+            }
+            return $this->apiReturn(1, [], '添加失败');
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 设置玩家胜率
+     */
+    public function setPlayerRate()
+    {
+        if ($this->request->isAjax()) {
+            $roleid  = intval(input('roleid')) ?? 0;
+            $ratio  = intval(input('ratio')) ?? 0;
+            $time  = intval(input('time')) ?? 0;
+            $timeinterval  = intval(input('timeinterval')) ?? 0;
+            $socket = new QuerySocket();
+            $socket->setRoleRate($roleid, $ratio, $time, $timeinterval);
+            ob_clean();
+            return $this->apiReturn(0, [], '修改成功');
+        }
+
+        $roleid  = (input('roleid')) ?? '';
+        $ratio  = (input('ratio')) ?? '';
+        $time  = (input('time')) ?? '';
+        $timeinterval  = (input('timeinterval')) ?? '';
+        $readonly  = (input('readonly')) ?? '';
+
+        $this->assign('roleid', $roleid);
+        $this->assign('ratio', $ratio);
+        $this->assign('time', $time);
+        $this->assign('timeinterval', $timeinterval);
+        $this->assign('read', $readonly);
+        return $this->fetch();
+    }
+}

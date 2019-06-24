@@ -1,0 +1,162 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\admin\controller\traits\search;
+use app\common\Api;
+use socket\QuerySocket;
+use app\admin\controller\traits\getSocketRoom;
+
+
+class Room extends Main
+{
+    use getSocketRoom;
+    use search;
+    private $socket = null;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->socket = new QuerySocket();
+    }
+    /**
+     * 房间总览
+     */
+    public function index()
+    {
+        $res = Api::getInstance()->sendRequest([], 'room', 'list');
+        $this->assign('roomlist', $res['data']);
+        return $this->fetch();
+    }
+
+    /**
+     * 捕鱼
+     */
+    public function buyu()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+
+
+
+
+        return $this->fetch();
+    }
+
+    /**
+     * 抢庄牛牛
+     */
+    public function qzniuniu()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+
+        $this->getRoomById(1010);
+        return $this->fetch();
+    }
+
+    /**
+     * 经典牛牛
+     */
+    public function jdniuniu()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+
+        return $this->fetch();
+    }
+
+    /**
+     * 二人麻将
+     */
+    public function majiang()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 斗地主
+     */
+    public function doudizhu()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 龙虎斗
+     */
+    public function longhudou()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 百家乐
+     */
+    public function bjl()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 奔驰宝马
+     */
+    public function bcbm()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+
+
+        $roomInfo = $this->getSocketRoom($this->socket, 69);
+        $this->assign('roomInfo', $roomInfo);
+        return $this->fetch();
+    }
+
+    /**
+     * 飞禽走兽
+     */
+    public function fqzs()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 红黑大战
+     */
+    public function hhdz()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 百人牛牛
+     */
+    public function brnn()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        return $this->fetch();
+    }
+}

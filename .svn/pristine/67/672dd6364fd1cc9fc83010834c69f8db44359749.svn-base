@@ -1,0 +1,119 @@
+{extend name="common/base" /}
+
+{block name="title"}所有玩家{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-header layuiadmin-card-header-auto">
+       <h3>游戏日志</h3>
+        <a href="javascript:history.back();" class="layui-btn layui-btn-sm layui-btn-radius" >返回</a>
+    </div>
+    <div class="layui-card-body">
+        <div id="alllist">
+            <table id="proxylist" lay-filter="proxylist"></table>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        var main = {
+            renderData : function() {
+                var cols = [ //表头
+
+                    {field: 'id', title: '记录时间', minWidth:100}
+                    ,{field: 'nickname', title: '游戏ID', minWidth:120}
+                    , {field: 'balance', title: '游戏流水', minWidth:120}
+                    , {field: 'gamebalance', title: '游戏结果', minWidth:120}
+                    , {field: 'kindname', title: '上次金币', minWidth:120}
+                    , {field: 'totalin', title: '本局金币输赢', minWidth:120}
+                    , {field: 'totalout', title: '当前金币', minWidth:120}
+
+
+
+//                        , {field: 'proxyincome', title: '备注', minWidth:150}
+//                        , {field: 'proxyincome', title: '操作', minWidth:150}
+                ];
+
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('player/gameLog')}" //数据接口
+                    , page: true //开启分页
+                    , cols: [cols]
+                });
+            },
+
+            //搜索
+            search : function() {
+                var roleid = $.trim($('#roleid').val());
+                var roomid = $.trim($('#roomid').val());
+                var orderby = $.trim($('#orderby').val());
+                var asc = $.trim($('#asc').val());
+
+                //执行重载
+                table.reload('proxylist', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        'asc':asc,
+                        'roleid':roleid,
+                        'roomid':roomid,
+                        'orderby':orderby,
+                    }
+                });
+            },
+
+            //操作事件
+            extraEvent : function () {
+                //编辑
+                table.on('tool(proxylist)', function(obj) {
+                    var data = obj.data //获得当前行数据
+                        ,layEvent = obj.event; //获得 lay-event 对应的值
+                    tr = obj.tr; //获得当前行 tr 的DOM对象
+                    if (layEvent === 'detail') {
+                        alert(55);
+                    } else if (layEvent === 'ganme') { //删除
+                        alert(data.nickname);
+                    }else if(layEvent === 'cold'){
+
+                    }else if(layEvent === 'delete'){
+
+                    }
+                });
+            },
+
+            init : function() {
+                main.renderData();
+                main.extraEvent();
+
+                $('#search').on('click', function(e) {
+                    e.preventDefault();
+                    main.search();
+                });
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

@@ -1,0 +1,159 @@
+{extend name="common/base" /}
+
+{block name="title"}新增超级玩家{/block}
+{block name="css"}
+{/block}
+{block name="content"}
+<div>
+<table class="layui-table dict" id="dict">
+    <tr><th>键名</th><th>键值</th><th>操作</th></tr>
+    <?php $count=0;?>
+    {foreach name="lists" item="v" key="k"}
+    <tr index="{$count}" >
+        <td class="" contenteditable="true" name="storage" index="{$count}">{$v.storage}</td>
+        <td class="" contenteditable="true" name="rate" index="{$count}">{$v.rate}</td>
+        <td>
+            <button class="layui-btn layui-btn-xs layui-btn-danger delete" onclick='del(this)' index="{$count}"><i class="layui-icon layui-icon-close"></i></button>
+        </td>
+    </tr>
+    <?php $count++; ?>
+    {/foreach}
+</table>
+    <a class="layui-btn layui-btn-sm add adddict"><i class="layui-icon layui-icon-add-1"></i></a>
+</div>
+
+<div style="margin-top: 10px;text-align: center">
+    <button type="submit" class="layui-btn sure" thisid="{$thisroomid}" id="sure">保存修改</button>
+</div>
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var layer = layui.layer
+            ,$ = layui.$
+            ,form = layui.form;
+
+
+
+        var main = {
+            submitForm : function(data) {
+                var roleid = $.trim(data.field.roleid)
+                    ,rate = $.trim(data.field.rate);
+                $.ajax({
+                    type:'post',
+                    url:data.form.action,
+                    data:{
+                        'roleid' : roleid,
+                        'rate' : rate
+                    },
+                    dataType:'json',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            layer.msg(res.msg,{icon:1,time:1000}, function () {
+                                x_admin_close();
+                                parent.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon:2});
+                        }
+                    }
+                });
+            },
+
+            bindEvent: function() {
+                form.on('submit(addit)', function(data) {
+                    main.submitForm(data);
+                    return false;
+                });
+
+                $('#cancel').on('click', function(e) {
+                    e.preventDefault();
+                    x_admin_close();
+                });
+
+                //新增一行
+                $('.adddict').on('click', function(e) {
+                    e.preventDefault();
+                    //var last = $('#dict').find("tr:last-child").attr('index');
+                    var last = $(this).parent().find("tr:last-child").attr('index');
+                    var thisindex = last;
+                    if (!isNaN(last)) {
+                        thisindex = parseInt(last) + 1;
+                    } else {
+                        thisindex=0;
+                    }
+
+                    $(this).parent().find('table').append("<tr index='"+thisindex+"'>" +
+                        "<td contenteditable=\"true\" name=\"storage\"></td>" +
+                        "<td contenteditable=\"true\" name=\"rate\"></td>" +
+                        "<td><a class=\"layui-btn layui-btn-xs layui-btn-danger delete\" index=\""+thisindex+"\" onclick='del(this)'><i class=\"layui-icon layui-icon-close\"></i></a></td>" +
+                        "</tr>");
+                });
+
+
+                $('.sure').on('click', function(e) {
+                    e.preventDefault();
+                    var send = {};
+
+                    var keys = values = '';
+                    $(this).parent().parent().find('tr').each(function(i){
+                        //去除表头
+                        if(i>0){
+                            var key=$(this).find("td[name='storage']").html();
+                            var value=$(this).find("td[name='rate']").html();
+                            if (key!="" && value!="" && !send.hasOwnProperty(key)) {
+                                send[key] = value;
+                            }
+                            keys += key +',';
+                            values += value +',';
+
+                        }
+                    });
+
+                    send = JSON.stringify(send);
+                    var roomid = $(this).attr('thisid');
+
+
+                    $.ajax({
+                        url: "{:url('admin/room/setSocketRoomStorage')}",
+                        type: 'post',
+                        data: {
+                            'roomid' : roomid,
+                            'data' : send,
+                        },
+                        success: function (res) {
+                            if (res.code !== 0) {
+                                layer.msg(res.msg, {icon:2});
+                            } else {
+                                layer.msg(res.msg,{icon:1,time:1000}, function () {
+                                    x_admin_close();
+                                    parent.location.reload();
+                                });
+                            }
+                        }
+                    })
+
+                });
+
+            },
+
+            init : function () {
+                main.bindEvent();
+            }
+        };
+
+        main.init();
+    });
+
+
+    function del(obj) {
+        $(obj).parent().parent().remove();
+    }
+</script>
+{/block}

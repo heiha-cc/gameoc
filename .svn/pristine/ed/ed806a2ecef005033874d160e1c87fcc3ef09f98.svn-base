@@ -1,0 +1,35 @@
+<?php
+namespace app\admin\controller\traits;
+trait getSocketRoom {
+
+    public function getSocketRoom($socket, $roomid)
+    {
+        $roomInfo = $socket->getRoomInfo($roomid);
+        $roomInfo = $roomInfo[0];
+        $storageInfo = [];
+        if ($roomInfo['szStorageRatio']) {
+            $storage = explode('#', $roomInfo['szStorageRatio']);
+            $info = array_chunk($storage,2);
+
+            foreach ($info as $k => $v) {
+                if ($k == 0) {
+                    $storageInfo[$k] = [
+                        'rate' => $v[1],
+                        'storage' => '<'.$v[0]
+                    ];
+                } else {
+                    $storageInfo[$k] = [
+                        'rate' => $v[1],
+                        'storage' => $info[$k-1][0].'~'.$info[$k][0]
+                    ];
+                }
+
+            }
+        }
+        $roomInfo['storage'] = $storageInfo;
+        return $roomInfo;
+    }
+
+
+
+}

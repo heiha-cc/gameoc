@@ -1,0 +1,64 @@
+<?php
+namespace socket;
+
+class QuerySocket {
+    /**
+     * Notes:查询房间
+     * @param $roomid
+     * @return mixed
+     */
+    public function getRoomInfo($roomid)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+
+        $sendQuery = new sendQuery();
+
+        $sendQuery->SendMDQueryRoom($socket, $roomid);
+        $out_data = $socket->response();
+        $change = new ChangeData();
+        $out_array =  $change->ProcessDMQueryRoomRate($out_data);
+        return $out_array;
+    }
+
+
+    //设置房间
+    public function setRoom($roomid, $ratio,$initStorage,$currentStorage,$szStorageRatio)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change = new ChangeData();
+        $sendQuery->SendMDCtrolRoom($socket,$roomid,$ratio,$initStorage,$currentStorage,$szStorageRatio);
+        $out_data = $socket->response();
+        $out_array =  $change->ProcessDMSetRoomRate($out_data);
+        return $out_array;
+    }
+
+    //账号充值
+    public function addRoleMoney($roleId,$money){
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change = new ChangeData();
+        $sendQuery->SendMDAddRoleMonery($socket, $roleId, $money);
+        $out_data = $socket->response();
+        $out_array = $change->ProcessDMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+
+    //玩家胜率
+    public function setRoleRate($roleId,$ratio, $timelong, $timeinterval){
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change = new ChangeData();
+        $sendQuery->SendMDCtrolPerson($socket, $roleId, $ratio, $timelong, $timeinterval);
+        $out_data = $socket->response();
+        $out_array = $change->ProcessDMSetRoomRate($out_data);
+        return $out_array;
+    }
+
+}
+
+

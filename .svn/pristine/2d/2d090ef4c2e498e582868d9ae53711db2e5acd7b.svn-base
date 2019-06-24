@@ -1,0 +1,116 @@
+{extend name="common/base" /}
+
+{block name="title"}抢庄牛牛{/block}
+{block name="css"}
+<link rel="stylesheet" href="__layui__/style/mycarousel.css" media="all">
+{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-brief" lay-filter="component-tabs-brief" >
+            <ul class="layui-tab-title">
+                <li class="layui-this">抢庄牛牛1</li>
+                <li>抢庄牛牛2</li>
+                <li>抢庄牛牛3</li>
+                <li>抢庄牛牛4</li>
+                <li>抢庄牛牛5</li>
+            </ul>
+            <div class="layui-tab-content" style="background-color: #f2f2f2">
+                <div class="layui-tab-item layui-show">
+                    {include file="room/qzniuniu_0" /}
+                </div>
+                <div class="layui-tab-item">{include file="room/qzniuniu_1" /}</div>
+                <div class="layui-tab-item">{include file="room/qzniuniu_2" /}</div>
+                <div class="layui-tab-item">{include file="room/qzniuniu_3" /}</div>
+                <div class="layui-tab-item">{include file="room/qzniuniu_4" /}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        element.on('tab(component-tabs-brief)', function(obj){
+            //layer.msg(obj.index + '：' + this.innerHTML);
+            $('#onlinenum'+obj.index).html(obj.index);
+        });
+
+        var main = {
+            renderData : function() {
+                var cols = [ //表头
+                    {field: 'userid', title: '玩家ID', width:120}
+                    ,{field: 'nickname', title: '昵称', width:120}
+                    , {field: 'percent', title: '银行余额', width:120}
+                    , {field: 'num', title: '携带余额', width:120}
+                    , {field: 'daytax', title: '总充值', width:150}
+                    , {field: 'dayincome', title: '总转出', width:150}
+                    , {field: 'proxyincome', title: '盈利', width:150}
+                    , {field: 'proxyincome', title: '个人胜率', width:100}
+                    , {field: 'proxyincome', title: '控制时长', width:150}
+                    , {field: 'proxyincome', title: '不控间隔', width:150}
+                    , {field: 'proxyincome', title: '总流水', width:150}
+                    , {field: 'proxyincome', title: '活跃度', width:150}
+                    , {field: 'proxyincome', title: '操作', width:150}
+                ];
+
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('player/index')}" //数据接口
+                    , page: true //开启分页
+                    , cols: [cols]
+                });
+            },
+
+
+            //搜索
+            search : function() {
+                var userid = $.trim($('#userid').val());
+
+                //执行重载
+                table.reload('proxylist', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        'userid':userid
+                    }
+                });
+            },
+
+
+            init : function() {
+                form.render(null, 'component-form-group');
+                laydate.render({
+                    elem: '#LAY-component-form-group-date'
+                    ,format:'yyyy-MM-dd'
+                    ,max:-1
+                    ,btns: ['clear', 'confirm']
+                });
+                main.renderData();
+                $('#search').on('click', function(e) {
+                    e.preventDefault();
+                    main.search();
+                });
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

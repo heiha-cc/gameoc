@@ -1,0 +1,140 @@
+{extend name="common/base" /}
+
+{block name="title"}所有玩家{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-header layuiadmin-card-header-auto">
+        <form class="layui-form" lay-filter="component-form-group">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">玩家ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name="roleid" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">房间</label>
+                    <div class="layui-input-inline">
+                        <select name="roomid" id="roomid">
+                            <option value="0">所有</option>
+                            <!-- foreach循环 -->
+                            {foreach name="selectData" item="vo"}
+                            <option value="{$vo.roomid}">{$vo.roomname}</option>
+                            {/foreach}
+                            <!-- for循环 -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">排序条件</label>
+                    <div class="layui-input-inline">
+                        <select name="orderby" id="orderby">
+                            <option value="0">不排序</option>
+                            <option value="1">总充值</option>
+                            <option value="2">总转出</option>
+                            <option value="3">活跃度</option>
+                            <option value="4">总流水</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <a class="layui-btn" id="search" data-type="reload">搜索</a>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-card-body">
+        <div id="alllist">
+            <table id="proxylist" lay-filter="proxylist"></table>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        var main = {
+            renderData : function() {
+                var cols = [ //表头
+
+                    {field: 'id', title: '玩家ID', minWidth:100}
+                    ,{field: 'nickname', title: '昵称', minWidth:120}
+                    , {field: 'balance', title: '银行余额', minWidth:120}
+                    , {field: 'gamebalance', title: '携带余额', minWidth:120}
+                    , {field: 'kindname', title: '游戏房间', minWidth:120}
+                    , {field: 'totalin', title: '总充值', minWidth:120}
+                    , {field: 'totalout', title: '总转出', minWidth:120}
+                    , {field: 'totalget', title: '盈利', minWidth:120}
+                    , {field: 'ctrolratio', title: '个人胜率', minWidth:100}
+                    , {field: 'cotroltime', title: '控制时长', minWidth:100}
+                    , {field: 'ctrltimeinterval', title: '不控间隔', minWidth:100}
+                    , {field: 'totalwater', title: '总流水', minWidth:120}
+                    , {field: 'huoyue', title: '活跃度', minWidth:150}
+//                        , {field: 'proxyincome', title: '备注', minWidth:150}
+//                        , {field: 'proxyincome', title: '操作', minWidth:150}
+                ];
+
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('player/all')}" //数据接口
+                    , page: true //开启分页
+                    , cols: [cols]
+                });
+            },
+
+            //搜索
+            search : function() {
+                var roleid = $.trim($('#roleid').val());
+                var roomid = $.trim($('#roomid').val());
+                var orderby = $.trim($('#orderby').val());
+
+                //执行重载
+                table.reload('proxylist', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        'roleid':roleid,
+                        'roomid':roomid,
+                        'orderby':orderby,
+                    }
+                });
+            },
+
+            init : function() {
+                main.renderData();
+                $('#search').on('click', function(e) {
+                    e.preventDefault();
+                    main.search();
+                });
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}
