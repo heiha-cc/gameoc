@@ -4,7 +4,6 @@
 {block name="css"}{/block}
 {block name="content"}
 
-
 <div class="layui-card">
     <div class="layui-card-header layuiadmin-card-header-auto">
 
@@ -17,6 +16,9 @@
                     <label class="layui-form-label">日期</label>
                     <div class="layui-input-inline" style="width: 100px;">
                         <input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" name="end" id="LAY-component-form-group-date2" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -79,25 +81,21 @@
             renderData : function() {
                 var cols = [ //表头
 
-                    {field: 'id', title: '记录时间', minWidth:100}
-                    ,{field: 'nickname', title: '游戏ID', minWidth:120}
-                    , {field: 'balance', title: '游戏流水', minWidth:120}
-                    , {field: 'gamebalance', title: '游戏结果', minWidth:120}
-                    , {field: 'kindname', title: '上次金币', minWidth:120}
-                    , {field: 'totalin', title: '本局金币输赢', minWidth:120}
-                    , {field: 'totalout', title: '当前金币', minWidth:120}
-
-
+                    {field: 'roleid', title: '玩家编号', minWidth:100}
+                    ,{field: 'rolename', title: '角色名字', minWidth:120}
+                    , {field: 'coinchange', title: '金币变化', minWidth:120}
+                    , {field: 'coin', title: '金币', minWidth:120}
+                    , {field: 'addtime', title: '时间', minWidth:120}
 
 //                        , {field: 'proxyincome', title: '备注', minWidth:150}
 //                        , {field: 'proxyincome', title: '操作', minWidth:150}
                 ];
 
-                var roleid = $('roleid').val();
+                var roleid = $('#roleid').val();
 
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/gameLog')}" //数据接口
+                    , url: "{:url('player/coinLog')}" //数据接口
                     , page: true //开启分页
                     , where: {roleid:roleid}
                     , cols: [cols]
@@ -107,9 +105,9 @@
             //搜索
             search : function() {
                 var roleid = $.trim($('#roleid').val());
-                var kindid = $.trim($('#kindid').val());
-                var result = $.trim($('#result').val());
-                var start = $.trim($('#LAY-component-form-group-date').val());
+                var strartdate = $.trim($('#LAY-component-form-group-date').val());
+                var enddate = $.trim($('#LAY-component-form-group-date2').val());
+                var winlost = $.trim($('#result').val());
 
                 //执行重载
                 table.reload('proxylist', {
@@ -118,9 +116,9 @@
                     },
                     where: {
                         'roleid':roleid,
-                        'kindid':kindid,
-                        'result':result,
-                        'start':start,
+                        'strartdate':strartdate,
+                        'enddate':enddate,
+                        'winlost':winlost,
                     }
                 });
             },
@@ -149,6 +147,12 @@
                 main.extraEvent();
                 laydate.render({
                     elem: '#LAY-component-form-group-date'
+                    ,format:'yyyy-MM-dd'
+                    ,max:0
+                    ,btns: ['clear', 'confirm']
+                });
+                laydate.render({
+                    elem: '#LAY-component-form-group-date2'
                     ,format:'yyyy-MM-dd'
                     ,max:0
                     ,btns: ['clear', 'confirm']

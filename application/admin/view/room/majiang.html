@@ -266,9 +266,15 @@
                     },
                     dataType:'json',
                     success: function(res) {
-                        layer.msg(res.msg, {icon:1,time:1000}, function () {
-                            window.location.reload();
-                        })
+                        if (res.code == 0) {
+                            layer.msg(res.msg, {icon:1,time:1000}, function () {
+                                window.location.reload();
+                            })
+                        } else {
+                            layer.msg(res.msg, {icon:2,time:1000}, function () {
+                                window.location.reload();
+                            })
+                        }
                     }
                 });
             },

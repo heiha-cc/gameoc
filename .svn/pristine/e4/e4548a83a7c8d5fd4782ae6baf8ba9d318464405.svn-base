@@ -136,6 +136,7 @@ class Player extends Main
         return $this->fetch();
     }
 
+
     /**
      * 金币日志
      */
@@ -147,9 +148,7 @@ class Player extends Main
             $roleId     = intval(input('roleid')) ? intval(input('roleid')) : 0;
             $strartdate = input('strartdate') ? input('strartdate') : '';
             $enddate    = input('enddate') ? input('enddate') : '';
-            $winlost    = intval(input('winlost')) >=0 ? intval(input('winlost')) : -1;
-
-
+            $winlost    = intval(input('winlost')) ? intval(input('winlost')) : -1;
 
             $res = Api::getInstance()->sendRequest([
                 'roleid'     => $roleId,

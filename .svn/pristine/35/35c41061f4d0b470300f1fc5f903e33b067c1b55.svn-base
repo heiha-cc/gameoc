@@ -37,7 +37,7 @@ class Summary extends Main
                 'pagesize'   => $limit
             ], 'system', 'userdata');
 
-            return $this->apiReturn($res['code'], $res['data']['userreportlist'], $res['message'], $res['total'], $res['data']['summodel']);
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
         }
         return $this->fetch();
     }

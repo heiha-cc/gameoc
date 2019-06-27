@@ -99,7 +99,7 @@ class Player extends Main
     }
 
     /**
-     * 游戏日志
+     * 所有玩家
      */
     public function gameLog()
     {
@@ -128,38 +128,6 @@ class Player extends Main
                 }
                 unset($v);
             }
-            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
-        }
-
-        $roleId = intval(input('roleid')) ? intval(input('roleid')) : 0;
-        $this->assign('roleid', $roleId);
-        return $this->fetch();
-    }
-
-    /**
-     * 金币日志
-     */
-    public function coinLog()
-    {
-        if ($this->request->isAjax()) {
-            $page       = intval(input('page')) ? intval(input('page')) : 1;
-            $limit      = intval(input('limit')) ? intval(input('limit')) : 10;
-            $roleId     = intval(input('roleid')) ? intval(input('roleid')) : 0;
-            $strartdate = input('strartdate') ? input('strartdate') : '';
-            $enddate    = input('enddate') ? input('enddate') : '';
-            $winlost    = intval(input('winlost')) >=0 ? intval(input('winlost')) : -1;
-
-
-
-            $res = Api::getInstance()->sendRequest([
-                'roleid'     => $roleId,
-                'strartdate' => $strartdate,
-                'enddate'    => $enddate,
-                'page'       => $page,
-                'winlost'    => $winlost,
-                'pagesize'   => $limit
-            ], 'player', 'coin');
-
             return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
         }
 
