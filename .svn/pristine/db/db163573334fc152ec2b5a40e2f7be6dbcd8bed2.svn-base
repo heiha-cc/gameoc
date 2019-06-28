@@ -131,7 +131,6 @@
                         elem: '#proxylist'
                         , url: "{:url('player/online')}" //数据接口
                         , page: true //开启分页
-                        , limit:15
                         , cols: [cols]
                         , done: function(res, curr, count){
                             $('#nums').html(count);

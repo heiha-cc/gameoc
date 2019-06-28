@@ -18,27 +18,19 @@
                         <input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off"
                                class="layui-input">
                     </div>
-                    <div class="layui-form-mid">
-                        -
-                    </div>
                     <div class="layui-input-inline" style="width: 100px;">
                         <input type="text" name="end" id="LAY-component-form-group-date2" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">房间</label>
-                    <div class="layui-input-inline">
-                        <select name="roomid" id="roomid">
-                            <option value="0">所有</option>
-                            <!-- foreach循环 -->
-                            {foreach name="selectData" item="vo"}
-                            <option value="{$vo.roomid}">{$vo.roomname}</option>
-                            {/foreach}
-                            <!-- for循环 -->
-                        </select>
-                    </div>
-                </div>
+                <!--<div class="layui-inline">-->
+                <!--<label class="layui-form-label">游戏种类</label>-->
+                <!--<div class="layui-input-inline">-->
+                <!--<select name="kindid" id="kindid">-->
+                <!--<option value="0">所有</option>-->
+                <!--</select>-->
+                <!--</div>-->
+                <!--</div>-->
 
                 <div class="layui-inline">
                     <label class="layui-form-label">游戏结果</label>
@@ -92,8 +84,7 @@
                 var cols = [ //表头
 //                    {field: 'roleid', title: '玩家编号', minWidth:100}
                     {field: 'rolename', title: '角色名字', minWidth: 120}
-                    ,{field: 'kindname', title: '游戏种类', minWidth: 120}
-                    ,{field: 'roomname', title: '房间名', minWidth: 120}
+
                     , {
                         field: 'changetype', title: '输赢情况', minWidth: 120, templet: function (d) {
                             var res = '';
@@ -120,13 +111,10 @@
 
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/gameLog')}" //数据接口
+                    , url: "{:url('player/coinLog')}" //数据接口
                     , page: true //开启分页
                     , limit:15
-                    , where: {
-                        roleid: roleid,
-                        winlost:-1
-                    }
+                    , where: {roleid: roleid}
                     , cols: [cols]
                 });
             },
@@ -134,7 +122,6 @@
             //搜索
             search: function () {
                 var roleid = $.trim($('#roleid').val());
-                var roomid = $.trim($('#roomid').val());
                 var strartdate = $.trim($('#LAY-component-form-group-date').val());
                 var enddate = $.trim($('#LAY-component-form-group-date2').val());
                 var winlost = $.trim($('#result').val());
@@ -146,7 +133,6 @@
                     },
                     where: {
                         'roleid': roleid,
-                        'roomid': roomid,
                         'strartdate': strartdate,
                         'enddate': enddate,
                         'winlost': winlost,

@@ -73,7 +73,7 @@
 {/block}
 {block name="script"}
 <script type="text/html" id="msg-bar">
-    <!--<a class="layui-btn layui-btn-xs" lay-event="detail">玩家详情</a>-->
+    <a class="layui-btn layui-btn-xs" lay-event="detail">玩家详情</a>
     <a class="layui-btn layui-btn-xs " lay-event="ganme">游戏日志</a>
     <a class="layui-btn layui-btn-xs" lay-event="cold">金币日志</a>
     <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">拉黑</a>
@@ -120,7 +120,6 @@
                     elem: '#proxylist'
                     , url: "{:url('player/all')}" //数据接口
                     , page: true //开启分页
-                    , limit:15
                     , cols: [cols]
                 });
             },
@@ -155,7 +154,7 @@
                     tr = obj.tr; //获得当前行 tr 的DOM对象
                     if (layEvent === 'detail') {
 
-                    } else if (layEvent === 'ganme') { //游戏日志
+                    } else if (layEvent === 'ganme') { //删除
                         window.location.href='gameLog?roleid='+data.id;
                     }else if(layEvent === 'cold'){
                         window.location.href='coinLog?roleid='+data.id;

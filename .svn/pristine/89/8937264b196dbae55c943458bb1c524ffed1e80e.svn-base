@@ -117,37 +117,6 @@ class Room extends Main
     }
 
     /**
-     * 设置玩家胜率
-     */
-    public function setPlayerRate()
-    {
-        if ($this->request->isAjax()) {
-            $roleid       = intval(input('roleid')) ? intval(input('roleid')) : 0;
-            $ratio        = intval(input('ratio')) ? intval(input('ratio')) : 0;
-            $time         = intval(input('time')) ? intval(input('time')) : 0;
-            $timeinterval = intval(input('timeinterval')) ? intval(input('timeinterval')) : 0;
-            $socket       = new QuerySocket();
-            $socket->setRoleRate($roleid, $ratio, $time, $timeinterval);
-            ob_clean();
-            GameLog::logData(__METHOD__, $this->request->request());
-            return $this->apiReturn(0, [], '修改成功');
-        }
-
-        $roleid       = intval(input('roleid')) ? intval(input('roleid')) : '';
-        $ratio        = intval(input('ratio')) ? intval(input('ratio')) : '';
-        $time         = intval(input('time')) ? intval(input('time')) : '';
-        $timeinterval = intval(input('timeinterval')) ? intval(input('timeinterval')) : '';
-        $readonly     = intval(input('readonly')) ? intval(input('readonly')) : '';
-
-        $this->assign('roleid', $roleid);
-        $this->assign('ratio', intval($ratio));
-        $this->assign('time', intval($time));
-        $this->assign('timeinterval', intval($timeinterval));
-        $this->assign('read', intval($readonly));
-        return $this->fetch();
-    }
-
-    /**
      * 房间总览
      */
     public function index()
@@ -311,19 +280,6 @@ class Room extends Main
     public function brnn()
     {
         $kindId = 9000;
-        if ($this->request->isAjax()) {
-        }
-        $roomList = $this->getRoomById($kindId);
-        $this->assign('roomlist', $roomList);
-        return $this->fetch();
-    }
-
-    /**
-     * Notes:红包扫雷
-     */
-    public function hbsl()
-    {
-        $kindId = 9004;
         if ($this->request->isAjax()) {
         }
         $roomList = $this->getRoomById($kindId);

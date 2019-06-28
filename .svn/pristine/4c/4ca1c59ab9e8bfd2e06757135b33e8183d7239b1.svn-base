@@ -18,9 +18,6 @@
                         <input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off"
                                class="layui-input">
                     </div>
-                    <div class="layui-form-mid">
-                        -
-                    </div>
                     <div class="layui-input-inline" style="width: 100px;">
                         <input type="text" name="end" id="LAY-component-form-group-date2" autocomplete="off"
                                class="layui-input">
@@ -92,8 +89,6 @@
                 var cols = [ //表头
 //                    {field: 'roleid', title: '玩家编号', minWidth:100}
                     {field: 'rolename', title: '角色名字', minWidth: 120}
-                    ,{field: 'kindname', title: '游戏种类', minWidth: 120}
-                    ,{field: 'roomname', title: '房间名', minWidth: 120}
                     , {
                         field: 'changetype', title: '输赢情况', minWidth: 120, templet: function (d) {
                             var res = '';
@@ -122,7 +117,6 @@
                     elem: '#proxylist'
                     , url: "{:url('player/gameLog')}" //数据接口
                     , page: true //开启分页
-                    , limit:15
                     , where: {
                         roleid: roleid,
                         winlost:-1
@@ -179,13 +173,13 @@
                 laydate.render({
                     elem: '#LAY-component-form-group-date'
                     , format: 'yyyy-MM-dd'
-                    , max: 1
+                    , max: 0
                     , btns: ['clear', 'confirm']
                 });
                 laydate.render({
                     elem: '#LAY-component-form-group-date2'
                     , format: 'yyyy-MM-dd'
-                    , max: 1
+                    , max: 0
                     , btns: ['clear', 'confirm']
                 });
                 $('#search').on('click', function (e) {

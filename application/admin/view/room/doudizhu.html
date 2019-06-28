@@ -138,7 +138,7 @@
                                             </div>
                                             <div class="layui-inline">
                                                 <div class="layui-input-inline">
-                                                    <a class="layui-btn" id="search" onclick="x_admin_show('设置玩家胜率', '{:url(\'player/setPlayerRate\')}')">设置玩家胜率</a>
+                                                    <a class="layui-btn" id="search" onclick="x_admin_show('设置玩家胜率', '{:url(\'room/setPlayerRate\')}')">设置玩家胜率</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -336,7 +336,9 @@
                         ,layEvent = obj.event; //获得 lay-event 对应的值
                     tr = obj.tr; //获得当前行 tr 的DOM对象
                     if (layEvent === 'edit') {
-                        x_admin_show('设置玩家胜率', 'admin/player/setplayerrate.html?roleid='+data.roleid+'&ratio='+data.ctrolratio+'&time='+data.ctroltime+'&timeinterval='+data.ctrltimeinterval+'&readonly=1');
+                        var url = 'setPlayerRate?roleid='+data.id+'&ratio='+data.ctrolratio+'&time='+data.cotroltime+'&timeinterval='+data.ctrltimeinterval+'&readonly=1';
+
+                        x_admin_show('设置玩家胜率', url);
                     }
                 });
             },

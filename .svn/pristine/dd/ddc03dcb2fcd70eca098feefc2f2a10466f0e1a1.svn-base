@@ -5,7 +5,7 @@
 {/block}
 {block name="content"}
 
-<form class="layui-form" action="{:url('player/setPlayerRate')}" method="post" id="addProxy" >
+<form class="layui-form" action="{:url('room/setPlayerRate')}" method="post" id="addProxy" >
 
     <div class="layui-form-item">
         <label class="layui-form-label">玩家ID：</label>
