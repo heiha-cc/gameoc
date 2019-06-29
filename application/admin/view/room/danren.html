@@ -1,9 +1,6 @@
 {extend name="common/base" /}
 
 {block name="title"}抢庄牛牛{/block}
-{block name="css"}
-<link rel="stylesheet" href="__layui__/style/mycarousel.css" media="all">
-{/block}
 {block name="content"}
 
 
@@ -25,36 +22,36 @@
                 <div class="layui-tab-item {if $k == 0}layui-show{/if}">
                     <div class ="layui-row layui-col-space20">
                         <!--汇总-->
-                        <div class="layui-col-md4">
+                        <div class="layui-col-xs12">
                             <div class="layui-card">
                                 <div class="layui-card-header">数据汇总</div>
                                 <div class="layui-card-body">
-                                    <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 230px;">
+                                    <div class="layadmin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: auto;">
                                         <div carousel-item="">
                                             <ul class="layui-row layui-col-space10 layui-this">
-                                                <li class="layui-col-xs6">
-                                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                                <li class="layui-col-xs3">
+                                                    <a href="javascript:;" class="layadmin-backlog-body">
                                                         <h3>历史总战绩</h3>
                                                         <p>
                                                             <cite id="history{$room.roomid}">0</cite></p>
                                                     </a>
                                                 </li>
-                                                <li class="layui-col-xs6">
-                                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                                <li class="layui-col-xs3">
+                                                    <a href="javascript:;" class="layadmin-backlog-body">
                                                         <h3>当前战绩</h3>
                                                         <p>
                                                             <cite id="currentjj{$room.roomid}">0</cite></p>
                                                     </a>
                                                 </li>
-                                                <li class="layui-col-xs6">
-                                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                                <li class="layui-col-xs3">
+                                                    <a href="javascript:;" class="layadmin-backlog-body">
                                                         <h3>在线人数</h3>
                                                         <p>
                                                             <cite id="onlinenum{$room.roomid}">0</cite></p>
                                                     </a>
                                                 </li>
-                                                <li class="layui-col-xs6">
-                                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                                <li class="layui-col-xs3">
+                                                    <a href="javascript:;" class="layadmin-backlog-body">
                                                         <h3>当前房间胜率</h3>
                                                         <p>
                                                             <cite id="winrate{$room.roomid}">0</cite>%</p>
@@ -67,7 +64,7 @@
                             </div>
                         </div>
                         <!--库存设置-->
-                        <div class="layui-col-md8">
+                        <div class="layui-col-xs12">
                             <div class="layui-card">
                                 <div class="layui-card-header">
                                     库存设置
@@ -75,16 +72,13 @@
                                 <div class="layui-card-body">
                                     <form class="layui-form" lay-filter="component-form-group">
                                         <div class="layui-form-item">
-                                            <div class="layui-inline">
-                                                <label class="layui-form-label">初始库存</label>
-                                                <div class="layui-input-inline">
-                                                    <input type="text" id="init{$room.roomid}" name="init" autocomplete="off" class="layui-input">
-                                                </div>
-                                            </div>
+
+
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">当前库存</label>
                                                 <div class="layui-input-inline" >
                                                     <input type="text" name="current" id="current{$room.roomid}" autocomplete="off" class="layui-input">
+                                                    <input type="text" id="init{$room.roomid}" name="init" value="0" autocomplete="off" class="layui-input" style="display: none">
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
@@ -99,7 +93,7 @@
                         </div>
 
                         <!--库存阶段控制方案-->
-                        <div class="layui-col-md8">
+                        <div class="layui-col-xs12">
                             <div class="layui-card">
                                 <div class="layui-card-header">
                                     库存阶段控制 <span style="float: right"><button class="layui-btn layui-btn-sm" onclick="x_admin_show('设置库存','setSocketRoomStorage?roomid={$room.roomid}')">设置库存阶段方案</button></span>
@@ -117,7 +111,7 @@
                             </div>
                         </div>
 
-                        <div class="layui-col-md12">
+                        <div class="layui-col-xs12">
                             <div class="layui-card">
                                 <div class="layui-card-header">
                                     房间在线明细
@@ -261,7 +255,7 @@
                     url:'setSocketRoomRate',
                     data:{
                         'roomid' : roomid,
-                        'init' : init,
+                        'init' : 0,
                         'current' : current,
                     },
                     dataType:'json',

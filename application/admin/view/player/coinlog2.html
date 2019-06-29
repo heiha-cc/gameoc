@@ -1,17 +1,19 @@
 {extend name="common/base" /}
 
-{block name="title"}游戏日志{/block}
+{block name="title"}金币日志{/block}
 {block name="css"}{/block}
 {block name="content"}
 
 <div class="layui-card">
     <div class="layui-card-header layuiadmin-card-header-auto">
-
-        <h3>游戏日志</h3>
-        <button class="layui-btn layui-btn-sm layui-btn-radius" onclick="window.history.back()">返回</button>
-
         <form class="layui-form" lay-filter="component-form-group">
             <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">玩家ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name="roleid" lay-verify="number" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">日期</label>
                     <div class="layui-input-inline" style="width: 100px;">
@@ -46,7 +48,6 @@
                 </div>
             </div>
         </form>
-        <input type="hidden" id="roleid" value="{$roleid}">
     </div>
     <div class="layui-card-body">
         <div id="alllist">
@@ -79,23 +80,21 @@
                     {field: 'roleid', title: '用户ID', minWidth:100}
                     ,{field: 'rolename', title: '角色名字', minWidth: 120}
                     ,{field: 'changename', title: '类型', minWidth: 120}
-
                     , {field: 'premoney', title: '操作前金币数', minWidth: 120}
                     , {field: 'changemoney', title: '操作金币', minWidth: 120}
                     , {field: 'balance', title: '操作后金币数', minWidth: 120}
                     , {field: 'addtime', title: '时间', minWidth: 120}
                     , {field: 'description', title: '备注', minWidth:250}
+//                        , {field: 'proxyincome', title: '备注', minWidth:150}
 //                        , {field: 'proxyincome', title: '操作', minWidth:150}
                 ];
 
-                var roleid = $('#roleid').val();
 
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/coinLog')}" //数据接口
+                    , url: "{:url('player/coinlog2')}" //数据接口
                     , page: true //开启分页
                     , limit:15
-                    , where: {roleid: roleid}
                     , cols: [cols]
                 });
             },

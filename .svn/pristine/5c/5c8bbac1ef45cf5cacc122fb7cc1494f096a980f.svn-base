@@ -14,43 +14,22 @@
 
 <div class ="layui-row layui-col-space30">
     <div class="layui-col-md12">
-        <!--<div class="layui-card">-->
-            <!--<div class="layui-card-header" style="color: red"><h3>房间数据汇总</h3></div>-->
-            <!--<div class="layui-card-body">-->
-                <!--<div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 90px">-->
-                    <!--<div carousel-item="">-->
-                        <!--<ul class="layui-row layui-col-space10 layui-this">-->
-                            <!--<li class="layui-col-xs12">-->
-                                <!--<a href="javascript:;" class="x-admin-backlog-body">-->
-                                    <!--<h3>历史总战绩</h3>-->
-                                    <!--<p>-->
-                                        <!--<cite>0</cite></p>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
         <div class="layui-card">
+            <div class="layui-card-header" style="color: red"><h3>房间数据汇总</h3></div>
             <div class="layui-card-body">
-                <fieldset class="layui-elem-field">
-                    <legend>房间数据汇总</legend>
-                    <div class="layui-field-box">
-                        <div class="layadmin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: auto;">
-                            <ul class="layui-row layui-col-space10 layui-this">
-                                <li class="layui-col-xs12">
-                                    <a href="javascript:;" class="layadmin-backlog-body">
-                                        <h3>历史总战绩</h3>
-                                        <p>
-                                            <cite>0</cite></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 90px">
+                    <div carousel-item="">
+                        <ul class="layui-row layui-col-space10 layui-this">
+                            <li class="layui-col-xs12">
+                                <a href="javascript:;" class="x-admin-backlog-body">
+                                    <h3>历史总战绩</h3>
+                                    <p>
+                                        <cite>0</cite></p>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </fieldset>
+                </div>
             </div>
         </div>
     </div>
@@ -59,32 +38,32 @@
             <div class="layui-card">
                 <div class="layui-card-header" style="color: red"><h3>{$room.roomname}</h3></div>
                 <div class="layui-card-body">
-                    <div class="layadmin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: auto;">
-
-                        <ul class="layui-row layui-col-space10 layui-this">
-                            <li class="layui-col-xs12">
-                                <a href="javascript:;" class="layadmin-backlog-body">
-                                    <h3>历史总战绩</h3>
-                                    <p>
-                                        <cite>{$room.historytotal}</cite></p>
-                                </a>
-                            </li>
-                            <li class="layui-col-xs6">
-                                <a href="javascript:;" class="layadmin-backlog-body">
-                                    <h3>当前战绩</h3>
-                                    <p>
-                                        <cite>{$room.currenttotal}</cite></p>
-                                </a>
-                            </li>
-                            <li class="layui-col-xs6">
-                                <a href="javascript:;" class="layadmin-backlog-body">
-                                    <h3>在线人数</h3>
-                                    <p>
-                                        <cite>{$room.online}</cite></p>
-                                </a>
-                            </li>
-                        </ul>
-
+                    <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 190px;">
+                        <div carousel-item="">
+                            <ul class="layui-row layui-col-space10 layui-this">
+                                <li class="layui-col-xs12">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>历史总战绩</h3>
+                                        <p>
+                                            <cite>{$room.historytotal}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>当前战绩</h3>
+                                        <p>
+                                            <cite>{$room.currenttotal}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>在线人数</h3>
+                                        <p>
+                                            <cite>{$room.online}</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

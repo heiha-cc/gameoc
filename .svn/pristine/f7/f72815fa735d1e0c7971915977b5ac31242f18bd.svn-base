@@ -178,7 +178,6 @@ class Player extends Main
      */
     public function coinLog()
     {
-        $changeType = config('site.bank_change_type');
         if ($this->request->isAjax()) {
             $page   = intval(input('page')) ? intval(input('page')) : 1;
             $limit  = intval(input('limit')) ? intval(input('limit')) : 10;
@@ -195,65 +194,13 @@ class Player extends Main
                 'asc'      => 0,
                 'pagesize' => $limit
             ], 'player', 'coin');
-            foreach ($res['data'] as &$v) {
-                $v['premoney'] = $v['balance'] - $v['changemoney'];
-                foreach ($changeType as $k2 => $v2) {
-                    if ($v['changetype'] == $k2) {
-                        $v['changename'] = $v2;
-                        break;
-                    }
-                }
-            }
-            unset($v);
             return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
         }
 
         $roleId = intval(input('roleid')) ? intval(input('roleid')) : 0;
         $this->assign('roleid', $roleId);
-        $this->assign('changeType', $changeType);
         return $this->fetch();
     }
-
-    /**
-     * Notes: 金币日志（单独菜单）
-     * @return mixed
-     */
-    public function coinlog2()
-    {
-        $changeType = config('site.bank_change_type');
-        if ($this->request->isAjax()) {
-            $page       = intval(input('page')) ? intval(input('page')) : 1;
-            $limit      = intval(input('limit')) ? intval(input('limit')) : 10;
-            $roleId     = intval(input('roleid')) ? intval(input('roleid')) : 0;
-            $strartdate = input('strartdate') ? input('strartdate') : '';
-            $enddate    = input('enddate') ? input('enddate') : '';
-            $changetype    = intval(input('changetype')) ? intval(input('changetype')) : 0;
-            $res = Api::getInstance()->sendRequest([
-                'roleid'     => $roleId,
-                'strartdate' => $strartdate,
-                'enddate'    => $enddate,
-                'page'       => $page,
-                'changetype' => $changetype,
-                'pagesize'   => $limit
-            ], 'player', 'coin');
-            foreach ($res['data'] as &$v) {
-                $v['premoney'] = $v['balance'] - $v['changemoney'];
-                foreach ($changeType as $k2 => $v2) {
-                    if ($v['changetype'] == $k2) {
-                        $v['changename'] = $v2;
-                        break;
-                    }
-                }
-            }
-            unset($v);
-            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
-        }
-
-
-        $this->assign('changeType', $changeType);
-        return $this->fetch();
-    }
-
 
     /**
      * Notes: 超级玩家列表

@@ -6,12 +6,14 @@
 
 <div class="layui-card">
     <div class="layui-card-header layuiadmin-card-header-auto">
-
-        <h3>游戏日志</h3>
-        <button class="layui-btn layui-btn-sm layui-btn-radius" onclick="window.history.back()">返回</button>
-
         <form class="layui-form" lay-filter="component-form-group">
             <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">玩家ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name="roleid" lay-verify="number" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">日期</label>
                     <div class="layui-input-inline" style="width: 100px;">
@@ -26,15 +28,29 @@
                                class="layui-input">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">房间</label>
+                    <div class="layui-input-inline">
+                        <select name="roomid" id="roomid">
+                            <option value="0">所有</option>
+                            <!-- foreach循环 -->
+                            {foreach name="selectData" item="vo"}
+                            <option value="{$vo.roomid}">{$vo.roomname}</option>
+                            {/foreach}
+                            <!-- for循环 -->
+                        </select>
+                    </div>
+                </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">类型</label>
+                    <label class="layui-form-label">游戏结果</label>
                     <div class="layui-input-inline">
-                        <select name="changetype" id="changetype">
-                            <option value="0">所有</option>
-                            {foreach $changeType as $k => $v}
-                            <option value="{$k}">{$v}</option>
-                            {/foreach}
+                        <select name="result" id="result">
+                            <option value="-1">所有</option>
+                            <option value="0">赢</option>
+                            <option value="1">输</option>
+                            <option value="2">和</option>
+                            <option value="3">逃</option>
                         </select>
                     </div>
                 </div>
@@ -46,7 +62,7 @@
                 </div>
             </div>
         </form>
-        <input type="hidden" id="roleid" value="{$roleid}">
+
     </div>
     <div class="layui-card-body">
         <div id="alllist">
@@ -76,26 +92,41 @@
         var main = {
             renderData: function () {
                 var cols = [ //表头
-                    {field: 'roleid', title: '用户ID', minWidth:100}
-                    ,{field: 'rolename', title: '角色名字', minWidth: 120}
-                    ,{field: 'changename', title: '类型', minWidth: 120}
-
-                    , {field: 'premoney', title: '操作前金币数', minWidth: 120}
-                    , {field: 'changemoney', title: '操作金币', minWidth: 120}
-                    , {field: 'balance', title: '操作后金币数', minWidth: 120}
+                    {field: 'roleid', title: '玩家ID', minWidth:100}
+                    , {field: 'rolename', title: '角色名字', minWidth: 120}
+                    ,{field: 'kindname', title: '游戏种类', minWidth: 120}
+                    ,{field: 'roomname', title: '房间名', minWidth: 120}
+                    , {
+                        field: 'changetype', title: '输赢情况', minWidth: 120, templet: function (d) {
+                            var res = '';
+                            if (d.changetype == 0) {
+                                res = '赢';
+                            } else if (d.changetype == 1) {
+                                res = '输';
+                            } else if (d.changetype == 2) {
+                                res = '和';
+                            } else if (d.changetype == 3) {
+                                res = '逃';
+                            }
+                            return res;
+                        }
+                    }
+                    , {field: 'premoney', title: '上局金币', minWidth: 120}
+                    , {field: 'money', title: '输赢金币', minWidth: 120}
+                    , {field: 'lastmoney', title: '当前金币', minWidth: 120}
                     , {field: 'addtime', title: '时间', minWidth: 120}
-                    , {field: 'description', title: '备注', minWidth:250}
+//                        , {field: 'proxyincome', title: '备注', minWidth:150}
 //                        , {field: 'proxyincome', title: '操作', minWidth:150}
                 ];
 
-                var roleid = $('#roleid').val();
-
                 table.render({
                     elem: '#proxylist'
-                    , url: "{:url('player/coinLog')}" //数据接口
+                    , url: "{:url('player/gamelog2')}" //数据接口
                     , page: true //开启分页
                     , limit:15
-                    , where: {roleid: roleid}
+                    , where: {
+                        winlost:-1
+                    }
                     , cols: [cols]
                 });
             },
@@ -103,9 +134,10 @@
             //搜索
             search: function () {
                 var roleid = $.trim($('#roleid').val());
+                var roomid = $.trim($('#roomid').val());
                 var strartdate = $.trim($('#LAY-component-form-group-date').val());
                 var enddate = $.trim($('#LAY-component-form-group-date2').val());
-                var changetype = $.trim($('#changetype').val());
+                var winlost = $.trim($('#result').val());
 
                 //执行重载
                 table.reload('proxylist', {
@@ -114,9 +146,10 @@
                     },
                     where: {
                         'roleid': roleid,
+                        'roomid': roomid,
                         'strartdate': strartdate,
                         'enddate': enddate,
-                        'changetype': changetype,
+                        'winlost': winlost,
                     }
                 });
             },
