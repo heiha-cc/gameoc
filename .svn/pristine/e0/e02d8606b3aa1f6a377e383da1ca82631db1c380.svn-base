@@ -1,0 +1,38 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\common\GameLog;
+use think\Controller;
+use think\Db;
+use app\model\User as userModel;
+
+class Playertrans extends Controller
+{
+    
+    /**
+     * 转出申请审核
+     */
+    public function apply()
+    {
+        return $this->fetch();
+
+    }
+
+    /**
+     * 财务审核
+     */
+    public function finance()
+    {
+        return $this->fetch('apply');
+    }
+
+    /**
+     * 转出记录
+     */
+    public function record()
+    {
+        return $this->fetch();
+    }
+
+}

@@ -1,0 +1,147 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\common\Api;
+use app\common\GameLog;
+use socket\QuerySocket;
+
+class Charge extends Main
+{
+    /**
+     * 充值汇总
+     */
+    public function index()
+    {
+        if ($this->request->isAjax()) {
+            $page    = intval(input('page')) ? intval(input('page')) : 1;
+            $limit   = intval(input('limit')) ? intval(input('limit')) : 10;
+            $roleId  = intval(input('roleid')) ? intval(input('roleid')) : 0;
+            $roomId  = intval(input('roomid')) ? intval(input('roomid')) : 0;
+            $orderby = intval(input('orderby')) ? intval(input('orderby')) : 0;
+
+            $res = Api::getInstance()->sendRequest([
+                'roleid'   => $roleId,
+                'roomid'   => $roomId,
+                'orderby'  => $orderby,
+                'page'     => $page,
+                'pagesize' => $limit
+            ], 'player', 'online');
+            if ($res['data']) {
+                foreach ($res['data'] as &$v) {
+                    //盈利
+                    $v['totalget'] = $v['totalin'] - $v['totalout'];
+                    //活跃度
+                    $v['huoyue'] = $v['totalin'] != 0 ? sprintf(".2f", $v['totalwater'] / $v['totalin']) : 0;
+                }
+                unset($v);
+            }
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+        }
+
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:转账明细查询
+     */
+    public function transfer()
+    {
+        if ($this->request->isAjax()) {
+
+
+            $page      = intval(input('page')) ? intval(input('page')) : 1;
+            $limit     = intval(input('limit')) ? intval(input('limit')) : 10;
+            $roleId    = intval(input('roleid')) ? intval(input('roleid')) : 0;
+            $orderno   = input('orderno') ? input('orderno') : '';
+            $channelid = intval(input('classid')) ? intval(input('classid')) : 0;
+            $start = input('start') ? input('start') : '';
+            $end   = input('end') ? input('end') : '';
+            $status = intval(input('status'))>=0 ? intval(input('status')) : -1;
+            $amount = input('amount') ? input('amount') . '-' . '200' : 0;
+            $data = ['page' => $page, 'pagesize' => $limit, 'roleid' => $roleId, 'orderno' => $orderno, 'strartdate' => $start, 'enddate' => $end, 'transactionid' => '', 'status' => $status, 'classid' => $channelid, 'isoffline' => 1, 'amount' => $amount];
+            $res = Api::getInstance()->sendRequest($data, 'payment', 'payorder');
+            return $this->apiReturn($res['code'], isset($res['data']['ResultData']['list']) ? $res['data']['ResultData']['list'] : [], $res['message'], $count = $res['total'], isset($res['data']['ResultData']['sum']) ? $res['data']['ResultData']['sum'] : []);
+        }
+
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:充值明细查询
+     */
+    public function recharge()
+    {
+
+        if ($this->request->isAjax()) {
+            $strartdate    = input('strartdate') ? input('strartdate') : '';
+            $enddate       = input('enddate') ? input('enddate') : '';
+            $roleId        = intval(input('roleid')) ? intval(input('roleid')) : 0;
+            $orderno       = input('orderno') ? input('orderno') : '';
+            $transactionid = input('transactionid') ? input('transactionid') : '';
+            $channelid     = intval(input('channelid')) ? intval(input('channelid')) : 0;
+            $classid       = intval(input('classid')) ? intval(input('classid')) : 0;
+            $status        = intval(input('status')) >= 0 ? intval(input('status')) : -1;
+            $isoffline     = 0;
+            $amount        = intval(input('amount')) ? intval(input('amount')) : 0;
+            $page          = intval(input('page')) ? intval(input('page')) : 1;
+            $limit         = intval(input('limit')) ? intval(input('limit')) : 10;
+
+            if ($amount > 0) {
+                $amount .= '-' . $amount;
+            }
+
+            $res = Api::getInstance()->sendRequest([
+                'strartdate'    => $strartdate,
+                'enddate'       => $enddate,
+                'roleid'        => $roleId,
+                'orderno'       => $orderno,
+                'transactionid' => $transactionid,
+                'channelid'     => $channelid,
+                'classid'       => $classid,
+                'status'        => $status,
+                'isoffline'     => $isoffline,
+                'amount'        => $amount,
+                'page'          => $page,
+                'pagesize'      => $limit
+            ], 'payment', 'payorder');
+            return $this->apiReturn(
+                $res['code'],
+                isset($res['data']['ResultData']['list']) ? $res['data']['ResultData']['list'] : [],
+                $res['message'],
+                isset($res['data']['total']) ? $res['data']['total'] : 0,
+                isset($res['data']['ResultData']['sum']) ? $res['data']['ResultData']['sum'] : []
+            );
+        }
+
+        $channel = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'channel');
+        $class   = config('site.zf_class');
+        $this->assign('channel', $channel['data']);
+        $this->assign('class', $class);
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:补发
+     */
+    public function bufa()
+    {
+        $roleId   = intval(input('roleid')) ? intval(input('roleid')) : 0;
+        $orderno  = input('orderno') ? input('orderno') : '';
+        if (!$orderno || !$roleId) {
+            return $this->apiReturn(1, [], '订单号或玩家数据有误');
+        }
+        $socket = new QuerySocket();
+        $res    = $socket->addRoleMoney($roleId, 100 * 1000);
+        if ($res['iResult'] == 0) {
+            $res = Api::getInstance()->sendRequest([], 'charge', 'add');
+            //log记录
+            GameLog::logData(__METHOD__, [], (isset($res['code']) && $res['code'] == 0) ? 1 : 0, $res);
+            return $this->apiReturn(0, [], '补发成功');
+        }
+        return $this->apiReturn(1, [], '添加失败');
+    }
+}

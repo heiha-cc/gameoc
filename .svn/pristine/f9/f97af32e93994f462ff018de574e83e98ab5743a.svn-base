@@ -6,7 +6,7 @@ use app\common\Api;
 use app\common\GameLog;
 use redis\Redis;
 
-class Game extends Main
+class Charge extends Main
 {
     /**
      * 充值汇总
@@ -42,4 +42,30 @@ class Game extends Main
         return $this->fetch();
     }
 
+
+    /**
+     * Notes:转账明细查询
+     */
+    public function transfer()
+    {
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:充值明细查询
+     */
+    public function recharge()
+    {
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:银商出货记录
+     */
+    public function shipment()
+    {
+        return $this->fetch();
+    }
 }
