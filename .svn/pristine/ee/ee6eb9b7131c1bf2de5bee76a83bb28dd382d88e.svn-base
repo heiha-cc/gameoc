@@ -203,7 +203,6 @@
                     dataType:'json',
                     success: function(res) {
                         if (res.code === 0) {
-                            console.log(222);
                             $('#init'+roomid).val(res.data.nInitStorage);
                             $('#current'+roomid).val(res.data.nCurrentStorage);
                             $('#winrate'+roomid).html(res.data.currentwinrate);
@@ -263,11 +262,11 @@
                     success: function(res) {
                         if (res.code == 0) {
                             layer.msg(res.msg, {icon:1,time:1000}, function () {
-                                main.socketData(roomid);
+                                window.location.reload();
                             })
                         } else {
                             layer.msg(res.msg, {icon:2,time:1000}, function () {
-                                main.socketData(roomid);
+                                window.location.reload();
                             })
                         }
                     }
