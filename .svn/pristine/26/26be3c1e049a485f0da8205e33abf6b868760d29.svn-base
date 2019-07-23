@@ -1,0 +1,88 @@
+{extend name="common/base" /}
+
+{block name="title"}备注{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-header layuiadmin-card-header-auto">
+        <h3>备注详情</h3>
+    </div>
+    <div class="layui-card-body">
+        <div id="alllist">
+            <input type="text" name="orderno" id="orderno" value="{$orderno}" hidden>
+            <table id="proxylist" lay-filter="proxylist"></table>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        var main = {
+            renderData : function() {
+                var cols = [ //表头
+
+                    {field: 'checkuser', title: '操作人', minWidth:120}
+                    ,{field: 'addtime', title: '操作时间', minWidth:180}
+                    , {field: 'status', title: '订单状态', minWidth:120, templet : function(d) {
+                        var classname = '';
+                        if (d.status == 0) {
+                            classname = '未审核';
+                        } else if (d.status == 1) {
+                            classname = '已审核';
+                        }else if(d.status == 2){
+                            classname = '已拒绝';
+                        }else if(d.status == 3){
+                            classname = '已结算';
+                        }
+                        else if(d.status == 4){
+                            classname = '银行处理中';
+                        }
+                        else if(d.status == 5){
+                            classname = '已打款';
+                        }
+                        else if(d.status == 6){
+                            classname = '银行未通过';
+                        }
+                        return classname;
+                    }}
+
+                    , {field: 'descript', title: '备注', minWidth:300}
+                ];
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('playertrans/descript')}" //数据接口
+                    , where :{
+                        'orderno' :  $('#orderno').val()
+                    }
+                    , page: false //开启分页
+                    , cols: [cols]
+                });
+            },
+
+            init : function() {
+                main.renderData();
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

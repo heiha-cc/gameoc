@@ -1,0 +1,100 @@
+<!--{extend name="common/base" /}-->
+
+<!--{block name="title"}{/block}-->
+<!--{block name="content"}-->
+{extend name="common/base" /}
+
+{block name="title"}新增支付通道{/block}
+{block name="css"}
+{/block}
+{block name="content"}
+<div class="layui-row layui-col-space30">
+
+
+
+
+    <div class="layui-col-md12 layui-col-lg12 layui-col-xs12 layui-col-sm12 ">
+        <div class="layui-card">
+            <div class="layui-card-header">
+              9
+                <span class="layui-badge layui-bg-red layuiadmin-badge">77</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <p class="layuiadmin-small-font">8</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-md12 layui-col-lg12 layui-col-xs12 layui-col-sm12 ">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                9
+                <span class="layui-badge layui-bg-red layuiadmin-badge">77</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+                <p class="layuiadmin-small-font">7</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{/block}
+
+
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '/src/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'jquery'], function() {
+        var $ = layui.$;
+        var main = {
+            bindEvent : function() {
+                $('#getreward').on('click', function(e) {
+                    e.preventDefault();
+                    main.getReward();
+                });
+            },
+            getReward : function() {
+                $.ajax({
+                    type: 'post',
+                    url: "{:url('index/getRewardPre')}",
+                    data: {},
+                    success: function (data) {
+                        if (data.code!==0) {
+                            layer.msg(data.msg,{icon:2});
+                            return false;
+                        } else {
+                            layer.confirm(data.msg+'，领取的奖励会存入您的余额中。', {
+                                btn: ['确认领取','取消'] //按钮
+                            }, function(){
+                                $.ajax({
+                                    type: 'post',
+                                    url: "{:url('index/getReward')}",
+                                    data: {},
+                                    success: function(res) {
+                                        if (res.code === 0) {
+                                            layer.msg(res.msg,{icon:1});
+                                            $('#getreward').removeClass('layui-btn-danger').addClass('layui-btn-disabled').html('红包已领取')
+                                        } else {
+                                            layer.msg(res.msg,{icon:2});
+                                            return false;
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }
+                })
+            }
+        };
+        main.bindEvent();
+    });
+</script>
+{/block}
+
+

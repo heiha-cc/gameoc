@@ -1,0 +1,232 @@
+<?php
+
+namespace socket;
+
+class QuerySocket
+{
+    /**
+     * Notes:查询房间
+     * @param $roomid
+     * @return mixed
+     */
+    public function getRoomInfo($roomid)
+    {
+        $comm   = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+
+        $sendQuery = new sendQuery();
+
+        $sendQuery->SendMDQueryRoom($socket, $roomid);
+        $out_data  = $socket->response();
+        $change    = new ChangeData();
+        $out_array = $change->ProcessDMQueryRoomRate($out_data);
+        return $out_array;
+    }
+
+
+    //设置房间
+    public function setRoom($roomid, $ratio, $initStorage, $currentStorage, $szStorageRatio)
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->SendMDCtrolRoom($socket, $roomid, $ratio, $initStorage, $currentStorage, $szStorageRatio);
+
+        $out_data = $socket->response();
+        $out_array = $change->ProcessDMSetRoomRate($out_data);
+        return $out_array;
+    }
+
+
+    //账号充值
+    public function addRoleMoney($roleId, $money)
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->SendMDAddRoleMonery($socket, $roleId, $money);
+        $out_data  = $socket->response();
+        $out_array = $change->ProcessDMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+
+    //玩家胜率
+    public function setRoleRate($roleId, $ratio, $timelong, $timeinterval)
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->SendMDCtrolPerson($socket, $roleId, $ratio, $timelong, $timeinterval);
+        $out_data  = $socket->response();
+        $out_array = $change->ProcessDMSetRoomRate($out_data);
+        return $out_array;
+    }
+
+
+    //添加ip黑名单
+    public function setBlackList($ip, $type)
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->AddBlackIp($socket, $ip, $type);
+        $out_data  = $socket->response();
+        $out_array = $change->returnAddBlack($out_data);
+        return $out_array;
+    }
+
+    //同步数据
+    public function sychron()
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->SendMDReloadGameData($socket, 0);
+        $out_data  = $socket->response();
+        $out_array = $change->ProcessDMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+
+
+
+    //玩家胜率
+    public function setRoleRate2($roleId, $ratio, $timelong, $timeinterval)
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->SendMDCtrolPerson($socket, $roleId, $ratio, $timelong, $timeinterval);
+        $out_data  = $socket->response();
+        $out_array = $change->ProcessDMSetRoomRate($out_data);
+        return $out_array;
+    }
+
+    //更新银行卡信息
+    public function updateBank($roleid, $username, $bankcardno, $bankname)
+    {
+        $comm      = new Comm();
+        $socket    = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change    = new ChangeData();
+        $sendQuery->SendMDCtrolBank($socket, $roleid, $username, $bankcardno, $bankname);
+        $out_data  = $socket->response();
+        $out_array = $change->returnAddBank($out_data);
+        return $out_array;
+    }
+    //查询角色状态
+    public function searchRoleStatus($roleid)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('AS');
+        $sendQuery = new omToAsSocket();
+        $change = new ChangeData();
+
+        $sendQuery->SendMAGetRoleBaseInfo($socket,$roleid);
+        $out_data = $socket->response();
+        $out_array = $this->ProcessAMGetRoleBaseInfoRes($out_data);
+        //1 锁定
+        if($out_array===1){
+            return 4;
+        }else{
+            return 3;
+        }
+
+
+    }
+
+    function ProcessAMGetRoleBaseInfoRes($out_data)
+    {
+        //echo "ProcessAMGetRoleBaseInfoRes: <br />";
+        $out_data_array = unpack('a64szLoginName/LiLoginID/a12szMobilePhone/a24IdCard/a12szQQ/LiMoorMachine/a33szMachineSerial/LiLockStartTime/LiTitleID/LiLockEndTime/LiLocked/LiLoginCount/a17szLastLoginIP/LiLastLoginTime/a17szRegIP/LiAddTime/LiBlockStartTime/LiBlockEndTime/LiBlocked/a10szPlayerName/a50szWeChat/', $out_data);
+        //print_r($out_data_array);
+        //print_r($out_data_array);
+        //echo "<br />";
+        $this->fitStr($out_data_array['szLoginName']);
+        $this->fitStr($out_data_array['szMobilePhone']);
+        $this->fitStr($out_data_array['IdCard']);
+        $this->fitStr($out_data_array['szQQ']);
+        $this->fitStr($out_data_array['szMachineSerial']);
+        $this->fitStr($out_data_array['szLastLoginIP']);
+        $this->fitStr($out_data_array['szRegIP']);
+        $this->fitStr($out_data_array['szPlayerName']);
+        $this->fitStr($out_data_array['szWeChat']);
+        $out_array = $out_data_array;
+
+        return $out_array;
+    }
+    function fitStr(&$str) {
+        //$str = substr($str,0,strpos($str,0));//取到0结束
+        $str = trim($str);
+        $str = iconv('GBK', 'UTF-8', $str);
+    }
+
+
+    //更新角色状态--锁定
+    public function lockRoleStatus($roleid, $day)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('AS');
+        $sendQuery = new omToAsSocket();
+        $change = new ChangeData();
+//        $sendQuery->SendMAResetLoginPwd($socket,$roleid, $day);
+        $sendQuery->SendMDCtrolRole($socket,$roleid, $day);
+        $out_data = $socket->response();
+//        $out_array = $change->ProcessAMRoleOperateAckRes($out_data);
+        $out_array = $change->ProcessAMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+    //更新角色状态--解锁
+    public function unlockRoleStatus($roleid)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('AS');
+        $sendQuery = new omToAsSocket();
+        $change = new ChangeData();
+        $sendQuery->SendMDCtrolUnlockRole($socket,$roleid);
+        $out_data = $socket->response();
+        $out_array = $change->ProcessAMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+
+
+
+
+
+
+
+    //超级玩家增加
+    public function setSuperPlayer($roleid, $level)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+        $sendQuery = new sendQuery();
+        $change = new ChangeData();
+        $sendQuery->SendMDSetSuperPlayer($socket,$roleid, $level);
+        $out_data = $socket->response();
+        $out_array = $change->ProcessDMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+    
+    
+    //修改玩家密码
+    public function setPlayerPwd($roleid, $pwd)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('AS');
+        $sendQuery = new omToAsSocket();
+        $change = new ChangeData();
+        $sendQuery->SendMAResetLoginPwd($socket,$roleid, md5($pwd));
+        $out_data = $socket->response();
+        $out_array = $change->ProcessAMRoleOperateAckRes($out_data);
+        return $out_array;
+    }
+
+}
+
+

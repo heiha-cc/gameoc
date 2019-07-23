@@ -1,0 +1,326 @@
+{extend name="common/base" /}
+
+{block name="title"}游戏日志{/block}
+{block name="css"}{/block}
+{block name="content"}
+<div class="layui-card">
+    <button class="layui-btn layui-btn-sm layui-btn-radius"
+            onclick="window.history.back()" style="margin-top: 10px;margin-left: 20px;">返回
+    </button>
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-brief">
+            <ul class="layui-tab-title">
+                <!--<li class="layui-this">玩家详情</li>-->
+                <li>玩家详情</li>
+                <li class="layui-this">编辑资料</li>
+                <li>操作</li>
+
+            </ul>
+            <div class="layui-tab-content" style="background-color: #f2f2f2">
+                <div class="layui-tab-item">其他</div>
+                <div class="layui-tab-item layui-show">
+                    <!--<div class="layui-tab-item ">-->
+                    <div class="layui-row layui-col-space30">
+                        <div class="layui-col-md12">
+                            <div class="layui-card">
+                                <div class="layui-card-header layuiadmin-card-header-auto">
+                                    <h3>修改银行卡信息</h3>
+
+
+                                </div>
+                                <div class="layui-card-body">
+                                    <form class="layui-form" lay-filter="component-form-group">
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">用户名</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" id="username" name="username" autocomplete="off"
+                                                           class="layui-input"
+                                                           value="{$username}">
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">开户行</label>
+                                                <div class="layui-input-inline">
+
+                                                    <select name="bankname" id="bankname">
+                                                        <option value="">请选择银行</option>
+                                                        <!-- foreach循环 -->
+
+                                                        {foreach name="bankname" item="vo" key="k" }
+                                                        <option value="{$k}" {if $bankname3==$vo } selected {
+                                                        /if}>{$vo}</option>
+                                                        {/foreach}
+                                                        <!-- for循环 -->
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">账号</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" id="bankcardno" name="bankcardno"
+                                                           autocomplete="off"
+                                                           class="layui-input"
+                                                           value="{$bankcardno}">
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="mytip" name="mytip" autocomplete="off"
+                                                   class="layui-input"
+                                                   value="{$mytip}">
+
+                                            <div class="layui-inline">
+                                                <div class="layui-input-inline">
+                                                    <a class="layui-btn" id="save" data-type="reload">保存</a>
+                                                    <span id="tip"
+                                                          style="color: red;display: none;float: right">保存成功</span>
+                                                    <span id="tip2"
+                                                          style="color: red;display: none;float: right">保存失败</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <input type="hidden" id="roleid" value="{$roleid}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md12">
+                            <div class="layui-card">
+                                <div class="layui-card-header layuiadmin-card-header-auto">
+                                    <h3>修改密码</h3>
+                                </div>
+                                <div class="layui-card-body">
+                                    <form class="layui-form">
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">新密码</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="password" id="pwd" name="pwd" autocomplete="off"
+                                                           class="layui-input">
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">确认密码</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="password" id="pwd2" name="pwd2" autocomplete="off"
+                                                           class="layui-input">
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"></label>
+                                                <div class="layui-input-inline">
+                                                    <a class="layui-btn" id="savepwd" data-type="reload">保存</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-tab-item">操作</div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="layui-row layui-col-space30">-->
+<!--<div class="layui-col-md12">-->
+<!--<div class="layui-card">-->
+<!--<div class="layui-card-header layuiadmin-card-header-auto">-->
+<!--<h3>玩家详情</h3>-->
+<!--<button class="layui-btn layui-btn-sm layui-btn-radius" onclick="window.history.back()">返回</button>-->
+
+<!--</div>-->
+<!--<div class="layui-card-body">-->
+<!--<form class="layui-form" lay-filter="component-form-group">-->
+<!--<div class="layui-form-item">-->
+<!--<div class="layui-inline">-->
+<!--<label class="layui-form-label">用户名</label>-->
+<!--<div class="layui-input-inline">-->
+<!--<input type="text" id="username" name="username" autocomplete="off" class="layui-input"-->
+<!--value="{$username}">-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="layui-inline">-->
+<!--<label class="layui-form-label">开户行</label>-->
+<!--<div class="layui-input-inline">-->
+
+<!--<select name="bankname" id="bankname">-->
+<!--<option value="">请选择银行</option>-->
+<!--&lt;!&ndash; foreach循环 &ndash;&gt;-->
+
+<!--{foreach name="bankname" item="vo" key="k" }-->
+<!--<option value="{$k}" {if $bankname3==$vo } selected {/if}>{$vo}</option>-->
+<!--{/foreach}-->
+<!--&lt;!&ndash; for循环 &ndash;&gt;-->
+<!--</select>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="layui-inline">-->
+<!--<label class="layui-form-label">账号</label>-->
+<!--<div class="layui-input-inline">-->
+<!--<input type="text" id="bankcardno" name="bankcardno" autocomplete="off"-->
+<!--class="layui-input"-->
+<!--value="{$bankcardno}">-->
+<!--</div>-->
+<!--</div>-->
+<!--<input type="hidden" id="mytip" name="mytip" autocomplete="off" class="layui-input"-->
+<!--value="{$mytip}">-->
+
+<!--<div class="layui-inline">-->
+<!--<div class="layui-input-inline">-->
+<!--<a class="layui-btn" id="save" data-type="reload">保存</a>-->
+<!--<span id="tip" style="color: red;display: none;float: right">保存成功</span>-->
+<!--<span id="tip2" style="color: red;display: none;float: right">保存失败</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</form>-->
+<!--<input type="hidden" id="roleid" value="{$roleid}">-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="layui-col-md12">-->
+<!--<div class="layui-card">-->
+<!--<div class="layui-card-header layuiadmin-card-header-auto">-->
+<!--<h3>修改密码</h3>-->
+<!--</div>-->
+<!--<div class="layui-card-body">-->
+<!--<form class="layui-form">-->
+<!--<div class="layui-form-item">-->
+<!--<div class="layui-inline">-->
+<!--<label class="layui-form-label">新密码</label>-->
+<!--<div class="layui-input-inline">-->
+<!--<input type="password" id="pwd" name="pwd" autocomplete="off" class="layui-input">-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="layui-inline">-->
+<!--<label class="layui-form-label">确认密码</label>-->
+<!--<div class="layui-input-inline">-->
+<!--<input type="password" id="pwd2" name="pwd2" autocomplete="off" class="layui-input">-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="layui-inline">-->
+<!--<label class="layui-form-label"></label>-->
+<!--<div class="layui-input-inline">-->
+<!--<a class="layui-btn" id="savepwd" data-type="reload">保存</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+
+{/block}
+{block name="script"}
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , table = layui.table
+            , $ = layui.$
+            , form = layui.form;
+        form.render('select');
+        var main = {
+            bindEvent: function () {
+                //保存银行卡信息
+                $('#save').on('click', function (e) {
+//                    e.preventDefault();
+                    var username = $('#username').val();
+                    var bankname2 = $('#bankname').val();
+                    var bankname = $('#bankname option:selected').text();
+                    var bankcardno = $('#bankcardno').val();
+                    var roleid = $('#roleid').val();
+                    if (username && bankname2 && bankcardno) {
+                        $.ajax({
+                            type: 'post',
+                            url: "updateSocketBank",
+                            data: {
+                                'roleid': roleid,
+                                'bankcardno': bankcardno,
+                                'bankname': bankname,
+                                'username': username,
+                            },
+                            dataType: 'json',
+                            success: function (res) {
+                                console.log(res);
+                                if (res.code === 0) {
+                                    layer.msg(res.msg, {icon: 1});
+                                } else if (res.code === 1) {
+                                    layer.msg(res.msg, {icon: 1});
+                                } else if (res.code === 3) {
+                                    layer.msg(res.msg, {icon: 2});
+                                }
+                            }
+                        });
+                    } else {
+                        layer.msg('输入不能为空', {icon: 2});
+                    }
+                });
+
+                //重置密码
+                $('#savepwd').on('click', function (e) {
+                    e.preventDefault();
+                    var roleid = $('#roleid').val();
+                    var pwd = $('#pwd').val();
+                    var pwd2 = $('#pwd2').val();
+
+
+                    $.ajax({
+                        type: 'post',
+                        url: "resetPwd",
+                        data: {
+                            'roleid': roleid,
+                            'pwd': pwd,
+                            'pwd2': pwd2
+                        },
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.code === 0) {
+                                layer.msg(res.msg, {icon: 1});
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }
+                    });
+
+                })
+
+            },
+
+            init: function () {
+                main.bindEvent();
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

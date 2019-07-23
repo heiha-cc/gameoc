@@ -1,0 +1,24 @@
+<?php
+namespace socket;
+
+class QuerySocket {
+    /**
+     * Notes:查询房间
+     * @param $roomid
+     * @return mixed
+     */
+    public function getRoomInfo($roomid)
+    {
+        $comm = new Comm();
+        $socket = $comm->getSocketInstance('DC');
+
+        $sendQuery = new sendQuery();
+        $sendQuery->SendMDQueryRoom($socket, $roomid);
+        $out_data = $socket->response();
+        $change = new ChangeData();
+        $out_array =  $change->ProcessDMQueryRoomRate($out_data);
+        return $out_array;
+    }
+}
+
+
