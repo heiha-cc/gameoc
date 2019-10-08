@@ -1,0 +1,187 @@
+{extend name="common/base" /}
+
+{block name="title"}所有玩家{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-header">
+    </div>
+    <div class="layui-card-body">
+        <form class="layui-form" lay-filter="component-form-group">
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">玩家ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="roleid" value="{$roleid}" autocomplete="off" class="layui-input" readonly>
+                </div>
+
+                <label class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['rolename']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+
+                <label class="layui-form-label">注册账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['accoutname']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录IP</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['lastloginip']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+
+                <label class="layui-form-label">注册IP</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['regip']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+                <label class="layui-form-label">同IP数量</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['sameiptotal']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+
+                <label class="layui-form-label">同MAC数量</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['samemactotal']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录MAC</label>
+                <div class="layui-input-block">
+                    <input type="text" value="{$data['loginmachineserial']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">注册MAC</label>
+                <div class="layui-input-block">
+                    <input type="text" value="{$data['regmachineserial']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">首次登入时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['firstlogintime']}" autocomplete="off" class="layui-input"
+                           readonly>
+                </div>
+                <label class="layui-form-label">最后登入时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['lastlogintime']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+                <label class="layui-form-label">设备类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['device']}" autocomplete="off" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">今日充值次数</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['todaychargetime']}" autocomplete="off" class="layui-input"
+                           readonly>
+                </div>
+                <label class="layui-form-label">历史充值次数</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['historychargetime']}" autocomplete="off" class="layui-input"
+                           readonly>
+                </div>
+
+                <label class="layui-form-label">首充金额</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['firstcharge']/1000|round=3}" autocomplete="off"
+                           class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">今日充值金币</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['todaycharge']/1000|round=3}" autocomplete="off"
+                           class="layui-input" readonly>
+                </div>
+                <label class="layui-form-label">历史充值金币</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['historycharge']/1000|round=3}" autocomplete="off"
+                           class="layui-input" readonly>
+                </div>
+
+                <label class="layui-form-label">玩家总流水</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data['totalwater']/1000|round=3}" autocomplete="off" class="layui-input"
+                           readonly>
+                </div>
+            </div>
+
+            <div class="layui-btn-container" style="margin-top: 40px;text-align: center">
+                <a class="layui-btn" id="coinlog">玩家流水详情</a>
+                <a class="layui-btn">玩家充值记录</a>
+                <a class="layui-btn" id="gamelog">总游戏记录</a>
+                <a class="layui-btn" id="selfgamelog">玩家游戏记录</a>
+                <a class="layui-btn" id="gamedailylog">每日房间游戏记录</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{/block}
+{block name="script"}
+<script type="text/html" id="msg-bar">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+    <!--<a class="layui-btn layui-btn-xs " lay-event="ganme">游戏日志</a>-->
+    <!--<a class="layui-btn layui-btn-xs" lay-event="cold">金币日志</a>-->
+    <!--<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">拉黑</a>-->
+</script>
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , table = layui.table
+            , $ = layui.$
+            , form = layui.form;
+
+        var main = {
+
+            //操作事件
+            extraEvent: function () {
+
+                $('#coinlog').on('click', function(e) {
+                    e.preventDefault();
+                    var url = 'coinlog?roleid='+$('#roleid').val();
+                    x_admin_show('玩家流水详情', url,  $(window).width()*0.95, $(window).height()*0.95);
+                });
+                $('#gamelog').on('click', function(e) {
+                    e.preventDefault();
+                    var url = 'gamelog';
+                    x_admin_show('总游戏记录', url,  $(window).width()*0.95, $(window).height()*0.95);
+                });
+                $('#selfgamelog').on('click', function(e) {
+                    e.preventDefault();
+                    var url = 'selfgamelog?roleid='+$('#roleid').val();
+                    x_admin_show('玩家游戏记录', url,  $(window).width()*0.95, $(window).height()*0.95);
+                });
+
+                $('#gamedailylog').on('click', function(e) {
+                    e.preventDefault();
+                    var url = 'gamedailylog?roleid='+$('#roleid').val();
+                    x_admin_show('每日房间游戏记录', url,  $(window).width()*0.95, $(window).height()*0.95);
+                });
+            },
+
+            init: function () {
+                main.extraEvent();
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

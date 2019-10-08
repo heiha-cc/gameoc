@@ -1,0 +1,75 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\admin\controller\traits\search;
+use app\common\Api;
+use app\common\GameLog;
+use socket\QuerySocket;
+use app\admin\controller\traits\getSocketRoom;
+
+
+class Gamectrl extends Main
+{
+    use getSocketRoom;
+    use search;
+    private $socket = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->socket = new QuerySocket();
+    }
+
+    //游戏配置一览
+    public function index()
+    {
+        $roomlist = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kind');
+        if ($this->request->isAjax()) {
+            $roomId = intval(input('roomId')) ? intval(input('roomId')) : 0;
+            $res = $this->socket->getProfitPercent($roomId);
+            if ($res) {
+                if ($roomlist['data']) {
+                    foreach ($res as &$v) {
+                        foreach ($roomlist['data'] as $v2) {
+                            if ($v['nRoomId'] == $v2['roomid']) {
+                                $v['roomname'] = $v2['roomname'];
+                            }
+                        }
+
+                        $v['lTotalRunning'] /= 1000;
+                        $v['lTotalProfit'] /= 1000;
+                    }
+                    unset($v);
+                }
+
+            }
+            ob_clean();
+            return $this->apiReturn(0, $res);
+        }
+        //$roomList = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kind');
+        $kindList = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kindlist');
+        $this->assign('roomlist', $roomlist['data']);
+        $this->assign('kindlist', $kindList['data']);
+        return $this->fetch();
+    }
+
+
+    //设置房间千分比
+    public function setProfit()
+    {
+        if ($this->request->isAjax()) {
+            $id = intval(input('id')) ? intval(input('id')) : 0;
+            $setrange = input('setrange') ? input('setrange') : 1;
+            $percent = input('percent') ? input('percent') : 0;
+            $type = 1;
+
+            $res = $this->socket->setProfitPercent($type, $setrange, $id, $percent);
+            $code = $res['iResult'];
+            return $this->apiReturn($code);
+        }
+
+        //return $this->fetch();
+    }
+
+}

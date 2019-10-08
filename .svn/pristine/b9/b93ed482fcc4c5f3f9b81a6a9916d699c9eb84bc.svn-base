@@ -1,0 +1,16 @@
+<?php
+
+return [
+    'Room'   => [
+        'setPlayerRate' => '玩家ID:{ct0}，玩家胜率:{ct1}，控制时长:{ct2}秒',
+        'setSocketRoomRate' => '房间ID:{ct0}，初始库存:{ct1}，当前库存:{ct2}秒',
+        'setSocketRoomStorage' => '房间ID:{ct0}，库存值:{ct1}',
+
+    ],
+    'Payment' => [
+        'setChannelStatus' =>  '支付通道ID:{ct0}，类别:{ct1}，状态:{ct2}',
+        'editChannel' => '通道ID:{ct0}，通道信息:{ct1}',
+    ],
+
+
+];

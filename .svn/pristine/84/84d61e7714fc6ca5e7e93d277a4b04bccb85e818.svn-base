@@ -1,0 +1,187 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\admin\controller\traits\search;
+use app\common\Api;
+use app\common\GameLog;
+use socket\QuerySocket;
+use app\admin\controller\traits\getSocketRoom;
+
+
+class Gamectrl extends Main
+{
+    use getSocketRoom;
+    use search;
+    private $socket = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->socket = new QuerySocket();
+    }
+
+    //游戏配置一览
+    public function index()
+    {
+        $roomlist = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kind');
+        if ($this->request->isAjax()) {
+            $roomId = intval(input('roomId')) ? intval(input('roomId')) : 0;
+            $page = intval(input('page')) ? intval(input('page')) : 1;
+            $limit = intval(input('limit')) ? intval(input('limit')) : 15;
+
+            $res = $this->socket->getProfitPercent($roomId);
+
+            $his = Api::getInstance()->sendRequest(['id' => 0], 'room', 'list');
+            if ($res) {
+                if ($roomlist['data']) {
+                    foreach ($res as &$v) {
+//                        foreach ($his['data']['ResultData'] as $v5) {
+                        foreach ($his['data'] as $v5) {
+                            if($v5['roomid']==$v['nRoomId']){
+                                $v['historytotal']=$v5['historytotal'];
+                                $v['currenttotal']=$v5['currenttotal'];
+                                $v['online']=$v5['online'];
+                            }
+                        }
+
+                        foreach ($roomlist['data'] as $v2) {
+                            if ($v['nRoomId'] == $v2['roomid']) {
+                                $v['roomname'] = $v2['roomname'];
+                            }
+                        }
+                        $v['lTotalRunning'] /= 1000;
+                        $v['lTotalProfit'] /= 1000;
+                        $v['lTotalTax'] /= 1000;
+                        $v['lHistorySumRunning'] /= 1000;
+                    }
+                    unset($v);
+                }
+            }
+
+            //假分页
+            $result = [];
+
+            $from = ($page -1) * $limit;
+            $to = $page * $limit - 1;
+            $count = count($res);
+            if ($count >0 && $count>=$from ) {
+                for ($i=$from; $i<= $to; $i++) {
+                    if (isset($res[$i])) {
+                        $result[] = $res[$i];
+                    }
+                }
+            }
+            ob_clean();
+
+            return $this->apiReturn(0, $result, '', $count);
+        }
+        //$roomList = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kind');
+        $kindList = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kindlist');
+        $this->assign('roomlist', $roomlist['data']);
+        $this->assign('kindlist', $kindList['data']);
+
+        $res = Api::getInstance()->sendRequest(['id' => 0], 'room', 'list');
+        $this->assign('roomlist', isset($res['data']['ResultData']) ? $res['data']['ResultData'] : []);
+        $this->assign('historytotal', isset($res['data']['historytotal']) ? $res['data']['historytotal'] : 0);
+        $this->assign('currentscore', isset($res['data']['currentscore']) ? $res['data']['currentscore'] : 0);
+        $this->assign('totalonline', isset($res['data']['totalonline']) ? $res['data']['totalonline'] : 0);
+
+        return $this->fetch();
+    }
+
+    //设置房间千分比
+    public function setProfit()
+    {
+        if ($this->request->isAjax()) {
+            $id = intval(input('id')) ? intval(input('id')) : 0;
+            $setrange = input('setrange') ? input('setrange') : 1;
+            $percent = input('percent') ? input('percent') : 0;
+            $type = 1;
+
+            $res = $this->socket->setProfitPercent($type, $setrange, $id, $percent);
+            $code = $res['iResult'];
+            GameLog::logData(__METHOD__, $this->request->request(), ($code == 0) ? 1 : 0, $res);
+            return $this->apiReturn($code);
+        }
+
+        $id = intval(input('id')) ? intval(input('id')) : 0;
+        $percent = input('percent') ? input('percent') : 0;
+        $roomname = input('roomname') ? input('roomname') : 0;
+
+        $this->assign('roomId', $id);
+        $this->assign('roomname', $roomname);
+        $this->assign('percent', $percent);
+        return $this->fetch();
+    }
+
+    //游戏配置一览
+    public function robotNum()
+    {
+        $roomlist = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kind');
+        if ($this->request->isAjax()) {
+            $roomId = intval(input('roomId')) ? intval(input('roomId')) : 0;
+            $page = intval(input('page')) ? intval(input('page')) : 1;
+            $limit = intval(input('limit')) ? intval(input('limit')) : 15;
+
+//            $res = $this->socket->getProfitPercent($roomId);
+            $res = $this->socket->getRobotNum($roomId);
+            print_r($res);die;
+            $his = Api::getInstance()->sendRequest(['id' => 0], 'room', 'list');
+            if ($res) {
+                if ($roomlist['data']) {
+                    foreach ($res as &$v) {
+                        foreach ($his['data']['ResultData'] as $v5) {
+                            if($v5['roomid']==$v['nRoomId']){
+                                $v['historytotal']=$v5['historytotal'];
+                                $v['currenttotal']=$v5['currenttotal'];
+                                $v['online']=$v5['online'];
+                            }
+                        }
+
+                        foreach ($roomlist['data'] as $v2) {
+                            if ($v['nRoomId'] == $v2['roomid']) {
+                                $v['roomname'] = $v2['roomname'];
+                            }
+                        }
+                        $v['lTotalRunning'] /= 1000;
+                        $v['lTotalProfit'] /= 1000;
+                        $v['lTotalTax'] /= 1000;
+                        $v['lHistorySumRunning'] /= 1000;
+                    }
+                    unset($v);
+                }
+            }
+
+            //假分页
+            $result = [];
+
+            $from = ($page -1) * $limit;
+            $to = $page * $limit - 1;
+            $count = count($res);
+            if ($count >0 && $count>=$from ) {
+                for ($i=$from; $i<= $to; $i++) {
+                    if (isset($res[$i])) {
+                        $result[] = $res[$i];
+                    }
+                }
+            }
+            ob_clean();
+
+            return $this->apiReturn(0, $result, '', $count);
+        }
+        //$roomList = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kind');
+        $kindList = Api::getInstance()->sendRequest(['id' => 0], 'room', 'kindlist');
+        $this->assign('roomlist', $roomlist['data']);
+        $this->assign('kindlist', $kindList['data']);
+
+        $res = Api::getInstance()->sendRequest(['id' => 0], 'room', 'list');
+        $this->assign('roomlist', isset($res['data']['ResultData']) ? $res['data']['ResultData'] : []);
+        $this->assign('historytotal', isset($res['data']['historytotal']) ? $res['data']['historytotal'] : 0);
+        $this->assign('currentscore', isset($res['data']['currentscore']) ? $res['data']['currentscore'] : 0);
+        $this->assign('totalonline', isset($res['data']['totalonline']) ? $res['data']['totalonline'] : 0);
+
+        return $this->fetch();
+    }
+
+}

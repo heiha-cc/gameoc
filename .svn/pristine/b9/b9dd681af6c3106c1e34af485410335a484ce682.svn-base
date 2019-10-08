@@ -1,0 +1,82 @@
+{extend name="common/base" /}
+
+{block name="title"}支付通道{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+<div class="layui-card">
+    <div class="layui-card-header layuiadmin-card-header-auto">
+        <h3>金币排行</h3>
+    </div>
+    <div class="layui-card-body" >
+        <!--<a style="margin-bottom: 10px;" class="layui-btn" onclick="x_admin_show('新增微信客服','addWeixin.html', '', 500)">-->
+            <!--<i class="layui-icon layui-icon-add-circle"></i>-->
+        <!--</a>-->
+        <div id="alllist">
+            <table id="proxylist" lay-filter="proxylist"></table>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+<script type="text/html" id="msg-bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></a>
+    <!--<a class="layui-btn layui-btn-xs" lay-event="open"><i class="layui-icon layui-icon-set-fill"></i></a>-->
+
+</script>
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        var main = {
+            renderData : function() {
+                var cols = [ //表头
+
+
+                    {field: 'id', title: '玩家ID', minWidth:60}
+                    , {field: 'nickname', title: '昵称', minWidth:200}
+//                    , {field: 'balance', title: '金币（用户银行）', minWidth:200}
+                    , {field: 'balance', title: '携带金币', minWidth:200}
+//                    , {field: 'gamebalance', title: '金币（游戏银行）', minWidth:200}
+                    , {field: 'gamebalance', title: '银行金币', minWidth:200}
+                    , {field: 'total', title: '总和', minWidth:200}
+
+
+                ];
+
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('ranke/coin')}" //数据接口
+                    , page: true //开启分页
+                    , cols: [cols]
+                });
+            },
+
+
+
+
+
+            init : function() {
+                main.renderData();
+
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

@@ -1,0 +1,434 @@
+{extend name="common/base" /}
+
+{block name="title"}游戏日志{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+
+
+<!--<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">-->
+<div class="layui-tab layui-tab-brief" lay-filter="test">
+    <!--<ul class="layui-tab-title">-->
+    <!--<li class="layui-this">平台每日统计</li>-->
+
+    <!--<li>平台每日统计图表</li>-->
+
+    <!--</ul>-->
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-header layuiadmin-card-header-auto">
+                    <form class="layui-form" lay-filter="component-form-group">
+                        <div class="layui-form-item">
+                            <div class="layui-inline" style="display: none">
+                                <label class="layui-form-label">玩家ID</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="roleid" name="roleid" lay-verify="number" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline" >
+                                <label class="layui-form-label">日期</label>
+                                <div class="layui-input-inline" style="width: 150px;">
+                                    <input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid" style="display: none">
+                                    -
+                                </div>
+                                <div class="layui-input-inline" style="width: 100px;display: none">
+                                    <input type="text" name="end" id="LAY-component-form-group-date2" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="layui-inline" style="display: none">
+                                <label class="layui-form-label">游戏结果</label>
+                                <div class="layui-input-inline">
+                                    <select name="result" id="result">
+                                        <option value="-1">所有</option>
+                                        <option value="0">赢</option>
+                                        <option value="1">输</option>
+                                        <option value="2">和</option>
+                                        <option value="3">逃</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <a class="layui-btn" id="search" data-type="reload">搜索</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="layui-card-body">
+                    <!--<form id="myform">-->
+                    {if $flag==3}
+                    <div class="layui-form" lay-filter="test1">
+                        <form class="layui-form">
+
+
+                            <div style="display: inline-block;position: absolute;top:1%">{$mydata}</div>
+                            <hr style="height:850px;width:1px;display: inline-block;position: relative;left:160px;top:-18px;" />
+                            <div style="float: right;">
+
+                                <div style="display: inline-block;width:280px;">
+                                    <div style="position: absolute;top:1%;">
+                                        <div>新增注册：{$data.regnew}</div>
+                                        <div>新增注册IP：{$data.regnewip}</div>
+                                        <div>绑定手机：{$data.bindphone}</div>
+                                        <div>绑定支付宝：{$data.bindalipay}</div>
+                                        <div>注充比率：{$data.zcbl}</div>
+                                        <div>注绑比率（手机）：{$data.zbbl}</div>
+                                        <div>wu注绑比率（支付宝）：{$data.regnew}</div>
+                                        <div>登录用户数：{$data.loginnum}</div>
+                                        <div>活跃用户数：{$data.activenum}</div>
+                                        <div>ios登录数：{$data.ioslogin}</div>
+                                        <div>android登录上：{$data.androidlogin}</div>
+                                        <div>最高在线人数（大厅）：{$data.highonline}</div>
+                                        <div>最高在线人数（游戏中）：{$data.highroom}</div>
+                                        <div>平均在线人数（大厅）：{$data.averageonline}</div>
+                                        <div>平均在线人数（游戏中）：{$data.averageroom}</div>
+                                        <div>全民代理注册数：{$data.qmdlreg}</div>
+                                        <div>全民代理注册数在新用户占比：{$data.qmdlregnew}</div>
+                                        <div>全名代理登录用户数：{$data.qmdllogin}</div>
+                                    </div>
+
+
+                                </div>
+                                <hr style="height:850px;width:1px;display: inline-block;position: relative;top:-18px;" />
+                                <div style="display: inline-block;width:280px;">
+                                    <div style="position: absolute;top:1%;">
+                                        <div>总充值：{$data.totalpay}</div>
+                                        <div>新用户充值：{$data.newuserpay}</div>
+                                        <div>老用户充值：{$data.olduserpay}</div>
+                                        <div>总充值人数：{$data.totalpayuser}</div>
+                                        <div>新用户充值人数：{$data.newuserpaynum}</div>
+                                        <div>wu老用户充值人数：{$data.agentczzb}</div>
+                                        <div>渠道充值占比：{$data.agentczzb}</div>
+                                        <div>渠道充值：{$data.agentpay}</div>
+                                        <div>新用户渠道充值：{$data.agentnewuserpay}</div>
+                                        <div>老用户渠道充值：</div>
+                                        <div>渠道充值人数：</div>
+                                        <div>老用户渠道充值人数：</div>
+                                        <div>新用户渠道充值人数：</div>
+                                        <div>渠道充值人次：</div>
+                                        <div>代理充值占比：</div>
+                                        <div>代理充值：</div>
+                                        <div>新用户代理充值：</div>
+                                        <div>老用户代理充值：</div>
+
+                                        <div>代理充值人数:</div>
+                                        <div>新用户代理充值人数:</div>
+                                        <div>老用户代理充值人数：</div>
+                                        <div>代理充值人次：</div>
+                                        <div>管理员给代理转入金额：</div>
+                                        <div>管理员给代理转入次数：</div>
+                                        <div>全名代理转出佣金：</div>
+                                        <div>全名代理提取佣金：</div>
+                                        <div>全名代理充值人数：</div>
+                                        <div>全名代理充值金额：</div>
+                                        <div>iOS充值人数：</div>
+                                        <div>iOS充值金额：</div>
+                                        <div>安卓充值人数：</div>
+                                        <div>安卓充值金额：</div>
+                                        <div>补单数量：</div>
+                                        <div>补单金额：</div>
+                                    </div>
+
+
+
+                                </div>
+                                <hr style="height:850px;width:1px;display: inline-block;;position: relative;top:-18px;" />
+                                <div style="display: inline-block;width:280px;">
+                                    <div style="position: absolute;top:1%;">
+                                        <div>总兑换：</div>
+                                        <div>总兑换人数：</div>
+                                        <div>全名订单金额：</div>
+                                        <div>全名代理兑换人数：</div>
+                                        <div>全名代理兑换金额：</div>
+                                        <div>全名代理兑换比率：</div>
+
+                                    </div>
+
+                                </div>
+                                <hr style="height:850px;width:1px;display: inline-block;position: relative;top:-18px;" />
+                                <div style="display: inline-block;width:280px;">
+                                    <div style="position: absolute;top:1%;">
+                                        <div>总盈亏：</div>
+                                        <div>兑换比率：</div>
+                                    </div>
+
+                                </div>
+                                <hr style="height:850px;width:1px;display: inline-block;position: relative;top:-18px;" />
+                                <div style="display: inline-block;width:280px;">
+                                    <div style="position: absolute;top:1%;">
+                                        <div>系统税收：</div>
+                                        <div>系统输赢：</div>
+                                        <div>总流水：</div>
+                                        <div>在线玩家总金币：</div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--<hr style="height:800px;width:1px;display: inline-block" />-->
+                            <!--<span style="display: inline-block;position: absolute;top:1%">日期</span>-->
+
+                        </form>
+
+                        <!--<div>-->
+
+
+
+
+                        <!--</div>-->
+                    </div>
+                    {else /}
+                    <div class="layui-form" lay-filter="test2">
+
+
+                        <div style="display: inline-block;position: absolute;top:1%">{$mydata}</div>
+                        <hr style="height:850px;width:1px;display: inline-block;position: relative;left:160px;top:-18px;" />
+                        <div style="float: right;">
+
+                            <div style="display: inline-block;width:280px;">
+                                <div style="position: absolute;top:1%;">
+                                    <div>新增注册：</div>
+                                    <div>新增注册IP：</div>
+                                    <div>绑定手机：</div>
+                                    <div>绑定支付宝：</div>
+                                    <div>注充比率：</div>
+                                    <div>注绑比率（手机）：</div>
+                                    <div>wu注绑比率（支付宝）：</div>
+                                    <div>登录用户数：</div>
+                                    <div>活跃用户数：</div>
+                                    <div>ios登录数：</div>
+                                    <div>android登录上：</div>
+                                    <div>最高在线人数（大厅）：</div>
+                                    <div>最高在线人数（游戏中）：</div>
+                                    <div>平均在线人数（大厅）：</div>
+                                    <div>平均在线人数（游戏中）：</div>
+                                    <div>全民代理注册数：</div>
+                                    <div>全民代理注册数在新用户占比：</div>
+                                    <div>全名代理登录用户数：</div>
+                                </div>
+
+
+                            </div>
+                            <hr style="height:850px;width:1px;display: inline-block;position: relative;top:-18px;" />
+                            <div style="display: inline-block;width:280px;">
+                                <div style="position: absolute;top:1%;">
+                                    <div>总充值：</div>
+                                    <div>新用户充值：</div>
+                                    <div>老用户充值：</div>
+                                    <div>总充值人数：</div>
+                                    <div>新用户充值人数：</div>
+                                    <div>wu老用户充值人数：</div>
+                                    <div>渠道充值占比：</div>
+                                    <div>渠道充值：</div>
+                                    <div>新用户渠道充值：</div>
+                                    <div>老用户渠道充值：</div>
+                                    <div>渠道充值人数：</div>
+                                    <div>老用户渠道充值人数：</div>
+                                    <div>新用户渠道充值人数：</div>
+                                    <div>渠道充值人次：</div>
+                                    <div>代理充值占比：</div>
+                                    <div>代理充值：</div>
+                                    <div>新用户代理充值：</div>
+                                    <div>老用户代理充值：</div>
+
+                                    <div>代理充值人数:</div>
+                                    <div>新用户代理充值人数:</div>
+                                    <div>老用户代理充值人数：</div>
+                                    <div>代理充值人次：</div>
+                                    <div>管理员给代理转入金额：</div>
+                                    <div>管理员给代理转入次数：</div>
+                                    <div>全名代理转出佣金：</div>
+                                    <div>全名代理提取佣金：</div>
+                                    <div>全名代理充值人数：</div>
+                                    <div>全名代理充值金额：</div>
+                                    <div>iOS充值人数：</div>
+                                    <div>iOS充值金额：</div>
+                                    <div>安卓充值人数：</div>
+                                    <div>安卓充值金额：</div>
+                                    <div>补单数量：</div>
+                                    <div>补单金额：</div>
+                                </div>
+
+
+
+                            </div>
+                            <hr style="height:850px;width:1px;display: inline-block;;position: relative;top:-18px;" />
+                            <div style="display: inline-block;width:280px;">
+                                <div style="position: absolute;top:1%;">
+                                    <div>总兑换：</div>
+                                    <div>总兑换人数：</div>
+                                    <div>全名订单金额：</div>
+                                    <div>全名代理兑换人数：</div>
+                                    <div>全名代理兑换金额：</div>
+                                    <div>全名代理兑换比率：</div>
+
+                                </div>
+
+                            </div>
+                            <hr style="height:850px;width:1px;display: inline-block;position: relative;top:-18px;" />
+                            <div style="display: inline-block;width:280px;">
+                                <div style="position: absolute;top:1%;">
+                                    <div>总盈亏：</div>
+                                    <div>兑换比率：</div>
+                                </div>
+
+                            </div>
+                            <hr style="height:850px;width:1px;display: inline-block;position: relative;top:-18px;" />
+                            <div style="display: inline-block;width:280px;">
+                                <div style="position: absolute;top:1%;">
+                                    <div>系统税收：</div>
+                                    <div>系统输赢：</div>
+                                    <div>总流水：</div>
+                                    <div>在线玩家总金币：</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!--<hr style="height:800px;width:1px;display: inline-block" />-->
+                        <!--<span style="display: inline-block;position: absolute;top:1%">日期</span>-->
+
+                        <!--</form>-->
+
+                        <div>
+
+
+
+
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-row layui-col-space30">
+                        <div class="layui-col-md12 layui-col-lg12 layui-col-xs12 layui-col-sm12">
+                            <div class="layui-card">
+                                <div class="layui-card-header layuiadmin-card-header-auto" style="text-align: left">在线人数概览</div>
+                                <div class="layui-card-body">
+                                    <div class="layui-carousel layadmin-carousel layadmin-dataview" id="test1" lay-arrow="always" data-anim="fade" lay-filter="LAY-index-dataview">
+                                        <div carousel-item id="LAY-index-dataview">
+                                            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {/block}
+        {block name="script"}
+
+
+        <script>
+            layui.config({
+                base: '__layui__/' //静态资源所在路径
+            }).extend({
+                index: 'lib/index' //主入口模块
+
+            }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery',  'carousel'], function () {
+                var element = layui.element
+                    , layer = layui.layer
+                    , laydate = layui.laydate
+                    , table = layui.table
+                    , $ = layui.$
+                    , form = layui.form;
+                var carousel = layui.carousel;
+                var element = layui.element;
+                var main = {
+                    renderData: function () {
+
+
+                    },
+
+                    //搜索
+                    search: function () {
+                        var strartdate = $.trim($('#LAY-component-form-group-date').val());
+                        $.ajax({
+                            type: 'post',
+                            url: "{:url('statistical/platformDailyStatistics')}",
+                            data: {
+                                'strartdate': strartdate
+                            },
+                            dataType: 'json',
+                            success: function (res) {
+
+//                                form.render(null, 'test1');
+                                if (res === 3) {
+                                    form.render();
+                                } else {
+                                    layer.msg('暂无数据', {icon: 5});
+                                }
+
+//                        if (res.code === 0) {
+//                            layer.msg(res.msg, {icon: 6,time:1000}, function() {
+//                                window.location.reload();
+//                            });
+//                        } else {
+//                            layer.msg(res.msg, {icon: 5});
+//                        }
+                            }
+                        });
+                        //执行重载
+//                table.reload('proxylist', {
+//                    page: {
+//                        curr: 1 //重新从第 1 页开始
+//                    },
+//                    where: {
+////                        'roleid': roleid,
+////                        'roomid': roomid,
+//                        'strartdate': strartdate,
+////                        'enddate': enddate,
+////                        'winlost': winlost,
+//                    }
+//                });
+
+
+                    },
+
+
+
+                    init: function () {
+                        main.renderData();
+
+                        laydate.render({
+                            elem: '#LAY-component-form-group-date'
+                            , format: 'yyyy-MM-dd'
+                            , max: 1
+                            , btns: ['clear', 'confirm']
+                        });
+                        laydate.render({
+                            elem: '#LAY-component-form-group-date2'
+                            , format: 'yyyy-MM-dd'
+                            , max: 1
+                            , btns: ['clear', 'confirm']
+                        });
+                        $('#search').on('click', function (e) {
+                            e.preventDefault();
+                            main.search();
+                        });
+                    }
+                };
+
+                main.init();
+            });
+        </script>
+        {/block}

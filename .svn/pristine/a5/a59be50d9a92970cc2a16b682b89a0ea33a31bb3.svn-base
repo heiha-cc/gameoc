@@ -1,0 +1,13 @@
+<?php
+//log类别
+return [
+    'Player' => [],
+    'Room'   => [
+        'setPlayerRate' => '设置玩家胜率',
+        'setSocketRoomRate' => '设置库存',
+        'setSocketRoomStorage' => '设置库存阶段值',
+    ],
+    'Payment' => [],
+    'Gamemanage' => [],
+    'Playertrans' => [],
+];

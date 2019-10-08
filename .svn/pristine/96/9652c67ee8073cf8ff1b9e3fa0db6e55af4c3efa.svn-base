@@ -1,0 +1,79 @@
+<?php
+namespace app\api\controller;
+
+use socket\QuerySocket;
+use think\Controller;
+use app\common\Api;
+
+class Index extends Controller
+{
+    //推广提现
+    public function addSpreadUserMoney()
+    {
+
+        $orderId = $_POST["orderid"];
+        $roleid = $_POST["roleid"];
+        $time = $_POST["time"];
+        $token = $_POST["token"];
+        $amount = $_POST["amount"];
+        $check = md5(config("skey") . $roleid . $amount . $orderId . $time);
+
+//        $orderId = '201909101234567';
+//        $amount = 1005;
+//        $roleid = 61644520;
+        save_log('api/addSpreadUserMoney', $orderId.'||'.$amount."||".$roleid);
+        if (!$orderId || !$amount || !$roleid || $amount<=0 || $amount>10000) {
+            save_log('api/addSpreadUserMoneyFail', $orderId.'||'.$amount."||".$roleid);
+            echo "FAIL1";
+        } elseif ($check != $token) {
+            save_log('api/addSpreadUserMoneyFail', $check.'<==>'.$token);
+            echo "FAIL3";
+        } else {
+//            $arrResult = $socket->addRoleMoney($roleid,$amount*1000,0,0);
+            $res = Api::getInstance()->sendRequest([
+                'roleid' => $roleid,
+                'orderid' => (string)$orderId,
+                'imoney'  => $amount,
+                'states'  => 0
+            ], 'payment', 'spreadcharge');
+            save_log('api/addSpreadUserMoneyStatus', $orderId.'||'.$amount."||".$roleid.json_encode($res, JSON_UNESCAPED_UNICODE));
+            if ($res['data'] == true) {
+                echo 'SUCCESS';
+            } else {
+                echo 'FAIL2';
+            }
+        }
+    }
+
+    //在线
+    public function getOnlineUser(){
+        $socket = new QuerySocket();
+        $arrResult = null;
+        $arrResult = $socket->DCQueryAllOnlinePlayer();
+        $arrOnlineList = isset($arrResult["onlinelist"]) ? $arrResult["onlinelist"] : [];
+        $unique_arr = array_unique($arrOnlineList);
+        if($arrOnlineList)
+        {
+            foreach ($arrOnlineList as &$val) {
+                $loginset = '';
+                if ($val['nClientType'] == 0) {
+                    $loginset = '电脑';
+                } else if ($val['nClientType'] == 1) {
+                    $loginset = '安卓';
+                } else if ($val['nClientType'] == 2) {
+                    $loginset = 'IOS';
+                }
+                $val['roomid'] = $val['iRoomId'];;
+                $val['device'] = $loginset;
+                $val['iUserID'] = $val['iUserId'];
+                $val['szUsername'] = trim(gb2312ToUtf8($val['szAccount']));
+                $val['kindname'] = trim(gb2312ToUtf8($val['szRoomName']));
+                $val['gamemoney'] = FormatMoney($val['iGameMoney']);
+                $val['bankmoney'] = FormatMoney($val['iBankMoney']);
+                unset($val['szAccount'], $val['szRoomName']);
+            }
+            unset($val);
+        }
+       echo json_encode($arrOnlineList, JSON_UNESCAPED_UNICODE);
+    }
+}

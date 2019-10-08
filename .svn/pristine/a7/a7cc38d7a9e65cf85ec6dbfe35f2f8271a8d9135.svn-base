@@ -1,0 +1,5 @@
+<?php
+
+return [
+    'setPlayerRate' => '玩家ID:{ct0}，玩家胜率:{ct1}，控制时长:{ct2}秒',
+];

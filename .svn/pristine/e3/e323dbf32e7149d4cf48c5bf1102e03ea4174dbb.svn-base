@@ -1,0 +1,254 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\common\Api;
+use app\common\GameLog;
+use redis\Redis;
+use socket\QuerySocket;
+
+class Charge extends Main
+{
+    /**
+     * 充值汇总
+     */
+    public function index()
+    {
+        if ($this->request->isAjax()) {
+            $page    = intval(input('page')) ? intval(input('page')) : 1;
+            $limit   = intval(input('limit')) ? intval(input('limit')) : 10;
+            $roleId  = intval(input('roleid')) ? intval(input('roleid')) : 0;
+
+            $res = Api::getInstance()->sendRequest([
+                'roleid'   => $roleId,
+                'page'     => $page,
+                'pagesize' => $limit
+            ], 'charge', 'paysum');
+
+            return $this->apiReturn($res['code'], $res['data'], $res['message'], $res['total']);
+        }
+
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:转账明细查询
+     */
+    public function transfer()
+    {
+        if ($this->request->isAjax()) {
+
+            $page      = intval(input('page')) ? intval(input('page')) : 1;
+            $limit     = intval(input('limit')) ? intval(input('limit')) : 10;
+            $roleId    = intval(input('roleid')) ? intval(input('roleid')) : 0;
+            $orderno   = input('orderno') ? input('orderno') : '';
+            $channelid = intval(input('classid')) ? intval(input('classid')) : 0;
+            $start = input('start') ? input('start') : '';
+            $end   = input('end') ? input('end') : '';
+            $status = intval(input('status'))>=0 ? intval(input('status')) : -1;
+
+            $amount = intval(input('amount')) ? intval(input('amount')) : 0;
+            if ($amount >0) {
+                $amount = '0-'.$amount;
+            }
+
+            $data = [
+                'page' => $page,
+                'pagesize' => $limit,
+                'roleid' => $roleId,
+                'orderno' => $orderno,
+                'strartdate' => $start,
+                'enddate' => $end,
+                'transactionid' => '',
+                'status' => $status,
+                'classid' => $channelid,
+                'isoffline' => 1,
+                'amount' => $amount
+            ];
+            $res = Api::getInstance()->sendRequest($data, 'payment', 'payorder');
+            return $this->apiReturn($res['code'], isset($res['data']['ResultData']['list']) ? $res['data']['ResultData']['list'] : [], $res['message'], $count = $res['data']['total'], isset($res['data']['ResultData']['sum']) ? $res['data']['ResultData']['sum'] : []);
+        }
+
+        return $this->fetch();
+    }
+
+
+    /**
+     * Notes:推广充值记录
+     */
+    public function spreadlist()
+    {
+        if ($this->request->isAjax()) {
+
+            $page      = intval(input('page')) ? intval(input('page')) : 1;
+            $limit     = intval(input('limit')) ? intval(input('limit')) : 10;
+            $roleId    = intval(input('roleid')) ? intval(input('roleid')) : 0;
+
+
+            $data = [
+                'page' => $page,
+                'pagesize' => $limit,
+                'roleid' => $roleId,
+
+            ];
+            $res = Api::getInstance()->sendRequest($data, 'charge', 'spreadlist');
+
+            return $this->apiReturn($res['code'], $res['data'], $res['message']);
+        }
+
+        return $this->fetch();
+    }
+
+
+
+
+
+    /**
+     * Notes:充值明细查询
+     */
+    public function recharge()
+    {
+        if ($this->request->isAjax()) {
+            $strartdate    = input('strartdate') ? input('strartdate') : '';
+            $enddate       = input('enddate') ? input('enddate') : '';
+            $roleId        = intval(input('roleid')) ? intval(input('roleid')) : 0;
+            $orderno       = input('orderno') ? input('orderno') : '';
+            $transactionid = input('transactionid') ? input('transactionid') : '';
+            $channelid     = intval(input('channelid')) ? intval(input('channelid')) : 0;
+            $classid       = intval(input('classid')) ? intval(input('classid')) : 0;
+            $status        = intval(input('status')) >= 0 ? intval(input('status')) : -1;
+            $isoffline     = 0;
+            $amount        = intval(input('amount')) ? intval(input('amount')) : 0;
+            $page          = intval(input('page')) ? intval(input('page')) : 1;
+            $limit         = intval(input('limit')) ? intval(input('limit')) : 10;
+
+            if ($amount > 0) {
+                $amount = '0-' . $amount;
+            }
+
+            $res = Api::getInstance()->sendRequest([
+                'strartdate'    => $strartdate,
+                'enddate'       => $enddate,
+                'roleid'        => $roleId,
+                'orderno'       => $orderno,
+                'transactionid' => $transactionid,
+                'channelid'     => $channelid,
+                'classid'       => $classid,
+                'status'        => $status,
+                'isoffline'     => $isoffline,
+                'amount'        => $amount,
+                'page'          => $page,
+                'pagesize'      => $limit
+            ], 'payment', 'payorder');
+            return $this->apiReturn(
+                $res['code'],
+                isset($res['data']['ResultData']['list']) ? $res['data']['ResultData']['list'] : [],
+                $res['message'],
+                isset($res['data']['total']) ? $res['data']['total'] : 0,
+                isset($res['data']['ResultData']['sum']) ? $res['data']['ResultData']['sum'] : []
+            );
+        }
+
+        $channel = Api::getInstance()->sendRequest(['page' => 1, 'pagesize' => 1000], 'payment', 'channel');
+        $class   = config('site.zf_class');
+        $this->assign('channel', $channel['data']);
+        $this->assign('class', $class);
+        return $this->fetch();
+    }
+
+
+
+
+    /**
+     * Notes:补发
+     */
+    public function bufa()
+    {
+        $roleId   = intval(input('roleid')) ? intval(input('roleid')) : 0;
+        $orderno  = input('orderno') ? input('orderno') : '';
+        if (!$orderno || !$roleId) {
+            return $this->apiReturn(1, [], '订单号或玩家数据有误');
+        }
+
+        //加锁
+        $key = 'lock_bufa_'.$orderno;
+        if (!Redis::getInstance()->lock($key)) {
+            return $this->apiReturn(2, [], '请勿重复操作');
+        }
+
+        //获取订单数据
+        $orderInfo = Api::getInstance()->sendRequest([
+            'orderno' => $orderno,
+            'roleid'  => $roleId
+        ], 'payment', 'orderinfo');
+        if ($orderInfo['code'] != 0) {
+            Redis::getInstance()->rm($key);
+            return $this->apiReturn(3, [], '获取不到订单数据');
+        }
+        $orderData = $orderInfo['data'];
+        if ($orderData['status'] != 0) {
+            Redis::getInstance()->rm($key);
+            return $this->apiReturn(4, [], '订单不是待付款状态，不能补发');
+        }
+
+        //先更新订单状态为成功
+        $updateOrder = [
+            'cardtype' => $orderData['cardtype'],
+            'sporderno' => $orderData['orderno'],
+            'status'   => 3,
+            'transactionid' => $orderData['tratransactionid']
+        ];
+        $status = Api::getInstance()->sendRequest($updateOrder, 'payment', 'updateorder');
+
+        if ($status['code'] == 0) {
+            $socket = new QuerySocket();
+//            $res = $socket->addRoleMoney($roleId, $orderData['totalfee'] * 1000);
+            $res = $socket->addRoleMoney($roleId, $orderData['totalfee'] * 1000,0);
+            if ($res['iResult'] == 0) {
+
+                //释放锁
+                Redis::getInstance()->rm($key);
+                GameLog::logData(__METHOD__, $orderData, 1, $res);
+                return $this->apiReturn(0, [], '补发成功');
+            } else {
+                //回退订单状态为原始状态
+                $updateOrder['status'] = 0;
+                Api::getInstance()->sendRequest($updateOrder, 'payment', 'updateorder');
+                GameLog::logData(__METHOD__, $orderData, 0, $res);
+                Redis::getInstance()->rm($key);
+                return $this->apiReturn(5, [], '补发失败');
+            }
+        }
+
+        GameLog::logData(__METHOD__, $orderData, 0, $status);
+        Redis::getInstance()->rm($key);
+        return $this->apiReturn(6, [], '补发失败');
+    }
+
+    /**
+     * Notes:银商出货记录
+     */
+    public function yinshang()
+    {
+        if ($this->request->isAjax()) {
+            $page       = intval(input('page')) ? intval(input('page')) : 1;
+            $limit      = intval(input('limit')) ? intval(input('limit')) : 10;
+            $roleId     = intval(input('roleid')) ? intval(input('roleid')) : 0;
+            $strartdate = input('strartdate') ? input('strartdate') : '';
+            $enddate    = input('enddate') ? input('enddate') : '';
+            $param = [
+                'roleid'     => $roleId,
+                'strartdate' => $strartdate,
+                'enddate'    => $enddate,
+                'page'       => $page,
+                'pagesize'   => $limit
+            ];
+            $res = Api::getInstance()->sendRequest($param, 'player', 'supercharge');
+
+            return $this->apiReturn($res['code'], $res['data']['list'], $res['message'], $res['total'], $res['data']['sum']);
+        }
+
+        return $this->fetch();
+    }
+}

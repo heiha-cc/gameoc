@@ -1,0 +1,284 @@
+{extend name="common/base" /}
+
+{block name="title"}游戏日志{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+
+
+
+<!--<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">-->
+<div class="layui-tab layui-tab-brief" lay-filter="test">
+    <ul class="layui-tab-title">
+        <li class="layui-this">平台每日统计</li>
+
+        <li>平台每日统计图表</li>
+
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-card" style="margin-top: 20px">
+                <div class="layui-card-header layuiadmin-card-header-auto">
+                    <form class="layui-form" lay-filter="component-form-group">
+                        <div class="layui-form-item">
+                            <div class="layui-inline" style="display: none">
+                                <label class="layui-form-label">玩家ID</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="roleid" name="roleid" lay-verify="number" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">日期</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="test29" placeholder="yyyy-MM-dd">
+                                </div>
+                            </div>
+                            <!--<div class="layui-inline">-->
+                            <!--<label class="layui-form-label">日期</label>-->
+                            <!--<div class="layui-input-inline" style="width: 100px;">-->
+                            <!--<input type="text" name="start" id="LAY-component-form-group-date" autocomplete="off"-->
+                            <!--class="layui-input">-->
+                            <!--</div>-->
+                            <!--<div class="layui-form-mid">-->
+                            <!-- - -->
+                            <!--</div>-->
+                            <!--<div class="layui-input-inline" style="width: 100px;">-->
+                            <!--<input type="text" name="end" id="LAY-component-form-group-date2" autocomplete="off"-->
+                            <!--class="layui-input">-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+
+                            <div class="layui-inline" style="display: none">
+                                <label class="layui-form-label">游戏结果</label>
+                                <div class="layui-input-inline">
+                                    <select name="result" id="result">
+                                        <option value="-1">所有</option>
+                                        <option value="0">赢</option>
+                                        <option value="1">输</option>
+                                        <option value="2">和</option>
+                                        <option value="3">逃</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <a class="layui-btn" id="search" data-type="reload">搜索</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="layui-card-body">
+                    <div id="alllist">
+                        <table id="proxylist" lay-filter="proxylist"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <div class="layui-row layui-col-space30">
+                <div class="layui-col-md12 layui-col-lg12 layui-col-xs12 layui-col-sm12">
+                    <div class="layui-card">
+                        <div class="layui-card-header layuiadmin-card-header-auto" style="text-align: left">在线人数概览</div>
+                        <div class="layui-card-body">
+                            <div class="layui-carousel layadmin-carousel layadmin-dataview" id="test1" lay-arrow="always" data-anim="fade" lay-filter="LAY-index-dataview">
+                                <div carousel-item id="LAY-index-dataview">
+                                    <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{/block}
+{block name="script"}
+
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery',  'carousel'], function () {
+        var element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , table = layui.table
+            , $ = layui.$
+            , form = layui.form;
+        var carousel = layui.carousel;
+        var element = layui.element;
+
+        element.on('tab(test)', function(data){
+            $.ajax({
+                type:'post',
+                url:'hall',
+                data:{
+                    username: username,
+                    password:password,
+                    mobile:mobile,
+                    remember:sr
+                },
+                dataType:'json',
+                success: function(res) {
+                    if (res.code === 0) {
+                        layer.msg('登录成功',{icon:1,time:1000}, function () {
+                            window.location.href="{:url('admin/index/index')}";
+                        });
+                    } else if (res.code === 1) {
+                        window.location.href="{:url('admin/index/index')}";
+                    } else if (res.code === 2) {
+                        window.location.href="{:url('admin/index/index')}";
+                    }else if (res.code === 3) {
+                        layer.msg(res.msg,{icon:2,time:1000}, function () {
+
+                        });
+
+                    }
+                }
+            });
+            console.log(data);
+        });
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            ,autoplay:false
+            ,interval:5000
+            //,anim: 'updown' //切换动画方式
+        });
+        //墨绿主题
+        laydate.render({
+            elem: '#test29'
+            ,theme: 'molv'
+        });
+        var main = {
+            renderData: function () {
+                var cols = [ //表头
+                    {field: 'roleid', title: '玩家ID', minWidth:100}
+                    , {field: 'rolename', title: '角色名字', minWidth: 120}
+//                    ,{field: 'kindname', title: '游戏种类', minWidth: 120}
+                    ,{field: 'roomname', title: '房间名', minWidth: 120}
+                    , {
+                        field: 'changetype', title: '输赢情况', minWidth: 120, templet: function (d) {
+                            var res = '';
+                            if (d.changetype == 0) {
+                                res = '赢';
+                            } else if (d.changetype == 1) {
+                                res = '输';
+                            } else if (d.changetype == 2) {
+                                res = '和';
+                            } else if (d.changetype == 3) {
+                                res = '逃';
+                            }
+                            return res;
+                        }
+                    }
+                    , {field: 'premoney', title: '上局金币', minWidth: 120}
+
+
+                    , {field: 'money', title: '输赢金币', minWidth: 120}
+                    , {field: 'lastmoney', title: '当前金币', minWidth: 120}
+                    , {field: 'addtime', title: '时间', minWidth: 120}
+//                        , {field: 'proxyincome', title: '备注', minWidth:150}
+//                        , {field: 'proxyincome', title: '操作', minWidth:150}
+                ];
+
+                table.render({
+                    elem: '#proxylist'
+                    , url: "{:url('player/gamelog2')}" //数据接口
+                    , page: true //开启分页
+                    , limit:15
+                    , where: {
+                        winlost:-1
+                    }
+                    , cols: [cols]
+                    ,done: function(res, curr, count){
+                        $('#totalin').html(res.other.alltotal.sum);
+                        $('#win').html(res.other.alltotal.win);
+                        $('#lose').html(res.other.alltotal.lose);
+                        $('#escape').html(res.other.alltotal.escape);
+
+                    }
+                });
+            },
+
+            //搜索
+            search: function () {
+                var roleid = $.trim($('#roleid').val());
+                var roomid = $.trim($('#roomid').val());
+                var strartdate = $.trim($('#LAY-component-form-group-date').val());
+                var enddate = $.trim($('#LAY-component-form-group-date2').val());
+                var winlost = $.trim($('#result').val());
+
+                //执行重载
+                table.reload('proxylist', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        'roleid': roleid,
+                        'roomid': roomid,
+                        'strartdate': strartdate,
+                        'enddate': enddate,
+                        'winlost': winlost,
+                    }
+                });
+            },
+
+            //操作事件
+            extraEvent: function () {
+                //编辑
+                table.on('tool(proxylist)', function (obj) {
+                    var data = obj.data //获得当前行数据
+                        , layEvent = obj.event; //获得 lay-event 对应的值
+                    tr = obj.tr; //获得当前行 tr 的DOM对象
+                    if (layEvent === 'detail') {
+                        alert(55);
+                    } else if (layEvent === 'ganme') { //删除
+                        alert(data.nickname);
+                    } else if (layEvent === 'cold') {
+
+                    } else if (layEvent === 'delete') {
+
+                    }
+                });
+            },
+
+            init: function () {
+                main.renderData();
+                main.extraEvent();
+                laydate.render({
+                    elem: '#LAY-component-form-group-date'
+                    , format: 'yyyy-MM-dd'
+                    , max: 1
+                    , btns: ['clear', 'confirm']
+                });
+                laydate.render({
+                    elem: '#LAY-component-form-group-date2'
+                    , format: 'yyyy-MM-dd'
+                    , max: 1
+                    , btns: ['clear', 'confirm']
+                });
+                $('#search').on('click', function (e) {
+                    e.preventDefault();
+                    main.search();
+                });
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

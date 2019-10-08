@@ -1,0 +1,45 @@
+{extend name="common/base" /}
+
+{block name="title"}向玩家转账{/block}
+{block name="css"}{/block}
+{block name="content"}
+
+    <div class="layui-row layui-col-space30">
+        <div class="layui-col-md12 layui-col-lg12 layui-col-xs12 layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header layuiadmin-card-header-auto" style="text-align: left">在线人数概览</div>
+                <div class="layui-card-body">
+                    <div class="layui-carousel layadmin-carousel layadmin-dataview" id="test1" lay-arrow="always" data-anim="fade" lay-filter="LAY-index-dataview">
+                        <div carousel-item id="LAY-index-dataview">
+                            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+        ,home: '../mymod/home'
+    }).use(['index', 'home', 'carousel'], function() {
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            ,autoplay:false
+            ,interval:5000
+            //,anim: 'updown' //切换动画方式
+        });
+    });
+</script>
+{/block}
+

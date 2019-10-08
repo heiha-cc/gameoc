@@ -1,0 +1,70 @@
+<?php
+
+namespace app\admin\controller;
+
+use app\common\Api;
+
+class Yunwei extends Main
+{
+    //房间配置
+    public function roomctrl()
+    {
+        if ($this->request->isAjax()) {
+            $page     = intval(input('page')) ? intval(input('page')) : 1;
+            $limit    = intval(input('limit')) ? intval(input('limit')) : 10;
+            $kindid   = input('kindid') ? input('kindid') : 0;
+            $serverip = input('serverip') ? input('serverip') : '';
+            $roomname = input('roomname') ? input('roomname') : '';
+
+            $data = [
+                'serverip' => $serverip,
+                'roomname' => $roomname,
+                'kindid'   => $kindid,
+                'page'     => $page,
+                'pagesize' => $limit
+            ];
+            $res  = Api::getInstance()->sendRequest($data, 'room', 'roomlist');
+
+            return $this->apiReturn($res['code'], isset($res['data']['ResultData']) ? $res['data']['ResultData'] : [], $res['message'], isset($res['data']['total']) ? $res['data']['total'] : 0);
+        }
+        $kindList = Api::getInstance()->sendRequest(['id'=>0], 'room', 'kindlist');
+        $this->assign('kindlist', $kindList['data']);
+        return $this->fetch();
+    }
+
+
+    //添加房间
+    public function addroom()
+    {
+        if ($this->request->isAjax()) {
+
+        }
+        $tableList = Api::getInstance()->sendRequest(['id'=>0], 'room', 'tablelist');
+        $this->assign('tablelist', $tableList['data']);
+        $kindList = Api::getInstance()->sendRequest(['id'=>0], 'room', 'kindlist');
+        $this->assign('kindlist', $kindList['data']);
+        $serverList = Api::getInstance()->sendRequest(['id'=>1], 'room', 'serverlist');
+
+        $this->assign('serverlist', $serverList['data']);
+        return $this->fetch();
+    }
+
+    //获取游戏信息
+    public function getKindInfo()
+    {
+        $kindid = intval(input('kindid')) ? intval(input('kindid')) : 0;
+        $data   = [
+            'code' => 0,
+            'msg'  => '',
+            'data' => ''
+        ];
+        if (!$kindid) {
+            $data['code'] = 1;
+            $data['msg']  = '请选择游戏';
+            return json($data);
+        }
+        $kindInfo = Api::getInstance()->sendRequest(['id'=>$kindid], 'room', 'kindinfo');
+        $data['data'] = $kindInfo['data'][0]['CustomField'] ? $kindInfo['data'][0]['CustomField'] : '';
+        return json($data);
+    }
+}

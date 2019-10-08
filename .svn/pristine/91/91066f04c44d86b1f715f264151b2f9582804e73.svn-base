@@ -1,0 +1,17 @@
+<?php
+//log类别
+return [
+    'Player' => [],
+    'Room'   => [
+        'setPlayerRate' => '设置玩家胜率',
+        'setSocketRoomRate' => '设置库存',
+        'setSocketRoomStorage' => '设置库存阶段值',
+    ],
+    'Payment' => [
+        'setChannelStatus' => '支付通道开关设置',
+        'editChannel' => '编辑支付通道',
+
+    ],
+    'Gamemanage' => [],
+    'Playertrans' => [],
+];

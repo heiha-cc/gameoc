@@ -1,0 +1,393 @@
+<?php
+// +----------------------------------------------------------------------
+// | ThinkPHP [ WE CAN DO IT JUST THINK ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: 流年 <liu21st@gmail.com>
+// +----------------------------------------------------------------------
+//解析js escape编码的数据
+if (!function_exists('js_unescape')) {
+    function js_unescape($str)
+    {
+        $ret = '';
+        $len = strlen($str);
+        for ($i = 0; $i < $len; $i++) {
+            if ($str[$i] == '%' && $str[$i+1] == 'u') {
+                $val = hexdec(substr($str, $i+2, 4));
+                if ($val < 0x7f) $ret .= chr($val);
+                else if($val < 0x800) $ret .= chr(0xc0|($val>>6)).chr(0x80|($val&0x3f));
+                else $ret .= chr(0xe0|($val>>12)).chr(0x80|(($val>>6)&0x3f)).chr(0x80|($val&0x3f));
+                $i += 5;
+            } else if ($str[$i] == '%') {
+                $ret .= urldecode(substr($str, $i, 3));
+                $i += 2;
+            } else $ret .= $str[$i];
+        }
+        return $ret;
+    }
+}
+
+//判断ip合法性
+if (!function_exists('checkIp')) {
+    function checkIp($ip)
+    {
+        $arr = explode('.', $ip);
+        if (count($arr) != 4) {
+            return false;
+        } else {
+            for ($i = 0; $i < 4; $i++) {
+                if (($arr[$i] < '0') || ($arr[$i] > '255')) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+
+//记录log
+if (!function_exists('save_log')) {
+    function save_log($path, $content, $mode = 'day')
+    {
+        $path = strval($path);
+        $path = str_replace('\\', '/', trim($path, '/'));
+
+        $content = strval($content);
+
+        if (!$path || !$content) {
+            return false;
+        }
+        $mode     = in_array($mode, array('day', 'month', 'year')) ? $mode : 'day';
+        $tempPath = config('log_dir') . '/' . $path . '/';
+
+        if ($mode == 'day') {
+            $tempPath .= date('Y') . '/' . date('m') . '/';
+            $fileName = date('d') . '.log';
+        } elseif ($mode == 'month') {
+            $tempPath .= date('Y') . '/';
+            $fileName = date('m') . '.log';
+        } else {
+            $fileName = date('Y') . 'log';
+        }
+
+        if (!file_exists($tempPath)) {
+            if (!mkdir($tempPath, 0777, true)) {
+                return false;
+            }
+        }
+
+        $file    = $tempPath . $fileName;
+        $content = date('Y-m-d H:i:s') . '#' . $content . "\r\n";
+        $res     = @file_put_contents($file, $content, FILE_APPEND);
+        if ($res) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+if (!function_exists('__')) {
+
+    /**
+     * 获取语言变量值
+     * @param string $name 语言变量名
+     * @param array $vars 动态变量值
+     * @param string $lang 语言
+     * @return mixed
+     */
+    function __($name, $vars = [], $lang = '')
+    {
+        if (is_numeric($name) || !$name)
+            return $name;
+        if (!is_array($vars)) {
+            $vars = func_get_args();
+            array_shift($vars);
+            $lang = '';
+        }
+        return \think\Lang::get($name, $vars, $lang);
+    }
+
+}
+
+//生成盐
+if (!function_exists('generateSalt')) {
+    function generateSalt()
+    {
+        $str  = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+        $salt = strtolower(substr(str_shuffle($str), 10, 6));
+        return $salt;
+    }
+}
+
+//生成随机数,用于生成salt
+if (!function_exists('random_str')) {
+    function random_str($length)
+    {
+        //生成一个包含  小写英文字母, 数字 的数组
+        $arr     = array_merge(range(0, 9), range('a', 'z'));
+        $str     = '';
+        $arr_len = count($arr);
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $arr_len - 1);
+            $str  .= $arr[$rand];
+        }
+        return $str;
+    }
+}
+
+if (!function_exists('p')) {
+    function p($data)
+    {
+        // 定义样式
+        $str = '<pre style="display: block;padding: 9.5px;margin: 44px 0 0 0;font-size: 13px;line-height: 1.42857;color: #333;word-break: break-all;word-wrap: break-word;background-color: #F5F5F5;border: 1px solid #CCC;border-radius: 4px;">';
+        // 如果是boolean或者null直接显示文字；否则print
+        if (is_bool($data)) {
+            $show_data = $data ? 'true' : 'false';
+        } elseif (is_null($data)) {
+            $show_data = 'null';
+        } else {
+            $show_data = print_r($data, true);
+        }
+        $str .= $show_data;
+        $str .= '</pre>';
+        echo $str;
+        die;
+    }
+}
+
+
+if (!function_exists('array_children_count')) {
+    /**
+     * 子元素计数器
+     * @param array $array
+     * @param int $pid
+     * @return array
+     */
+    function array_children_count($array, $pid)
+    {
+        $counter = [];
+        foreach ($array as $item) {
+            $count = isset($counter[$item[$pid]]) ? $counter[$item[$pid]] : 0;
+            $count++;
+            $counter[$item[$pid]] = $count;
+        }
+        return $counter;
+    }
+}
+
+if (!function_exists('array2level')) {
+    /**
+     * 数组层级缩进转换
+     * @param array $array 源数组
+     * @param int $pid
+     * @param int $level
+     * @return array
+     */
+    function array2level($array, $pid = 0, $level = 1)
+    {
+        static $list = [];
+        foreach ($array as $v) {
+            if ($v['pid'] == $pid) {
+                $v['level'] = $level;
+                $list[]     = $v;
+                array2level($array, $v['id'], $level + 1);
+            }
+        }
+        return $list;
+    }
+}
+
+if (!function_exists('array2tree')) {
+    /**
+     * 构建层级（树状）数组
+     * @param array $array 要进行处理的一维数组，经过该函数处理后，该数组自动转为树状数组
+     * @param string $pid_name 父级ID的字段名
+     * @param string $child_key_name 子元素键名
+     * @return array|bool
+     */
+    function array2tree(&$array, $pid_name = 'pid', $child_key_name = 'children')
+    {
+        $counter = array_children_count($array, $pid_name);
+        if (!isset($counter[0]) || $counter[0] == 0) {
+            return $array;
+        }
+        $tree = [];
+        while (isset($counter[0]) && $counter[0] > 0) {
+            $temp = array_shift($array);
+            if (isset($counter[$temp['id']]) && $counter[$temp['id']] > 0) {
+                array_push($array, $temp);
+            } else {
+                if ($temp[$pid_name] == 0) {
+                    $tree[] = $temp;
+                } else {
+                    $array = array_child_append($array, $temp[$pid_name], $temp, $child_key_name);
+                }
+            }
+            $counter = array_children_count($array, $pid_name);
+        }
+        return $tree;
+    }
+}
+
+
+if (!function_exists('array_child_append')) {
+    /**
+     * 把元素插入到对应的父元素$child_key_name字段
+     * @param        $parent
+     * @param        $pid
+     * @param        $child
+     * @param string $child_key_name 子元素键名
+     * @return mixed
+     */
+    function array_child_append($parent, $pid, $child, $child_key_name)
+    {
+        foreach ($parent as &$item) {
+            if ($item['id'] == $pid) {
+                if (!isset($item[$child_key_name])) {
+                    $item[$child_key_name] = [];
+                }
+
+                $item[$child_key_name][] = $child;
+            }
+        }
+        return $parent;
+    }
+}
+
+if (!function_exists('getClientIP')) {
+    //获取客户端真实IP
+    function getClientIP()
+    {
+        global $ip;
+        if (getenv("HTTP_CLIENT_IP")) {
+            $ip = getenv("HTTP_CLIENT_IP");
+        } else if (getenv("HTTP_X_FORWARDED_FOR")) {
+            $ip = getenv("HTTP_X_FORWARDED_FOR");
+        } else if (getenv("REMOTE_ADDR")) {
+            $ip = getenv("REMOTE_ADDR");
+        } else {
+            $ip = "Unknow";
+        }
+
+        return $ip;
+    }
+}
+
+if (!function_exists('getCity')) {
+    /**
+     * 获取 IP  地理位置
+     * 淘宝IP接口
+     * @Return: array
+     */
+    function getCity($ip = '')
+    {
+        if ($ip == '') {
+            $url  = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";
+            $ip   = json_decode(file_get_contents($url), true);
+            $data = $ip;
+        } else {
+            $url = "http://ip.taobao.com/service/getIpInfo.php?ip=" . $ip;
+            $ip  = json_decode(file_get_contents($url));
+            if ((string)$ip->code == '1') {
+                return false;
+            }
+            $data = (array)$ip->data;
+        }
+
+        return $data;
+    }
+}
+
+if (!function_exists('game_split_sql')) {
+    /**
+     * 切分SQL文件成多个可以单独执行的sql语句
+     * @param $file sql文件路径
+     * @param $tablePre 表前缀
+     * @param string $charset 字符集
+     * @param string $defaultTablePre 默认表前缀
+     * @param string $defaultCharset 默认字符集
+     * @return array
+     */
+    function game_split_sql($file, $tablePre, $charset = 'utf8mb4', $defaultTablePre = 'game_', $defaultCharset = 'utf8mb4')
+    {
+        if (file_exists($file)) {
+            //读取SQL文件
+            $sql = file_get_contents($file);
+            $sql = str_replace("\r", "\n", $sql);
+            $sql = str_replace("BEGIN;\n", '', $sql);//兼容 navicat 导出的 insert 语句
+            $sql = str_replace("COMMIT;\n", '', $sql);//兼容 navicat 导出的 insert 语句
+            $sql = str_replace($defaultCharset, $charset, $sql);
+            $sql = trim($sql);
+            //替换表前缀
+            $sql  = str_replace(" `{$defaultTablePre}", " `{$tablePre}", $sql);
+            $sqls = explode(";\n", $sql);
+            return $sqls;
+        }
+
+        return [];
+    }
+}
+
+if (!function_exists('format_bytes')) {
+    /**
+     * 格式化字节大小
+     *
+     * @param  number $size 字节数
+     * @param  string $delimiter 数字和单位分隔符
+     * @return string            格式化后的带单位的大小
+     */
+    function format_bytes($size, $delimiter = '')
+    {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+        for ($i = 0; $size >= 1024 && $i < 5; $i++) $size /= 1024;
+        return round($size, 2) . $delimiter . $units[$i];
+    }
+}
+
+if (!function_exists('checkStr')) {
+    //异常字符串处理
+    function checkStr($str)
+    {
+        switch ($str) {
+            case strspn($str, '&#;') > 0:
+                $str = ltrim($str, '&#');
+                $str = rtrim($str, ';');
+                return $str;
+            default:
+                return $str;
+                break;
+        }
+    }
+}
+
+if (!function_exists('http_curl')) {
+    /**
+     * @param string $url 请求地址
+     * @param string $type 请求类型 post  get
+     * @param string $arr 如果是post 传递的数据
+     * @return mixed|\think\response\Json
+     */
+    function http_curl($url, $type = 'get', $authorization, $arr = '')
+    {
+
+        $headers = array('appkey:' . $authorization['appkey'], 'appsecret:' . $authorization['appsecret']);
+        $ch      = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, $headers); //设置header
+        curl_setopt($ch, CURLOPT_URL, $url);//设置访问的地址
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//获取的信息返回
+        if ($type == 'post') {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $arr);
+        }
+        $output = curl_exec($ch);//采集
+        if (curl_error($ch)) {
+            return curl_error($ch);
+        }
+        return $output;
+    }
+}

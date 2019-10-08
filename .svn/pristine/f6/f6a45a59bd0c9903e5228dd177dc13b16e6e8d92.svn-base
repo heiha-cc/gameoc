@@ -1,0 +1,354 @@
+{extend name="common/base" /}
+
+{block name="title"}新增超级玩家{/block}
+{block name="css"}
+{/block}
+{block name="content"}
+
+<form class="layui-form" action="{:url('player/addSuper')}" method="post" id="addProxy" >
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">房间基本信息</li>
+            <li>房间属性</li>
+            <li>房间规则</li>
+            <li>底分规则</li>
+            <li>布局规则</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">游戏种类</label>
+                    <div class="layui-input-inline">
+                        <select name="kindid" id="kindid" lay-filter="kindid">
+                            {foreach $kindlist as $k => $v}
+                            <option value="{$v.kindid}">{$v.kindname}({$v.kindid})</option>
+                            {/foreach}
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">房间名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roomname" name='roleid' lay-verify="required"  placeholder="房间名称" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">桌子数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roomname" name='roleid' lay-verify="required|number"  placeholder="桌子数量" 120pxcomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">房间最大人数：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roomname" name='roleid' lay-verify="required|number"  placeholder="房间最大人数" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">房间服务器：</label>
+                    <div class="layui-input-inline">
+                        <select name="kindid" id="kindid">
+                            {foreach $serverlist as $k => $v}
+                            <option value="{$v.ServerIP}">{$v.ServerIP}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">彩蛋税率：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roomname" name='roleid' lay-verify="required|number"  placeholder="房间名称" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">房间设置：</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="like[write]" title="防作弊">
+                        <input type="checkbox" name="like[read]" title="百人房间">
+                        <input type="checkbox" id="exproom" name="exproom" lay-filter="exproom" title="体验房">
+                    </div>
+                </div>
+                <div class="layui-form-item" id="exproommoney" style="display: none">
+                    <label class="layui-form-label">体验金额：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="expmoney" name='expmoney' value="0" lay-verify="required|number"  placeholder="体验金额" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">房间提示(多条用|分开)：</label>
+                    <div class="layui-input-block">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">规则提示：</label>
+                    <div class="layui-input-block">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">允许旁观：</label>
+                    <div class="layui-input-inline">
+                        <select name="kindid" id="kindid">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">等待开始游戏：</label>
+                    <div class="layui-input-inline">
+                        <select name="StartMode" id="StartMode" lay-filter="StartMode">
+                            <option value="0">由时间控制开始</option>
+                            <option value="1">所有玩家准备好后开始</option>
+                            <option value="2">部分玩家准备好后开始</option>
+                            <option value="3">由游戏程序控制开始</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" id="startmode2" style="display: none">
+                    <label class="layui-form-label" style="width: 130px;">至少几组准备好后开始游戏：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">游戏开始后允许坐下：</label>
+                    <div class="layui-input-inline">
+                        <select name="kindid" id="kindid">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label"  style="width: 130px">自动启动客户端：</label>
+                    <div class="layui-input-inline">
+                        <select name="kindid" id="kindid">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"  style="width: 130px">单桌最大旁观数：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">进入房间最小积分：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">自动起立(坐下时长)：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">自动起立(举手时长)：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">自动踢出(进入房间时长)：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">房间权限：</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="like[write]" title="房间禁止设置">
+                    </div>
+                    <label class="layui-form-label" style="width: 130px">机器人权限：</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="like[write]" title="允许游戏中加入">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="display: none" id="extradata">
+                    <label class="layui-form-label"  id="extradatalabel" style="width: auto">庄家最大连庄数|满足条件最大连庄数|上庄条件|玩家最大下注额|蓝钻贵族最大下注额（5|10|1000|1000|2000）万：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">进入房间最小积分：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="进入房间最小分" 120pxcomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">进入房间最大积分：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="rate" name="rate" lay-verify="required|number" value="0" placeholder="进入房间最大分" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 130px">坐下游戏最小积分：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="roleid" name='roleid' lay-verify="required|number" value="0" placeholder="坐下游戏最小积分" 120pxcomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label" style="width: 130px">坐下游戏最大积分：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="rate" name="rate" lay-verify="required|number" value="0" placeholder="坐下游戏最大积分" 120pxcomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">底分类型</label>
+                    <div class="layui-input-block">
+                        <select name="kindid" id="kindid">
+                            <option value="0">程序自动计算</option>
+                            <option value="1">房间对局分</option>
+                            <option value="2">玩家对局分</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">桌子类型</label>
+                    <div class="layui-input-block">
+                    <select name="tableid" id="tableid">
+                        {foreach $tablelist as $k => $v}
+                        <option value="{$v.tableschemeid}">{$v.schemename}</option>
+                        {/foreach}
+                    </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <a style="margin-left: 30%" type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="addit" id="addit" >新增</a>
+            <a class="layui-btn layui-btn-primary layui-btn-radius" id="cancel" >取消</a>
+        </div>
+    </div>
+</form>
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var layer = layui.layer
+            ,$ = layui.$
+            ,form = layui.form
+            ,element = layui.element;
+        form.render();
+        element.render();
+
+        var main = {
+            bindEvent: function() {
+                form.on('submit(addit)', function(data) {
+                    main.submitForm(data);
+                    return false;
+                });
+
+                $('#cancel').on('click', function(e) {
+                    e.preventDefault();
+                    x_admin_close();
+                });
+
+                //监听体验房点击事件
+               form.on('checkbox(exproom)', function (data) {
+                   var checked = data.elem.checked;
+                   if (checked == true) {
+                       $('#exproommoney').show();
+                   } else {
+                       $('#exproommoney').hide();
+                   }
+               });
+                //监听等待开始游戏点击事件
+                form.on('select(StartMode)', function (data) {
+                    var value = data.value;
+                    if (value == 2) {
+                        $('#startmode2').show();
+                    } else {
+                        $('#startmode2').hide();
+                    }
+                });
+                //监听游戏点击事件
+                form.on('select(kindid)', function (data) {
+                    var value = data.value;
+                    $('#extradata').hide();
+                    main.getKindInfo(value);
+                });
+            },
+
+            //获取游戏信息
+            getKindInfo : function (kindid) {
+                $.ajax({
+                    type:'post',
+                    url:"{:url('yunwei/getKindInfo')}",
+                    data:{
+                        'kindid' : kindid,
+                    },
+                    dataType:'json',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            if (res.data != '') {
+                                $('#extradatalabel').html(res.data);
+                                $('#extradata').show();
+                            } else {
+                                $('#extradata').hide();
+                            }
+                        }
+                    }
+                });
+            },
+
+            //添加
+            submitForm : function(data) {
+                var roleid = $.trim(data.field.roleid)
+                    ,rate = $.trim(data.field.rate);
+                $.ajax({
+                    type:'post',
+                    url:data.form.action,
+                    data:{
+                        'roleid' : roleid,
+                        'rate' : rate
+                    },
+                    dataType:'json',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            layer.msg(res.msg,{icon:1,time:1000}, function () {
+                                x_admin_close();
+                                parent.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon:2});
+                        }
+                    }
+                });
+            },
+
+            init : function () {
+                main.bindEvent();
+                //初始化获取游戏种类信息
+                main.getKindInfo($('#kindid').val());
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}

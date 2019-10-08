@@ -1,0 +1,146 @@
+{extend name="common/base" /}
+
+{block name="title"}通道金额配置{/block}
+{block name="css"}
+{/block}
+{block name="content"}
+
+<form class="layui-form" action="{:url('gamectrl/setProfit')}" method="post" id="addProxy" >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">设置范围：</label>
+        <div class="layui-input-block">
+            <select name="setrange" id="setrange" lay-filter="setrange">
+                <option value="1">所有服务器</option>
+                <option value="2">游戏类型</option>
+                <option value="3">游戏房间</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item" id="showkindidname" style="display: none;">
+        <label class="layui-form-label">游戏类型：</label>
+        <div class="layui-input-block">
+            <select name="kindid" id="kindid">
+                {foreach $kindlist as $k1 => $v1}
+                <option value="{$v1.kindid}">{$v1.kindname}({$v1.kindid})</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item" id="showroomidname" style="display: none;">
+        <label class="layui-form-label">游戏房间：</label>
+        <div class="layui-input-block">
+            <select name="roomid" id="roomid">
+                {foreach $roomlist as $k2 => $v2}
+                <option value="{$v2.roomid}">{$v2.roomname}({$v2.roomid})</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">盈利千分比：</label>
+        <div class="layui-input-block">
+            <input type="text" id="percent" name='percent' lay-verify="required|number" placeholder="请输入盈利千分比" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <a style="margin-left: 15%" type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="addit" id="addit" >设置</a>
+            <a  class="layui-btn layui-btn-primary layui-btn-radius" lay-submit="" lay-filter="cancel" id="cancel" >取消</a>
+        </div>
+    </div>
+</form>
+
+{/block}
+{block name="script"}
+
+<script>
+    layui.config({
+        base: '__layui__/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+
+    }).use(['index', 'table', 'layer', 'element', 'laydate', 'form', 'jquery'], function() {
+        var element = layui.element
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$
+            ,form = layui.form;
+
+        var main = {
+            submitForm : function(data) {
+                var setrange = $.trim(data.field.setrange),
+                    percent = $.trim(data.field.percent);
+                var id=0;
+                if (setrange == 1) {
+                    id = 0;
+                } else if (setrange == 2) {
+                    id = $('#kindid').val();
+                } else if (setrange == 3) {
+                    id = $('#roomid').val();
+                }
+                $.ajax({
+                    type:'post',
+                    url:data.form.action,
+                    data:{
+                        'setrange' : setrange,
+                        'id' : id,
+                        'percent' : percent
+                    },
+                    dataType:'json',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            layer.msg('设置成功',{icon:1,time:1000}, function () {
+                                x_admin_close();
+                                parent.location.reload();
+                            });
+                        } else {
+                            layer.msg('设置失败', {icon:2});
+                        }
+                    }
+                });
+            },
+
+            bindEvent: function() {
+                form.on('submit(addit)', function(data) {
+                    main.submitForm(data);
+                    return false;
+                });
+
+                $('#cancel').on('click', function(e) {
+                    e.preventDefault();
+                    x_admin_close();
+                });
+                //监听等待开始游戏点击事件
+                form.on('select(setrange)', function (data) {
+                    var value = data.value;
+                    if (value == 1) {
+                        $('#showkindidname').hide();
+                        $('#showroomidname').hide();
+                    } else if (value==2){
+                        $('#showroomidname').hide();
+                        $('#showkindidname').show();
+                    } else if (value==3){
+                        $('#showroomidname').show();
+                        $('#showkindidname').hide();
+                    } else {
+                        $('#showkindidname').hide();
+                        $('#showroomidname').hide();
+                    }
+                });
+            },
+
+            init : function () {
+                main.bindEvent();
+            }
+        };
+
+        main.init();
+    });
+</script>
+{/block}
